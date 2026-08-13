@@ -108,7 +108,6 @@ export function PluginManagerTab({ list, setEnabled, setCategoryEnabled, t }: Pl
       const enabledCount = section.entries.filter(entry => entry.enabled).length
       const checked = mutableEnabled > 0
       const partial = enabledCount > 0 && enabledCount < section.entries.length
-      const protectedOnly = mutableEnabled === 0 && enabledCount > 0
       const targetEnabled = mutableEnabled === 0
       const categoryBusyKey = `category:${section.category}`
       const categoryLabel = categoryKey === undefined ? section.category : t(categoryKey)
@@ -117,13 +116,13 @@ export function PluginManagerTab({ list, setEnabled, setCategoryEnabled, t }: Pl
         <button className={css.categoryExpand} type="button" aria-expanded={isOpen} onClick={() => { setOpen(current => { const next = new Set(current); next.has(section.category) ? next.delete(section.category) : next.add(section.category); return next }) }}>
           <ChevronDown size={16} aria-hidden="true" /><span><h4>{categoryLabel}</h4><small>{enabledCount}/{section.entries.length}</small></span>
         </button>
-        <Toggle checked={checked} warning={partial || protectedOnly} disabled={mutable.length === 0 || busy.has(categoryBusyKey)} label={`${categoryLabel}: ${targetEnabled ? t('enableCategory') : t('disableCategory')}`} onChange={() => { void run(categoryBusyKey, () => setCategoryEnabled(section.category, targetEnabled)) }} />
+        <Toggle checked={checked} warning={partial} disabled={mutable.length === 0 || busy.has(categoryBusyKey)} label={`${categoryLabel}: ${targetEnabled ? t('enableCategory') : t('disableCategory')}`} onChange={() => { void run(categoryBusyKey, () => setCategoryEnabled(section.category, targetEnabled)) }} />
       </header>
       {feedback.has(categoryBusyKey) ? <FeedbackView feedback={feedback.get(categoryBusyKey)!} /> : null}
       {isOpen ? <ul className={css.entries}>{section.entries.map(entry => {
           const entryKey = `entry:${entry.entryId}`
           return <li key={entry.entryId}>
-            <div className={css.entryText}><strong>{entry.configId}</strong><span data-phase={entry.phase ?? 'stopped'}>{phaseLabel(entry, t)}</span><small title={entry.protectionReason ?? undefined}>{entry.protected ? t('protected') : t('runtimeSwitch')}</small></div>
+            <div className={css.entryText} title={entry.protectionReason ?? undefined}><strong>{entry.configId}</strong><span data-phase={entry.phase ?? 'stopped'}>{phaseLabel(entry, t)}</span></div>
             <Toggle checked={entry.enabled} disabled={entry.protected || busy.has(entryKey)} label={`${entry.configId}: ${entry.enabled ? t('disableEntry') : t('enableEntry')}`} onChange={() => { void run(entryKey, () => setEnabled(entry.entryId, !entry.enabled)) }} />
             {feedback.has(entryKey) ? <FeedbackView feedback={feedback.get(entryKey)!} /> : null}
           </li>

@@ -47,7 +47,8 @@ describe('PluginManagerTab', () => {
 
     fireEvent.change(screen.getByRole('searchbox'), { target: { value: 'manager' } })
     expect(screen.queryByText('tool-client')).toBeNull()
-    expect(screen.getByText(en.protected)).toBeTruthy()
+    expect(screen.queryByText(en.protected)).toBeNull()
+    expect(screen.queryByText(en.runtimeSwitch)).toBeNull()
     expect(screen.getByRole('checkbox', { name: /manager/ })).toHaveProperty('disabled', true)
   })
 

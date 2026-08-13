@@ -29,15 +29,14 @@
 .entryText > span { color: var(--dsw-alias-label-tertiary); font-size: 11px; line-height: 17px; white-space: nowrap; }
 .entryText > span[data-phase='active'] { color: var(--dsw-alias-state-success-primary); }
 .entryText > span[data-phase='failed'] { color: var(--dsw-alias-state-error-primary); }
-.entryText small { grid-column: 1 / -1; width: max-content; border-radius: 4px; padding: 1px 5px; background: var(--dsw-alias-bg-layer-1); color: var(--dsw-alias-label-tertiary); font-size: 10px; line-height: 15px; }
 .switch { position: relative; display: inline-flex; width: 34px; height: 20px; flex: none; }
 .switch input { position: absolute; width: 1px; height: 1px; opacity: 0; }
 .switch span { box-sizing: border-box; width: 34px; height: 20px; border: 1px solid var(--dsw-alias-border-l1); border-radius: 10px; background: var(--dsw-alias-bg-layer-1); cursor: pointer; transition: background 120ms ease; }
 .switch span::after { content: ''; display: block; width: 14px; height: 14px; margin: 2px; border-radius: 50%; background: var(--dsw-alias-label-tertiary); transition: transform 120ms ease, background 120ms ease; }
 .switch input:checked + span { border-color: var(--dsw-alias-state-success-primary); background: color-mix(in srgb, var(--dsw-alias-state-success-primary) 18%, transparent); }
 .switch input:checked + span::after { transform: translateX(14px); background: var(--dsw-alias-state-success-primary); }
-.switch[data-warning='true'] span { border-color: #b7791f; background: color-mix(in srgb, #b7791f 18%, transparent); }
-.switch[data-warning='true'] span::after { background: #b7791f; }
+.switch[data-warning='true'] input + span { border-color: #b7791f; background: color-mix(in srgb, #b7791f 18%, transparent); }
+.switch[data-warning='true'] input + span::after { background: #b7791f; }
 .switch input:focus-visible + span { outline: 2px solid var(--dsw-alias-state-business-primary); outline-offset: 2px; }
 .switch input:disabled + span { cursor: not-allowed; opacity: .42; }
 .inlineFeedback { grid-column: 1 / -1; border-top: 1px solid color-mix(in srgb, var(--dsw-alias-state-error-primary) 22%, transparent); padding: 7px 14px; background: color-mix(in srgb, var(--dsw-alias-state-error-primary) 7%, transparent); color: var(--dsw-alias-state-error-primary); font-size: 11px; line-height: 17px; }
