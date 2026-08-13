@@ -60,7 +60,7 @@ The Web API follows the same trusted-host decision as the Harness connection. An
 
 ## Categories and entry names
 
-Official `@deepseek-ai/dsh-*` packages are categorized by the Harness workspace groups for the supported release, including `core`, `bundle`, `boot`, `session`, `interaction`, `extensions`, and `llm`. Groups are collapsed by default and directly list Loader entries by their configured ids, such as `include`, `timer`, and `tool-web`; imported module specifiers are intentionally hidden. A group toggle changes every mutable entry and skips protected infrastructure. Green means fully enabled, yellow-on means a mixed group still has mutable entries running, and yellow-off means mutable entries are off while protected entries remain running.
+Official `@deepseek-ai/dsh-*` packages are categorized automatically from the installed package's `repository.directory` metadata, so new or moved Harness packages do not require a plugin-manager release. Only manifests that identify the official `deepseek-ai/deepseek-harness` repository may contribute an official group; missing or invalid metadata falls back to **Other Harness plugins**. Groups are collapsed by default and directly list Loader entries by their configured ids, such as `include`, `timer`, and `tool-web`; imported module specifiers are intentionally hidden. A group toggle changes every mutable entry and skips protected infrastructure. Green means fully enabled, yellow-on means a mixed group still has mutable entries running, and yellow-off means mutable entries are off while protected entries remain running.
 
 ## Development
 

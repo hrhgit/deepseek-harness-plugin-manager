@@ -60,7 +60,7 @@ Web API 沿用 Harness 连接层的受信任 Host 判定。能够使用受信任
 
 ## 分类与条目名称
 
-官方 `@deepseek-ai/dsh-*` 包先按当前兼容 Harness 版本的工作区包组分类，包括 `core`、`bundle`、`boot`、`session`、`interaction`、`extensions` 和 `llm`。分组默认收起，展开后直接显示 `include`、`timer` 和 `tool-web` 等 Loader 配置名称，不显示导入模块名。组开关只操作可修改条目并跳过受保护基础设施：绿色开启表示全部启用，黄色开启表示混合状态且仍有可关闭条目运行，黄色关闭表示可修改条目均已关闭、但受保护条目仍在运行。
+官方 `@deepseek-ai/dsh-*` 包会根据已安装软件包的 `repository.directory` 元数据自动发现工作区分组，因此 Harness 新增或移动软件包时不需要同步发布管理器。只有明确指向官方 `deepseek-ai/deepseek-harness` 仓库的 manifest 才能提供官方分组；元数据缺失或不合法时落入“其他 Harness 插件”。分组默认收起，展开后直接显示 `include`、`timer` 和 `tool-web` 等 Loader 配置名称，不显示导入模块名。组开关只操作可修改条目并跳过受保护基础设施：绿色开启表示全部启用，黄色开启表示混合状态且仍有可关闭条目运行，黄色关闭表示可修改条目均已关闭、但受保护条目仍在运行。
 
 ## 开发与路线图
 

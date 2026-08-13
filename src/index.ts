@@ -138,7 +138,7 @@ export class PluginManager extends TypertRemoteService {
       configId: entry.options.id,
       moduleName: entry.options.name,
       packageName: packageRoot(entry.options.name),
-      category: pluginCategory(packageRoot(entry.options.name)),
+      category: pluginCategory(packageRoot(entry.options.name), entry.parent.tree.ctx.baseUrl ?? this.location.directory),
       enabled: !entry.disabled,
       phase: fiber === undefined ? null : FIBER_PHASE[fiber.state] ?? null,
       protected: protectionReason !== null,
