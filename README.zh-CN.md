@@ -84,6 +84,19 @@ pnpm run build
 pnpm run pack:check
 ```
 
+## 发布
+
+推送 `vX.Y.Z` 标签后，`.github/workflows/publish.yml` 会执行发布。工作流先校验标签与 `package.json` 中的版本一致，再运行测试、类型检查和构建，最后通过 GitHub OIDC 与 npm 可信发布完成发布，不保存长期 `NPM_TOKEN`。
+
+使用工作流前，需要在 npm 软件包的可信发布者设置中填写：GitHub 所有者 `hrhgit`、仓库 `deepseek-harness-plugin-manager`、工作流文件名 `publish.yml`，环境留空，允许的操作只勾选 `npm publish`。npm 只在已存在的软件包设置中提供此入口，因此首次 `0.1.0` 发布仍需使用一个有权发布此包、且启用“绕过双重身份验证”的细粒度访问令牌。首次发布后应立即配置可信发布并撤销该引导令牌。
+
+后续每次发布只需更新并提交版本，然后推送提交及标签：
+
+```powershell
+npm version patch
+git push origin main --follow-tags
+```
+
 后续计划包括 npm 插件安装、删除和升级，展示真实 `dsh.bundle` 来源与兼容性，从 npm、GitHub 或专用索引发现社区插件，以及导入导出插件集合。
 
 建议 GitHub Topics：`deepseek-harness`、`dsh`、`cordis`、`plugin-manager`、`plugin-management`、`web-ui`、`deepseek`、`typescript`。

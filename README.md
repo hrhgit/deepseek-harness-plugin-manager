@@ -84,6 +84,19 @@ pnpm run build
 pnpm run pack:check
 ```
 
+## Publishing
+
+Pushing a `vX.Y.Z` tag runs `.github/workflows/publish.yml`. The workflow verifies that the tag matches `package.json`, runs the test, typecheck, and build gates, and publishes through npm Trusted Publishing with GitHub OIDC. It does not use a long-lived `NPM_TOKEN`.
+
+Before using the workflow, configure the npm package's Trusted Publisher with GitHub owner `hrhgit`, repository `deepseek-harness-plugin-manager`, workflow filename `publish.yml`, no environment, and `npm publish` as the allowed action. npm exposes this setting only on an existing package, so the initial `0.1.0` release must first be published with a granular access token that has permission for this package and **Bypass two-factor authentication** enabled. Configure Trusted Publishing immediately afterward and revoke the bootstrap token.
+
+For each later release, update and commit the version, then push the commit and its tag:
+
+```powershell
+npm version patch
+git push origin main --follow-tags
+```
+
 The package has one Host entry, one browser entry, generated Typert Remote artifacts, and one `dsh.bundle` patch. It targets the pre-release `0.1.x` Harness APIs; review release notes before upgrading peer dependencies.
 
 ## Roadmap
