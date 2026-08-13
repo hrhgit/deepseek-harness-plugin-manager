@@ -65,6 +65,9 @@
     "LICENSE"
   ],
   "dsh": {
+    "pluginManager": {
+      "group": "plugin-management"
+    },
     "bundle": {
       "patch": "./cordis.patch.yml"
     },

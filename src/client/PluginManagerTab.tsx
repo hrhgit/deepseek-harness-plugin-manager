@@ -20,9 +20,9 @@ const phaseKeys: Record<Exclude<PluginPhase, null>, LocaleKey> = { pending: 'pen
 const categoryKeys: Readonly<Partial<Record<PluginCategory, LocaleKey>>> = {
   cordis: 'categoryCordis', core: 'categoryCore', bundle: 'categoryBundle', boot: 'categoryBoot', session: 'categorySession',
   interaction: 'categoryInteraction', extensions: 'categoryExtensions', llm: 'categoryLlm', api: 'categoryApi', client: 'categoryClient',
-  host: 'categoryHost', settings: 'categorySettings', tools: 'categoryTools', 'harness-other': 'categoryHarnessOther', community: 'categoryCommunity',
+  host: 'categoryHost', settings: 'categorySettings', tools: 'categoryTools', 'harness-other': 'categoryHarnessOther', community: 'categoryCommunity', ungrouped: 'categoryUngrouped',
 }
-const preferredCategoryOrder = ['cordis', 'core', 'bundle', 'boot', 'session', 'interaction', 'extensions', 'llm', 'api', 'client', 'host', 'settings', 'tools', 'harness-other', 'community']
+const preferredCategoryOrder = ['cordis', 'core', 'bundle', 'boot', 'session', 'interaction', 'extensions', 'llm', 'api', 'client', 'host', 'settings', 'tools', 'harness-other', 'community', 'ungrouped']
 type Feedback = { readonly severity: 'warning' | 'error'; readonly message: string }
 
 function phaseLabel(entry: ManagedPluginEntry, t: PluginManagerTabProps['t']): string {

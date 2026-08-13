@@ -60,7 +60,19 @@ Web API 沿用 Harness 连接层的受信任 Host 判定。能够使用受信任
 
 ## 分类与条目名称
 
-官方 `@deepseek-ai/dsh-*` 包会根据已安装软件包的 `repository.directory` 元数据自动发现工作区分组，因此 Harness 新增或移动软件包时不需要同步发布管理器。只有明确指向官方 `deepseek-ai/deepseek-harness` 仓库的 manifest 才能提供官方分组；元数据缺失或不合法时落入“其他 Harness 插件”。分组默认收起，展开后直接显示 `include`、`timer` 和 `tool-web` 等 Loader 配置名称，不显示导入模块名。组开关只操作可修改条目并跳过受保护基础设施：绿色开启表示全部启用，黄色开启表示混合状态且仍有可关闭条目运行，黄色关闭表示可修改条目均已关闭、但受保护条目仍在运行。
+官方和第三方软件包使用同一套开放的功能分组规则。插件可以在 `package.json` 中声明 `dsh.pluginManager.group`，不同发布者声明相同组 ID 时会进入同一组。未声明时，任何仓库都可以用 `repository.directory` 的 `packages/<组>/<包>` 形式提供尽力而为的回退；元数据缺失或不合法时进入“未分组”。组 ID 只允许小写字母、数字、点、下划线和连字符。丰富的 `dsh-plugin.json` 独立清单与详情页明确留到后续版本设计。
+
+```json
+{
+  "dsh": {
+    "pluginManager": {
+      "group": "llm"
+    }
+  }
+}
+```
+
+分组默认收起，展开后直接显示 `include`、`timer` 和 `tool-web` 等 Loader 配置名称，不显示导入模块名。组开关只操作可修改条目并跳过受保护基础设施：绿色表示全部启用，黄色表示部分启用。
 
 ## 开发与路线图
 

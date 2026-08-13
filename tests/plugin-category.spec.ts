@@ -14,27 +14,34 @@ async function installManifest(name: string, manifest: object): Promise<string> 
 }
 
 describe('pluginCategory', () => {
-  it('discovers the official Harness workspace group from installed metadata', async () => {
+  it('prefers an explicit functional group over repository layout', async () => {
     const baseUrl = await installManifest('@deepseek-ai/dsh-fixture', {
+      dsh: { pluginManager: { group: 'llm' } },
       repository: {
         type: 'git',
         url: 'git+https://github.com/deepseek-ai/deepseek-harness.git',
         directory: 'packages/core/fixture',
       },
     })
-    expect(pluginCategory('@deepseek-ai/dsh-fixture', baseUrl)).toBe('core')
+    expect(pluginCategory('@deepseek-ai/dsh-fixture', baseUrl)).toBe('llm')
   })
 
-  it('keeps missing or non-Harness metadata out of official groups', async () => {
+  it('infers packages/<group>/<package> for official and third-party repositories', async () => {
     const thirdParty = await installManifest('@deepseek-ai/dsh-third-party', {
       repository: { url: 'https://github.com/example/project', directory: 'packages/core/plugin' },
     })
-    const missingDirectory = await installManifest('@deepseek-ai/dsh-missing-directory', {
-      repository: { url: 'https://github.com/deepseek-ai/deepseek-harness' },
+    const community = await installManifest('community-plugin', {
+      repository: { url: 'https://github.com/example/community', directory: 'packages/tools/plugin' },
     })
-    expect(pluginCategory('@deepseek-ai/dsh-third-party', thirdParty)).toBe('harness-other')
-    expect(pluginCategory('@deepseek-ai/dsh-missing-directory', missingDirectory)).toBe('harness-other')
-    expect(pluginCategory('local-plugin', thirdParty)).toBe('community')
-    expect(pluginCategory('cordis:include', thirdParty)).toBe('cordis')
+    expect(pluginCategory('@deepseek-ai/dsh-third-party', thirdParty)).toBe('core')
+    expect(pluginCategory('community-plugin', community)).toBe('tools')
+  })
+
+  it('falls back to ungrouped for missing or invalid metadata', async () => {
+    const missing = await installManifest('missing-plugin', { repository: { url: 'https://github.com/example/project' } })
+    const invalid = await installManifest('invalid-plugin', { dsh: { pluginManager: { group: 'Not a group' } } })
+    expect(pluginCategory('missing-plugin', missing)).toBe('ungrouped')
+    expect(pluginCategory('invalid-plugin', invalid)).toBe('ungrouped')
+    expect(pluginCategory('cordis:include', missing)).toBe('cordis')
   })
 })
