@@ -1,6 +1,9 @@
 /** Lifecycle phase of a Cordis Loader entry. */
 export type PluginPhase = 'pending' | 'loading' | 'active' | 'failed' | 'unloading' | null
 
+/** Product package group or external plugin origin shown by the Web UI. */
+export type PluginCategory = string
+
 /** One managed non-group Loader entry. */
 export interface ManagedPluginEntry {
   /** Stable runtime entry id, including nested group prefixes. */
@@ -11,6 +14,8 @@ export interface ManagedPluginEntry {
   readonly moduleName: string
   /** Package-like root used for grouping in the Web UI. */
   readonly packageName: string
+  /** Harness workspace package group, or an external origin group. */
+  readonly category: PluginCategory
   /** Effective enablement, including disabled ancestors. */
   readonly enabled: boolean
   /** Current root Fiber phase, or null when no live Fiber exists. */
@@ -36,7 +41,7 @@ export interface MutationItem {
   /** Requested runtime entry id. */
   readonly entryId: string
   /** Mutation outcome. */
-  readonly status: 'changed' | 'unchanged' | 'skipped' | 'failed'
+  readonly status: 'changed' | 'restart-required' | 'unchanged' | 'skipped' | 'failed'
   /** Failure or skip explanation, otherwise null. */
   readonly message: string | null
 }

@@ -5,12 +5,14 @@ import type { MutationReceipt, PluginManagerSnapshot } from './types.js'
 
 const phase = z.union([z.literal(null), z.literal('pending'), z.literal('loading'), z.literal('active'), z.literal('failed'), z.literal('unloading')])
 const entry = z.object({
-  entryId: z.string(), configId: z.string(), moduleName: z.string(), packageName: z.string(), enabled: z.boolean(), phase,
+  entryId: z.string(), configId: z.string(), moduleName: z.string(), packageName: z.string(),
+  category: z.string(),
+  enabled: z.boolean(), phase,
   protected: z.boolean(), protectionReason: z.string().nullable(), error: z.string().nullable(),
 }).readonly()
 const snapshot = z.object({ profileName: z.string(), entries: z.array(entry).readonly() }).readonly()
 const mutationItem = z.object({
-  entryId: z.string(), status: z.union([z.literal('changed'), z.literal('unchanged'), z.literal('skipped'), z.literal('failed')]), message: z.string().nullable(),
+  entryId: z.string(), status: z.union([z.literal('changed'), z.literal('restart-required'), z.literal('unchanged'), z.literal('skipped'), z.literal('failed')]), message: z.string().nullable(),
 }).readonly()
 const receipt = z.object({ enabled: z.boolean(), items: z.array(mutationItem).readonly(), snapshot }).readonly()
 

@@ -10,7 +10,7 @@ This is a community project, not an official DeepSeek Harness package.
 
 - Inspect the current Cordis Loader entries and lifecycle state.
 - Enable or disable one plugin without deleting its npm package.
-- Collapse entries by their npm package root and enable or disable a package group in one action.
+- Browse official plugins by their Harness workspace group, then collapse entries by npm package root and enable or disable a package in one action.
 - Persist desired state in the active profile's `cordis.patch.yml` so it survives restart.
 - Protect the manager itself and the Web management surface from accidental shutdown.
 - Use Harness's existing trusted-host transport policy; the plugin does not open another server.
@@ -44,9 +44,9 @@ Git installs run the `prepare` build and require explicit build-script authoriza
 
 ## Behavior and safety
 
-"Disable" means stopping a configured Cordis plugin and persisting `disabled: true`; it does not uninstall the dependency. The manager writes only its own marked patch rows and leaves user-authored rows untouched. If a local entry id is ambiguous, the operation fails instead of changing the wrong plugin.
+"Disable" means persisting `disabled: true` and asking Cordis to stop the configured plugin; it does not uninstall the dependency. Ordinary leaf plugins are switched in the running process when their lifecycle permits it. If the desired state is saved but does not settle before the timeout, the UI reports that a profile restart is required instead of treating the saved change as a failure. The manager writes only its own marked patch rows and leaves user-authored rows untouched. If a local entry id is ambiguous, the operation fails instead of changing the wrong plugin.
 
-By default, the manager protects its own entry plus the API gateway, Web server, client runtime, settings shell, client module loader, HMR bridge, and Host runner. Add deployment-specific ids through the Cordis row config:
+By default, the manager protects its own entry and Loader ancestors, the root Include and profile HMR services, plus the API gateway, Web server, client runtime, settings shell, client module loader, connection, locale, and Host runner. These entries keep profile changes and the management page alive and cannot safely be disabled from that page. Add deployment-specific ids through the Cordis row config:
 
 ```yaml
 - id: dsh-plugin-manager
@@ -58,9 +58,9 @@ By default, the manager protects its own entry plus the API gateway, Web server,
 
 The Web API follows the same trusted-host decision as the Harness connection. Anyone allowed to use the trusted Web control plane can invoke plugin enablement, so do not expose the Harness Web server to untrusted networks.
 
-## Package grouping
+## Categories and package grouping
 
-Grouping is based on the imported npm package root: `@scope/package/client` and `@scope/package/host` appear under `@scope/package`. Cordis built-ins such as `cordis:group` remain separate. A Harness `dsh.bundle` is a distribution layer and is not currently retained as runtime provenance, so bundle-origin grouping belongs to a later release.
+Official `@deepseek-ai/dsh-*` packages are categorized by the Harness workspace groups for the supported release, including `core`, `bundle`, `boot`, `session`, `interaction`, `extensions`, and `llm`. Each category then groups imported module entries by npm package root: `@scope/package/client` and `@scope/package/host` appear under `@scope/package`. Cordis infrastructure and community or local packages have separate categories. The `bundle` category describes the package's official workspace ownership; Cordis does not retain which installed profile bundle contributed an individual runtime row.
 
 ## Development
 

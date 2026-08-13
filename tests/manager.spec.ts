@@ -40,11 +40,19 @@ async function emulateHmr(ctx: Context, entryIds: readonly string[], enabled: bo
 
 describe('PluginManager', () => {
   it('projects package groups and protects itself', async () => {
-    const { manager, selfId } = await harness()
+    const { ctx, manager, selfId } = await harness()
+    const includeId = await ctx.loader.create({ name: 'cordis:empty' })
+    ctx.loader.resolve(includeId).options.id = 'include'
+    ctx.loader.resolve(includeId).options.name = 'cordis:include'
+    const timerId = await ctx.loader.create({ name: 'cordis:empty' })
+    ctx.loader.resolve(timerId).options.id = 'timer'
+    ctx.loader.resolve(timerId).options.name = '@deepseek-ai/cordis-plugin-timer'
     const snapshot = manager.list()
     expect(snapshot.profileName).toMatch(/^dsh-plugin-manager-/)
     expect(snapshot.entries.filter(entry => entry.packageName === '@fixture/tool')).toHaveLength(2)
-    expect(snapshot.entries.find(entry => entry.entryId === selfId)).toMatchObject({ protected: true, enabled: true })
+    expect(snapshot.entries.find(entry => entry.entryId === selfId)).toMatchObject({ category: 'community', protected: true, enabled: true })
+    expect(snapshot.entries.find(entry => entry.configId === 'include')).toMatchObject({ category: 'cordis', protected: true })
+    expect(snapshot.entries.find(entry => entry.configId === 'timer')).toMatchObject({ category: 'cordis', protected: true })
   })
 
   it('persists and waits for the Loader state before reporting success', async () => {
@@ -57,7 +65,7 @@ describe('PluginManager', () => {
     expect(await readFile(patch, 'utf8')).toContain('disabled: true')
   })
 
-  it('handles package batches, skips protected entries, and returns failures', async () => {
+  it('handles package batches, skips protected entries, and reports saved states that need restart', async () => {
     const { ctx, manager, featureId, siblingId, selfId } = await harness()
     const hmr = emulateHmr(ctx, [featureId, siblingId], false)
     const receipt = await manager.setPackageEnabled('@fixture/tool', false)
@@ -67,7 +75,7 @@ describe('PluginManager', () => {
     expect(self.items).toEqual([{ entryId: selfId, status: 'skipped', message: 'The plugin manager cannot disable itself.' }])
 
     const failed = await manager.setEnabled(featureId, true)
-    expect(failed.items[0]?.status).toBe('failed')
+    expect(failed.items[0]?.status).toBe('restart-required')
     expect(failed.items[0]?.message).toContain('Timed out')
   })
 

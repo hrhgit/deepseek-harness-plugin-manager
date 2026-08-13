@@ -6,6 +6,7 @@ import type {} from '@deepseek-ai/cordis-plugin-loader'
 import { Remote, TypertRemoteService } from '@deepseek-ai/dsh-typert-protocol'
 import type {} from 'zod'
 import { packageRoot } from './host/package-name.js'
+import { pluginCategory } from './host/plugin-category.js'
 import { profileLocation, writeDesiredState, type ProfileLocation } from './host/profile-patches.js'
 import type {
   ManagedPluginEntry,
@@ -20,12 +21,22 @@ export type * from './types.js'
 const SELF_MODULE = 'dsh-plugin-manager'
 const DEFAULT_PROTECTED_IDS = new Set([
   'api-gateway',
+  'api-remotes',
+  'connection',
   'client-hmr',
+  'client-locale',
   'client-modules',
   'client-runtime',
   'cordis-host-runner',
+  'hmr',
+  'include',
+  'locale',
+  'modules',
+  'runtime',
+  'timer',
   'ui-settings',
   'ui-settings-general',
+  'ui-settings-plugins',
   'webserver',
 ])
 
@@ -101,10 +112,13 @@ export class PluginManager extends TypertRemoteService {
   private project(entry: Entry): ManagedPluginEntry {
     const self = packageRoot(entry.options.name) === SELF_MODULE
     const protectedById = this.protectedIds.has(entry.options.id)
+    const protectsManager = this.isManagerAncestor(entry)
     const protectionReason = self
       ? 'The plugin manager cannot disable itself.'
+      : protectsManager
+        ? 'This entry owns the plugin manager lifecycle.'
       : protectedById
-        ? 'This entry is required by the Web management surface.'
+        ? 'This entry is required by profile reload or the Web management surface.'
         : null
     const fiber = entry.fiber as (Entry['fiber'] & { error?: unknown }) | undefined
     return {
@@ -112,6 +126,7 @@ export class PluginManager extends TypertRemoteService {
       configId: entry.options.id,
       moduleName: entry.options.name,
       packageName: packageRoot(entry.options.name),
+      category: pluginCategory(packageRoot(entry.options.name)),
       enabled: !entry.disabled,
       phase: fiber === undefined ? null : FIBER_PHASE[fiber.state] ?? null,
       protected: protectionReason !== null,
@@ -128,11 +143,30 @@ export class PluginManager extends TypertRemoteService {
     }
     try {
       await writeDesiredState(this.location, entry.configId, entry.moduleName, enabled)
-      await this.waitFor(entry.entryId, enabled)
-      return { entryId: entry.entryId, status: 'changed', message: null }
     } catch (error) {
       return { entryId: entry.entryId, status: 'failed', message: error instanceof Error ? error.message : String(error) }
     }
+    try {
+      await this.waitFor(entry.entryId, enabled)
+      return { entryId: entry.entryId, status: 'changed', message: null }
+    } catch (error) {
+      return {
+        entryId: entry.entryId,
+        status: 'restart-required',
+        message: `The desired state was saved but did not settle at runtime. Restart the ${this.location.profileName} profile to apply it. ${error instanceof Error ? error.message : String(error)}`,
+      }
+    }
+  }
+
+  private isManagerAncestor(candidate: Entry): boolean {
+    const manager = [...this.ctx.loader.entries()].find(entry => packageRoot(entry.options.name) === SELF_MODULE)
+    if (manager === undefined) return false
+    let ancestor = manager.parent.ctx.fiber.entry
+    while (ancestor !== undefined) {
+      if (ancestor === candidate) return true
+      ancestor = ancestor.parent.ctx.fiber.entry
+    }
+    return false
   }
 
   private hasAmbiguousConfigId(target: ManagedPluginEntry): boolean {

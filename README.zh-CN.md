@@ -10,7 +10,7 @@
 
 - 查看当前 Cordis Loader 条目与生命周期状态。
 - 启用或停用单个插件，不删除其 npm 软件包。
-- 按 npm 包根名折叠条目，并批量启用或停用整组插件。
+- 先按 Harness 官方工作区包组分类，再按 npm 包根名折叠条目，并批量启用或停用整个包。
 - 把目标状态持久化到当前 profile 的 `cordis.patch.yml`，重启后仍然生效。
 - 保护管理器自身及 Web 管理界面的基础插件，避免意外关闭恢复入口。
 - 复用 Harness 现有的受信任 Host 策略，不额外开放服务器端口。
@@ -42,7 +42,7 @@ Git 安装会运行 `prepare`，pnpm 10 及更高版本要求用户明确授权�
 
 ## 行为与安全
 
-界面中的“停用”表示停止已配置的 Cordis 插件并持久化 `disabled: true`，不是卸载 npm 依赖。管理器只维护带自身标记的 patch 行，不改写用户已有行；本地条目 id 存在歧义时会拒绝操作。
+界面中的“停用”表示持久化 `disabled: true` 并请求 Cordis 停止已配置的插件，不是卸载 npm 依赖。普通叶子插件会在其生命周期允许时于当前进程即时切换；如果状态已经保存、但在期限内没有完成切换，界面会提示需要重启当前 profile，而不会把已保存的变更当作失败。管理器只维护带自身标记的 patch 行，不改写用户已有行；本地条目 id 存在歧义时会拒绝操作。
 
 默认保护管理器自身、API 网关、Web 服务器、客户端运行时、设置外壳、客户端模块加载器、HMR 桥和 Host runner。可在管理器配置中补充部署自己的基础条目：
 
@@ -56,9 +56,11 @@ Git 安装会运行 `prepare`，pnpm 10 及更高版本要求用户明确授权�
 
 Web API 沿用 Harness 连接层的受信任 Host 判定。能够使用受信任 Web 控制面的访问者也能启停插件，因此不要把 Harness Web 服务暴露给不可信网络。
 
-## 分组语义
+管理器默认保护自身条目及其 Loader 祖先、根 Include、配置 HMR 服务，以及远程接口、Web 服务、客户端运行时、设置页、模块加载、连接和语言服务。这些条目维持配置刷新和管理页面本身，不能从该页面安全停用。
 
-首版按模块的 npm 包根名分组：`@scope/package/client` 和 `@scope/package/host` 会归到 `@scope/package`；`cordis:group` 等 Cordis 内建模块保持独立。Harness 的 `dsh.bundle` 是分发配置层，目前运行时没有保留其来源信息，因此按组合包来源分组留待后续版本。
+## 分类与分组语义
+
+官方 `@deepseek-ai/dsh-*` 包先按当前兼容 Harness 版本的工作区包组分类，包括 `core`、`bundle`、`boot`、`session`、`interaction`、`extensions` 和 `llm`。每个分类内再按导入模块的 npm 包根名分组：`@scope/package/client` 和 `@scope/package/host` 会归到 `@scope/package`。Cordis 基础设施和社区或本地包各有独立分类。这里的 `bundle` 表示该包在官方仓库中的归属；Cordis 运行时不会保留某个条目最初来自哪个已安装 profile bundle。
 
 ## 开发与路线图
 

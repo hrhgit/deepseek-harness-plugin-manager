@@ -1,6 +1,6 @@
 import { ChevronDown, RefreshCw, Search } from 'lucide-react'
 import { useEffect, useMemo, useState, type ReactNode } from 'react'
-import type { ManagedPluginEntry, MutationReceipt, PluginManagerSnapshot, PluginPhase } from '../types.js'
+import type { ManagedPluginEntry, MutationReceipt, PluginManagerSnapshot, PluginCategory, PluginPhase } from '../types.js'
 import type { LocaleKey } from './locales.js'
 import css from './PluginManagerTab.module.css'
 
@@ -16,6 +16,13 @@ export interface PluginManagerTabProps extends PluginManagerTabApi {
 
 type LoadState = { readonly status: 'loading' } | { readonly status: 'error'; readonly message: string } | { readonly status: 'ready'; readonly snapshot: PluginManagerSnapshot }
 const phaseKeys: Record<Exclude<PluginPhase, null>, LocaleKey> = { pending: 'pending', loading: 'loadingPhase', active: 'active', failed: 'failed', unloading: 'unloading' }
+const categoryKeys: Readonly<Partial<Record<PluginCategory, LocaleKey>>> = {
+  cordis: 'categoryCordis', core: 'categoryCore', bundle: 'categoryBundle', boot: 'categoryBoot', session: 'categorySession',
+  interaction: 'categoryInteraction', extensions: 'categoryExtensions', llm: 'categoryLlm', api: 'categoryApi', client: 'categoryClient',
+  host: 'categoryHost', settings: 'categorySettings', tools: 'categoryTools', 'harness-other': 'categoryHarnessOther', community: 'categoryCommunity',
+}
+const preferredCategoryOrder = ['cordis', 'core', 'bundle', 'boot', 'session', 'interaction', 'extensions', 'llm', 'api', 'client', 'host', 'settings', 'tools', 'harness-other', 'community']
+type Feedback = { readonly severity: 'warning' | 'error'; readonly message: string }
 
 function phaseLabel(entry: ManagedPluginEntry, t: PluginManagerTabProps['t']): string {
   if (!entry.enabled || entry.phase === null) return t('stopped')
@@ -28,7 +35,7 @@ export function PluginManagerTab({ list, setEnabled, setPackageEnabled, t }: Plu
   const [query, setQuery] = useState('')
   const [open, setOpen] = useState<ReadonlySet<string>>(new Set())
   const [busy, setBusy] = useState<ReadonlySet<string>>(new Set())
-  const [failure, setFailure] = useState<ReadonlyMap<string, string>>(new Map())
+  const [feedback, setFeedback] = useState<ReadonlyMap<string, Feedback>>(new Map())
   const [state, setState] = useState<LoadState>({ status: 'loading' })
 
   useEffect(() => {
@@ -39,30 +46,45 @@ export function PluginManagerTab({ list, setEnabled, setPackageEnabled, t }: Plu
     return () => { current = false }
   }, [list, request])
 
-  const groups = useMemo(() => {
+  const sections = useMemo(() => {
     if (state.status !== 'ready') return []
     const normalized = query.trim().toLocaleLowerCase()
-    const map = new Map<string, ManagedPluginEntry[]>()
+    const map = new Map<PluginCategory, Map<string, ManagedPluginEntry[]>>()
     for (const entry of state.snapshot.entries) {
       if (normalized && ![entry.packageName, entry.moduleName, entry.entryId].some(value => value.toLocaleLowerCase().includes(normalized))) continue
-      const entries = map.get(entry.packageName) ?? []
+      const packages = map.get(entry.category) ?? new Map<string, ManagedPluginEntry[]>()
+      const entries = packages.get(entry.packageName) ?? []
       entries.push(entry)
-      map.set(entry.packageName, entries)
+      packages.set(entry.packageName, entries)
+      map.set(entry.category, packages)
     }
-    return [...map.entries()]
+    const categories = [...map.keys()].sort((left, right) => {
+      const leftIndex = preferredCategoryOrder.indexOf(left)
+      const rightIndex = preferredCategoryOrder.indexOf(right)
+      if (leftIndex < 0 && rightIndex < 0) return left.localeCompare(right)
+      if (leftIndex < 0) return 1
+      if (rightIndex < 0) return -1
+      return leftIndex - rightIndex
+    })
+    return categories.flatMap(category => {
+      const packages = map.get(category)
+      return packages === undefined ? [] : [{ category, packages: [...packages.entries()] }]
+    })
   }, [query, state])
 
   const refresh = (): void => { setState({ status: 'loading' }); setRequest(value => value + 1) }
   const run = async (key: string, operation: () => Promise<MutationReceipt>): Promise<void> => {
     setBusy(current => new Set(current).add(key))
-    setFailure(current => { const next = new Map(current); next.delete(key); return next })
+    setFeedback(current => { const next = new Map(current); next.delete(key); return next })
     try {
       const receipt = await operation()
       setState({ status: 'ready', snapshot: receipt.snapshot })
-      const message = receipt.items.filter(item => item.status === 'failed').map(item => item.message).filter(Boolean).join(' ')
-      if (message) setFailure(current => new Map(current).set(key, message))
+      const failed = receipt.items.filter(item => item.status === 'failed').map(item => item.message).filter(Boolean).join(' ')
+      const restart = receipt.items.filter(item => item.status === 'restart-required').map(item => item.message).filter(Boolean).join(' ')
+      if (failed) setFeedback(current => new Map(current).set(key, { severity: 'error', message: failed }))
+      else if (restart) setFeedback(current => new Map(current).set(key, { severity: 'warning', message: restart }))
     } catch {
-      setFailure(current => new Map(current).set(key, t('operationFailed')))
+      setFeedback(current => new Map(current).set(key, { severity: 'error', message: t('operationFailed') }))
     } finally {
       setBusy(current => { const next = new Set(current); next.delete(key); return next })
     }
@@ -78,8 +100,12 @@ export function PluginManagerTab({ list, setEnabled, setPackageEnabled, t }: Plu
     </header>
     <label className={css.search}><Search size={16} aria-hidden="true" /><span className={css.srOnly}>{t('search')}</span><input type="search" value={query} placeholder={t('search')} onChange={event => { setQuery(event.currentTarget.value) }} /></label>
     {state.snapshot.entries.length === 0 ? <p className={css.message}>{t('empty')}</p> : null}
-    {state.snapshot.entries.length > 0 && groups.length === 0 ? <p className={css.message}>{t('emptySearch')}</p> : null}
-    <div className={css.groups}>{groups.map(([packageName, entries]) => {
+    {state.snapshot.entries.length > 0 && sections.length === 0 ? <p className={css.message}>{t('emptySearch')}</p> : null}
+    <div className={css.sections}>{sections.map(section => {
+      const categoryKey = categoryKeys[section.category]
+      return <section className={css.category} key={section.category}>
+      <header className={css.categoryHeader}><h4>{categoryKey === undefined ? section.category : t(categoryKey)}</h4><span>{section.packages.length} {t('packagesCount')}</span></header>
+      <div className={css.groups}>{section.packages.map(([packageName, entries]) => {
       const isOpen = open.has(packageName)
       const mutable = entries.filter(entry => !entry.protected)
       const enabledCount = entries.filter(entry => entry.enabled).length
@@ -92,18 +118,23 @@ export function PluginManagerTab({ list, setEnabled, setPackageEnabled, t }: Plu
           </button>
           <Toggle checked={!targetEnabled} disabled={busy.has(key) || mutable.length === 0} label={targetEnabled ? t('enablePackage') : t('disablePackage')} onChange={() => { void run(key, () => setPackageEnabled(packageName, targetEnabled)) }} />
         </div>
-        {failure.has(key) ? <p className={css.inlineError} role="alert">{failure.get(key)}</p> : null}
+        {feedback.has(key) ? <FeedbackView feedback={feedback.get(key)!} /> : null}
         {isOpen ? <ul className={css.entries}>{entries.map(entry => {
           const entryKey = `entry:${entry.entryId}`
           return <li key={entry.entryId}>
-            <div className={css.entryText}><strong title={entry.moduleName}>{entry.moduleName}</strong><span data-phase={entry.phase ?? 'stopped'}>{phaseLabel(entry, t)}</span><code>{entry.entryId}</code>{entry.protected ? <small title={entry.protectionReason ?? undefined}>{t('protected')}</small> : null}</div>
+            <div className={css.entryText}><strong title={entry.moduleName}>{entry.moduleName}</strong><span data-phase={entry.phase ?? 'stopped'}>{phaseLabel(entry, t)}</span><code>{entry.entryId}</code><small title={entry.protectionReason ?? undefined}>{entry.protected ? t('protected') : t('runtimeSwitch')}</small></div>
             <Toggle checked={entry.enabled} disabled={entry.protected || busy.has(entryKey)} label={`${entry.moduleName}: ${entry.enabled ? t('disableEntry') : t('enableEntry')}`} onChange={() => { void run(entryKey, () => setEnabled(entry.entryId, !entry.enabled)) }} />
-            {failure.has(entryKey) ? <p className={css.inlineError} role="alert">{failure.get(entryKey)}</p> : null}
+            {feedback.has(entryKey) ? <FeedbackView feedback={feedback.get(entryKey)!} /> : null}
           </li>
         })}</ul> : null}
       </article>
+    })}</div></section>
     })}</div>
   </section>
+}
+
+function FeedbackView({ feedback }: { feedback: Feedback }): ReactNode {
+  return <p className={css.inlineFeedback} data-severity={feedback.severity} role={feedback.severity === 'error' ? 'alert' : 'status'}>{feedback.message}</p>
 }
 
 function Toggle({ checked, disabled, label, onChange }: { checked: boolean; disabled: boolean; label: string; onChange: () => void }): ReactNode {

@@ -11,9 +11,10 @@ const t = (key: LocaleKey): string => en[key]
 const snapshot: PluginManagerSnapshot = {
   profileName: 'web',
   entries: [
-    { entryId: 'tool-client', configId: 'tool-client', moduleName: '@fixture/tool/client', packageName: '@fixture/tool', enabled: true, phase: 'active', protected: false, protectionReason: null, error: null },
-    { entryId: 'tool-host', configId: 'tool-host', moduleName: '@fixture/tool/host', packageName: '@fixture/tool', enabled: false, phase: null, protected: false, protectionReason: null, error: null },
-    { entryId: 'manager', configId: 'manager', moduleName: 'dsh-plugin-manager', packageName: 'dsh-plugin-manager', enabled: true, phase: 'active', protected: true, protectionReason: 'self', error: null },
+    { entryId: 'tool-client', configId: 'tool-client', moduleName: '@fixture/tool/client', packageName: '@fixture/tool', category: 'community', enabled: true, phase: 'active', protected: false, protectionReason: null, error: null },
+    { entryId: 'tool-host', configId: 'tool-host', moduleName: '@fixture/tool/host', packageName: '@fixture/tool', category: 'community', enabled: false, phase: null, protected: false, protectionReason: null, error: null },
+    { entryId: 'manager', configId: 'manager', moduleName: 'dsh-plugin-manager', packageName: 'dsh-plugin-manager', category: 'community', enabled: true, phase: 'active', protected: true, protectionReason: 'self', error: null },
+    { entryId: 'session', configId: 'session', moduleName: '@deepseek-ai/dsh-session-persistence', packageName: '@deepseek-ai/dsh-session-persistence', category: 'session', enabled: true, phase: 'active', protected: false, protectionReason: null, error: null },
   ],
 }
 
@@ -35,6 +36,8 @@ describe('PluginManagerTab', () => {
   it('groups, searches, expands, and protects entries', async () => {
     render(<PluginManagerTab {...props()} />)
     expect(await screen.findByText('@fixture/tool')).toBeTruthy()
+    expect(screen.getByText(en.categorySession)).toBeTruthy()
+    expect(screen.getByText(en.categoryCommunity)).toBeTruthy()
     expect(screen.getByText('1/2 enabled')).toBeTruthy()
     fireEvent.click(screen.getByRole('button', { name: /@fixture\/tool/ }))
     expect(screen.getByText('@fixture/tool/client')).toBeTruthy()
@@ -73,6 +76,20 @@ describe('PluginManagerTab', () => {
     await screen.findByText('@fixture/tool')
     fireEvent.click(screen.getByRole('checkbox', { name: en.enablePackage }))
     expect((await screen.findByRole('alert')).textContent).toContain('HMR rejected the patch.')
+  })
+
+  it('shows a restart-required result as a non-error status', async () => {
+    const setPackageEnabled = vi.fn(async (): Promise<MutationReceipt> => ({
+      enabled: true,
+      items: [{ entryId: 'tool-host', status: 'restart-required', message: en.restartRequired }],
+      snapshot,
+    }))
+    render(<PluginManagerTab {...props({ setPackageEnabled })} />)
+    await screen.findByText('@fixture/tool')
+    fireEvent.click(screen.getByRole('checkbox', { name: en.enablePackage }))
+    const status = await screen.findByRole('status')
+    expect(status.textContent).toContain(en.restartRequired)
+    expect(screen.queryByRole('alert')).toBeNull()
   })
 
   it('ignores a late list result after unmount', async () => {
