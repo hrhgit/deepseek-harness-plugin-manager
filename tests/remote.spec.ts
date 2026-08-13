@@ -2,9 +2,9 @@ import { describe, expect, it } from 'vitest'
 import { TYPERT, TYPERT_REMOTE } from '../src/remote.js'
 
 describe('plugin manager Remote contribution', () => {
-  it('publishes the same three strict descriptors to Host and Client faces', () => {
+  it('publishes the same four strict descriptors to Host and Client faces', () => {
     expect(TYPERT_REMOTE.descriptors.map(item => `${item.namespace}/${item.method}`)).toEqual([
-      'pluginManager/list', 'pluginManager/setEnabled', 'pluginManager/setPackageEnabled',
+      'pluginManager/list', 'pluginManager/setEnabled', 'pluginManager/setCategoryEnabled', 'pluginManager/setPackageEnabled',
     ])
     expect(TYPERT.invocations).toBe(TYPERT_REMOTE.descriptors)
     for (const descriptor of TYPERT_REMOTE.descriptors) {

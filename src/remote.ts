@@ -27,6 +27,7 @@ const descriptor = (method: string, parameters: readonly ReturnType<typeof param
 const descriptors = [
   descriptor('list', [], snapshot),
   descriptor('setEnabled', [parameter('entryId', z.string()), parameter('enabled', z.boolean())], receipt),
+  descriptor('setCategoryEnabled', [parameter('category', z.string()), parameter('enabled', z.boolean())], receipt),
   descriptor('setPackageEnabled', [parameter('packageName', z.string()), parameter('enabled', z.boolean())], receipt),
 ] as const
 
@@ -42,12 +43,14 @@ declare module '@deepseek-ai/dsh-typert-protocol' {
   interface TypertRemoteMap {
     'pluginManager/list': () => Promise<RemoteResult<PluginManagerSnapshot>>
     'pluginManager/setEnabled': (entryId: string, enabled: boolean) => Promise<RemoteResult<MutationReceipt>>
+    'pluginManager/setCategoryEnabled': (category: string, enabled: boolean) => Promise<RemoteResult<MutationReceipt>>
     'pluginManager/setPackageEnabled': (packageName: string, enabled: boolean) => Promise<RemoteResult<MutationReceipt>>
   }
   interface TypertRemoteNamespaceMap {
     pluginManager: {
       list: () => Promise<RemoteResult<PluginManagerSnapshot>>
       setEnabled: (entryId: string, enabled: boolean) => Promise<RemoteResult<MutationReceipt>>
+      setCategoryEnabled: (category: string, enabled: boolean) => Promise<RemoteResult<MutationReceipt>>
       setPackageEnabled: (packageName: string, enabled: boolean) => Promise<RemoteResult<MutationReceipt>>
     }
   }

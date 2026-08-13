@@ -1,4 +1,4 @@
-import { RefreshCw, Search } from 'lucide-react'
+import { ChevronDown, RefreshCw, Search } from 'lucide-react'
 import { useEffect, useMemo, useState, type ReactNode } from 'react'
 import type { ManagedPluginEntry, MutationReceipt, PluginManagerSnapshot, PluginCategory, PluginPhase } from '../types.js'
 import type { LocaleKey } from './locales.js'
@@ -7,6 +7,7 @@ import css from './PluginManagerTab.module.css'
 export interface PluginManagerTabApi {
   readonly list: () => Promise<PluginManagerSnapshot>
   readonly setEnabled: (entryId: string, enabled: boolean) => Promise<MutationReceipt>
+  readonly setCategoryEnabled: (category: string, enabled: boolean) => Promise<MutationReceipt>
   readonly setPackageEnabled: (packageName: string, enabled: boolean) => Promise<MutationReceipt>
 }
 
@@ -30,9 +31,10 @@ function phaseLabel(entry: ManagedPluginEntry, t: PluginManagerTabProps['t']): s
 }
 
 /** Searchable plugin management view grouped by Harness category. */
-export function PluginManagerTab({ list, setEnabled, t }: PluginManagerTabProps): ReactNode {
+export function PluginManagerTab({ list, setEnabled, setCategoryEnabled, t }: PluginManagerTabProps): ReactNode {
   const [request, setRequest] = useState(0)
   const [query, setQuery] = useState('')
+  const [open, setOpen] = useState<ReadonlySet<string>>(new Set())
   const [busy, setBusy] = useState<ReadonlySet<string>>(new Set())
   const [feedback, setFeedback] = useState<ReadonlyMap<string, Feedback>>(new Map())
   const [state, setState] = useState<LoadState>({ status: 'loading' })
@@ -100,16 +102,32 @@ export function PluginManagerTab({ list, setEnabled, t }: PluginManagerTabProps)
     {state.snapshot.entries.length > 0 && sections.length === 0 ? <p className={css.message}>{t('emptySearch')}</p> : null}
     <div className={css.sections}>{sections.map(section => {
       const categoryKey = categoryKeys[section.category]
-      return <section className={css.category} key={section.category}>
-      <header className={css.categoryHeader}><h4>{categoryKey === undefined ? section.category : t(categoryKey)}</h4><span>{section.entries.length} {t('entriesCount')}</span></header>
-      <ul className={css.entries}>{section.entries.map(entry => {
+      const isOpen = query.trim() !== '' || open.has(section.category)
+      const mutable = section.entries.filter(entry => !entry.protected)
+      const mutableEnabled = mutable.filter(entry => entry.enabled).length
+      const enabledCount = section.entries.filter(entry => entry.enabled).length
+      const checked = mutableEnabled > 0
+      const partial = enabledCount > 0 && enabledCount < section.entries.length
+      const protectedOnly = mutableEnabled === 0 && enabledCount > 0
+      const targetEnabled = mutableEnabled === 0
+      const categoryBusyKey = `category:${section.category}`
+      const categoryLabel = categoryKey === undefined ? section.category : t(categoryKey)
+      return <section className={css.category} key={section.category} data-open={isOpen || undefined}>
+      <header className={css.categoryHeader}>
+        <button className={css.categoryExpand} type="button" aria-expanded={isOpen} onClick={() => { setOpen(current => { const next = new Set(current); next.has(section.category) ? next.delete(section.category) : next.add(section.category); return next }) }}>
+          <ChevronDown size={16} aria-hidden="true" /><span><h4>{categoryLabel}</h4><small>{enabledCount}/{section.entries.length}</small></span>
+        </button>
+        <Toggle checked={checked} warning={partial || protectedOnly} disabled={mutable.length === 0 || busy.has(categoryBusyKey)} label={`${categoryLabel}: ${targetEnabled ? t('enableCategory') : t('disableCategory')}`} onChange={() => { void run(categoryBusyKey, () => setCategoryEnabled(section.category, targetEnabled)) }} />
+      </header>
+      {feedback.has(categoryBusyKey) ? <FeedbackView feedback={feedback.get(categoryBusyKey)!} /> : null}
+      {isOpen ? <ul className={css.entries}>{section.entries.map(entry => {
           const entryKey = `entry:${entry.entryId}`
           return <li key={entry.entryId}>
             <div className={css.entryText}><strong>{entry.configId}</strong><span data-phase={entry.phase ?? 'stopped'}>{phaseLabel(entry, t)}</span><small title={entry.protectionReason ?? undefined}>{entry.protected ? t('protected') : t('runtimeSwitch')}</small></div>
             <Toggle checked={entry.enabled} disabled={entry.protected || busy.has(entryKey)} label={`${entry.configId}: ${entry.enabled ? t('disableEntry') : t('enableEntry')}`} onChange={() => { void run(entryKey, () => setEnabled(entry.entryId, !entry.enabled)) }} />
             {feedback.has(entryKey) ? <FeedbackView feedback={feedback.get(entryKey)!} /> : null}
           </li>
-        })}</ul></section>
+        })}</ul> : null}</section>
     })}</div>
   </section>
 }
@@ -118,6 +136,6 @@ function FeedbackView({ feedback }: { feedback: Feedback }): ReactNode {
   return <p className={css.inlineFeedback} data-severity={feedback.severity} role={feedback.severity === 'error' ? 'alert' : 'status'}>{feedback.message}</p>
 }
 
-function Toggle({ checked, disabled, label, onChange }: { checked: boolean; disabled: boolean; label: string; onChange: () => void }): ReactNode {
-  return <label className={css.switch} title={label}><input type="checkbox" checked={checked} disabled={disabled} aria-label={label} onChange={onChange} /><span aria-hidden="true" /></label>
+function Toggle({ checked, warning = false, disabled, label, onChange }: { checked: boolean; warning?: boolean; disabled: boolean; label: string; onChange: () => void }): ReactNode {
+  return <label className={css.switch} data-warning={warning || undefined} title={label}><input type="checkbox" checked={checked} disabled={disabled} aria-label={label} onChange={onChange} /><span aria-hidden="true" /></label>
 }

@@ -97,6 +97,18 @@ export class PluginManager extends TypertRemoteService {
     })
   }
 
+  /** Persist and apply all mutable entries from one Harness category. */
+  @Remote('setCategoryEnabled')
+  async setCategoryEnabled(category: string, enabled: boolean): Promise<MutationReceipt> {
+    return await this.serialize(async () => {
+      const targets = this.list().entries.filter(entry => entry.category === category)
+      if (targets.length === 0) throw new Error(`unknown plugin category ${JSON.stringify(category)}`)
+      const items: MutationItem[] = []
+      for (const target of targets) items.push(await this.change(target, enabled))
+      return { enabled, items, snapshot: this.list() }
+    })
+  }
+
   /** Persist and apply all mutable entries from one package-like group. */
   @Remote('setPackageEnabled')
   async setPackageEnabled(packageName: string, enabled: boolean): Promise<MutationReceipt> {

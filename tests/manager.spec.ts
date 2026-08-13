@@ -79,6 +79,18 @@ describe('PluginManager', () => {
     expect(failed.items[0]?.message).toContain('Timed out')
   })
 
+  it('changes a category while skipping its protected entries', async () => {
+    const { ctx, manager, featureId, siblingId, selfId } = await harness()
+    const hmr = emulateHmr(ctx, [featureId, siblingId], false)
+    const receipt = await manager.setCategoryEnabled('community', false)
+    await hmr
+    expect(receipt.items).toEqual([
+      { entryId: featureId, status: 'changed', message: null },
+      { entryId: siblingId, status: 'changed', message: null },
+      { entryId: selfId, status: 'skipped', message: 'The plugin manager cannot disable itself.' },
+    ])
+  })
+
   it('serializes concurrent mutations', async () => {
     const { ctx, manager, featureId, siblingId } = await harness()
     const firstHmr = emulateHmr(ctx, [featureId], false)

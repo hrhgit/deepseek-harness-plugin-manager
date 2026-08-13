@@ -20,6 +20,7 @@ export async function apply(ctx: ClientContext): Promise<() => Promise<void>> {
     const api: PluginManagerTabApi = {
       list: async () => unwrap(await scope.remote.pluginManager.list()),
       setEnabled: async (entryId, enabled) => unwrap(await scope.remote.pluginManager.setEnabled(entryId, enabled)),
+      setCategoryEnabled: async (category, enabled) => unwrap(await scope.remote.pluginManager.setCategoryEnabled(category, enabled)),
       setPackageEnabled: async (packageName, enabled) => unwrap(await scope.remote.pluginManager.setPackageEnabled(packageName, enabled)),
     }
     scope.slots.inject('settings.plugins.tab', () => scope.slots.register({
