@@ -3,10 +3,10 @@
 .toolbar h3, .toolbar p, .message, .inlineFeedback { margin: 0; }
 .toolbar h3 { font-size: 14px; line-height: 20px; font-weight: 600; letter-spacing: 0; }
 .toolbar p { margin-top: 2px; color: var(--dsw-alias-label-tertiary); font-size: 12px; line-height: 18px; }
-.toolbar code, .entryText code { font-family: var(--ds-font-family-code); }
+.toolbar code { font-family: var(--ds-font-family-code); }
 .iconButton { display: inline-grid; place-items: center; width: 32px; height: 32px; flex: none; border: 1px solid var(--dsw-alias-border-l2); border-radius: 6px; background: transparent; color: var(--dsw-alias-label-secondary); cursor: pointer; }
 .iconButton:hover { background: var(--dsw-alias-interactive-bg-hover); color: var(--dsw-alias-label-primary); }
-.iconButton:focus-visible, .expand:focus-visible, .error button:focus-visible { outline: 2px solid var(--dsw-alias-state-business-primary); outline-offset: 2px; }
+.iconButton:focus-visible, .error button:focus-visible { outline: 2px solid var(--dsw-alias-state-business-primary); outline-offset: 2px; }
 .search { position: relative; display: flex; align-items: center; color: var(--dsw-alias-label-tertiary); }
 .search > svg { position: absolute; left: 11px; pointer-events: none; }
 .search input { box-sizing: border-box; width: 100%; height: 36px; border: 1px solid var(--dsw-alias-border-l2); border-radius: 7px; padding: 0 12px 0 35px; outline: none; background: var(--dsw-alias-bg-layer-1); color: var(--dsw-alias-label-primary); font: inherit; font-size: 13px; }
@@ -16,26 +16,14 @@
 .categoryHeader { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 0 2px; }
 .categoryHeader h4 { margin: 0; color: var(--dsw-alias-label-primary); font-size: 12px; line-height: 18px; font-weight: 600; }
 .categoryHeader span { color: var(--dsw-alias-label-tertiary); font-size: 10px; line-height: 16px; }
-.groups { display: flex; flex-direction: column; gap: 7px; }
-.group { overflow: hidden; border: 1px solid var(--dsw-alias-border-l2); border-radius: 7px; background: var(--dsw-alias-bg-layer-3); }
-.group[data-open='true'] { border-color: var(--dsw-alias-border-l1); }
-.groupHeader { display: grid; grid-template-columns: minmax(0, 1fr) 38px; align-items: center; gap: 10px; min-height: 56px; padding: 0 14px 0 4px; }
-.expand { display: flex; align-items: center; gap: 8px; min-width: 0; min-height: 54px; border: 0; padding: 5px 8px; background: transparent; color: inherit; text-align: left; cursor: pointer; }
-.expand:hover { color: var(--dsw-alias-state-business-primary); }
-.expand > svg { flex: none; color: var(--dsw-alias-label-tertiary); transition: transform 140ms var(--ds-ease-in-out); }
-.group[data-open='true'] .expand > svg { transform: rotate(180deg); }
-.expand > span { display: grid; min-width: 0; }
-.expand strong { overflow: hidden; font-size: 13px; line-height: 20px; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
-.expand small { color: var(--dsw-alias-label-tertiary); font-size: 11px; line-height: 17px; }
-.entries { margin: 0; padding: 0; border-top: 1px solid var(--dsw-alias-border-l2); list-style: none; background: var(--dsw-alias-bg-module-platform); }
-.entries li { display: grid; grid-template-columns: minmax(0, 1fr) 38px; align-items: center; gap: 10px; min-height: 58px; padding: 8px 14px 8px 38px; border-bottom: 1px solid var(--dsw-alias-border-l2); }
+.entries { overflow: hidden; margin: 0; padding: 0; border: 1px solid var(--dsw-alias-border-l2); border-radius: 7px; list-style: none; background: var(--dsw-alias-bg-layer-3); }
+.entries li { display: grid; grid-template-columns: minmax(0, 1fr) 38px; align-items: center; gap: 10px; min-height: 58px; padding: 8px 14px; border-bottom: 1px solid var(--dsw-alias-border-l2); }
 .entries li:last-child { border-bottom: 0; }
 .entryText { display: grid; grid-template-columns: minmax(0, auto) auto 1fr; align-items: baseline; gap: 3px 9px; min-width: 0; }
 .entryText strong { min-width: 0; overflow: hidden; font-size: 12px; line-height: 18px; font-weight: 500; text-overflow: ellipsis; white-space: nowrap; }
 .entryText > span { color: var(--dsw-alias-label-tertiary); font-size: 11px; line-height: 17px; white-space: nowrap; }
 .entryText > span[data-phase='active'] { color: var(--dsw-alias-state-success-primary); }
 .entryText > span[data-phase='failed'] { color: var(--dsw-alias-state-error-primary); }
-.entryText code { grid-column: 1 / -1; overflow-wrap: anywhere; color: var(--dsw-alias-label-tertiary); font-size: 10px; line-height: 15px; }
 .entryText small { grid-column: 1 / -1; width: max-content; border-radius: 4px; padding: 1px 5px; background: var(--dsw-alias-bg-layer-1); color: var(--dsw-alias-label-tertiary); font-size: 10px; line-height: 15px; }
 .switch { position: relative; display: inline-flex; width: 34px; height: 20px; flex: none; }
 .switch input { position: absolute; width: 1px; height: 1px; opacity: 0; }
@@ -53,15 +41,11 @@
 .error small { display: block; margin-top: 2px; color: var(--dsw-alias-label-tertiary); font: inherit; font-size: 11px; }
 .error button { border: 1px solid var(--dsw-alias-border-l2); border-radius: 6px; padding: 4px 10px; background: transparent; color: var(--dsw-alias-label-primary); font: inherit; cursor: pointer; }
 .srOnly { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-@media (prefers-reduced-motion: reduce) { .expand > svg, .switch span, .switch span::after { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .switch span, .switch span::after { transition: none; } }
 @media (max-width: 560px) {
   .manager { gap: 9px; }
   .toolbar { align-items: flex-start; gap: 6px; }
   .toolbar p { overflow-wrap: anywhere; }
-  .groupHeader { grid-template-columns: minmax(0, 1fr); gap: 0; padding: 5px 8px; }
-  .expand { min-height: 42px; padding: 3px 0; }
-  .expand strong { overflow: visible; overflow-wrap: anywhere; text-overflow: clip; white-space: normal; }
-  .groupHeader > .switch { justify-self: end; margin: 2px 0; }
   .entries li { grid-template-columns: minmax(0, 1fr); padding: 8px; }
   .entries li > .switch { justify-self: end; }
   .entryText { grid-template-columns: minmax(0, 1fr); }

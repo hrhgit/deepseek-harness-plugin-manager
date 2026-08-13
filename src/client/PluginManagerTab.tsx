@@ -1,4 +1,4 @@
-import { ChevronDown, RefreshCw, Search } from 'lucide-react'
+import { RefreshCw, Search } from 'lucide-react'
 import { useEffect, useMemo, useState, type ReactNode } from 'react'
 import type { ManagedPluginEntry, MutationReceipt, PluginManagerSnapshot, PluginCategory, PluginPhase } from '../types.js'
 import type { LocaleKey } from './locales.js'
@@ -29,11 +29,10 @@ function phaseLabel(entry: ManagedPluginEntry, t: PluginManagerTabProps['t']): s
   return t(phaseKeys[entry.phase])
 }
 
-/** Searchable package-grouped plugin management view. */
-export function PluginManagerTab({ list, setEnabled, setPackageEnabled, t }: PluginManagerTabProps): ReactNode {
+/** Searchable plugin management view grouped by Harness category. */
+export function PluginManagerTab({ list, setEnabled, t }: PluginManagerTabProps): ReactNode {
   const [request, setRequest] = useState(0)
   const [query, setQuery] = useState('')
-  const [open, setOpen] = useState<ReadonlySet<string>>(new Set())
   const [busy, setBusy] = useState<ReadonlySet<string>>(new Set())
   const [feedback, setFeedback] = useState<ReadonlyMap<string, Feedback>>(new Map())
   const [state, setState] = useState<LoadState>({ status: 'loading' })
@@ -49,14 +48,12 @@ export function PluginManagerTab({ list, setEnabled, setPackageEnabled, t }: Plu
   const sections = useMemo(() => {
     if (state.status !== 'ready') return []
     const normalized = query.trim().toLocaleLowerCase()
-    const map = new Map<PluginCategory, Map<string, ManagedPluginEntry[]>>()
+    const map = new Map<PluginCategory, ManagedPluginEntry[]>()
     for (const entry of state.snapshot.entries) {
-      if (normalized && ![entry.packageName, entry.moduleName, entry.entryId].some(value => value.toLocaleLowerCase().includes(normalized))) continue
-      const packages = map.get(entry.category) ?? new Map<string, ManagedPluginEntry[]>()
-      const entries = packages.get(entry.packageName) ?? []
+      if (normalized && !entry.configId.toLocaleLowerCase().includes(normalized)) continue
+      const entries = map.get(entry.category) ?? []
       entries.push(entry)
-      packages.set(entry.packageName, entries)
-      map.set(entry.category, packages)
+      map.set(entry.category, entries)
     }
     const categories = [...map.keys()].sort((left, right) => {
       const leftIndex = preferredCategoryOrder.indexOf(left)
@@ -67,8 +64,8 @@ export function PluginManagerTab({ list, setEnabled, setPackageEnabled, t }: Plu
       return leftIndex - rightIndex
     })
     return categories.flatMap(category => {
-      const packages = map.get(category)
-      return packages === undefined ? [] : [{ category, packages: [...packages.entries()] }]
+      const entries = map.get(category)
+      return entries === undefined ? [] : [{ category, entries }]
     })
   }, [query, state])
 
@@ -104,31 +101,15 @@ export function PluginManagerTab({ list, setEnabled, setPackageEnabled, t }: Plu
     <div className={css.sections}>{sections.map(section => {
       const categoryKey = categoryKeys[section.category]
       return <section className={css.category} key={section.category}>
-      <header className={css.categoryHeader}><h4>{categoryKey === undefined ? section.category : t(categoryKey)}</h4><span>{section.packages.length} {t('packagesCount')}</span></header>
-      <div className={css.groups}>{section.packages.map(([packageName, entries]) => {
-      const isOpen = open.has(packageName)
-      const mutable = entries.filter(entry => !entry.protected)
-      const enabledCount = entries.filter(entry => entry.enabled).length
-      const targetEnabled = mutable.some(entry => !entry.enabled)
-      const key = `package:${packageName}`
-      return <article className={css.group} key={packageName} data-open={isOpen || undefined}>
-        <div className={css.groupHeader}>
-          <button className={css.expand} type="button" aria-expanded={isOpen} onClick={() => { setOpen(current => { const next = new Set(current); next.has(packageName) ? next.delete(packageName) : next.add(packageName); return next }) }}>
-            <ChevronDown size={16} aria-hidden="true" /><span><strong>{packageName}</strong><small>{enabledCount}/{entries.length} {t('enabledCount')}</small></span>
-          </button>
-          <Toggle checked={!targetEnabled} disabled={busy.has(key) || mutable.length === 0} label={targetEnabled ? t('enablePackage') : t('disablePackage')} onChange={() => { void run(key, () => setPackageEnabled(packageName, targetEnabled)) }} />
-        </div>
-        {feedback.has(key) ? <FeedbackView feedback={feedback.get(key)!} /> : null}
-        {isOpen ? <ul className={css.entries}>{entries.map(entry => {
+      <header className={css.categoryHeader}><h4>{categoryKey === undefined ? section.category : t(categoryKey)}</h4><span>{section.entries.length} {t('entriesCount')}</span></header>
+      <ul className={css.entries}>{section.entries.map(entry => {
           const entryKey = `entry:${entry.entryId}`
           return <li key={entry.entryId}>
-            <div className={css.entryText}><strong title={entry.moduleName}>{entry.moduleName}</strong><span data-phase={entry.phase ?? 'stopped'}>{phaseLabel(entry, t)}</span><code>{entry.entryId}</code><small title={entry.protectionReason ?? undefined}>{entry.protected ? t('protected') : t('runtimeSwitch')}</small></div>
-            <Toggle checked={entry.enabled} disabled={entry.protected || busy.has(entryKey)} label={`${entry.moduleName}: ${entry.enabled ? t('disableEntry') : t('enableEntry')}`} onChange={() => { void run(entryKey, () => setEnabled(entry.entryId, !entry.enabled)) }} />
+            <div className={css.entryText}><strong>{entry.configId}</strong><span data-phase={entry.phase ?? 'stopped'}>{phaseLabel(entry, t)}</span><small title={entry.protectionReason ?? undefined}>{entry.protected ? t('protected') : t('runtimeSwitch')}</small></div>
+            <Toggle checked={entry.enabled} disabled={entry.protected || busy.has(entryKey)} label={`${entry.configId}: ${entry.enabled ? t('disableEntry') : t('enableEntry')}`} onChange={() => { void run(entryKey, () => setEnabled(entry.entryId, !entry.enabled)) }} />
             {feedback.has(entryKey) ? <FeedbackView feedback={feedback.get(entryKey)!} /> : null}
           </li>
-        })}</ul> : null}
-      </article>
-    })}</div></section>
+        })}</ul></section>
     })}</div>
   </section>
 }

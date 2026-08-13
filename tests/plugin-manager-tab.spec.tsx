@@ -33,60 +33,54 @@ function props(overrides: Partial<PluginManagerTabProps> = {}): PluginManagerTab
 }
 
 describe('PluginManagerTab', () => {
-  it('groups, searches, expands, and protects entries', async () => {
+  it('lists config entry names by category without module names or expansion', async () => {
     render(<PluginManagerTab {...props()} />)
-    expect(await screen.findByText('@fixture/tool')).toBeTruthy()
+    expect(await screen.findByText('tool-client')).toBeTruthy()
     expect(screen.getByText(en.categorySession)).toBeTruthy()
     expect(screen.getByText(en.categoryCommunity)).toBeTruthy()
-    expect(screen.getByText('1/2 enabled')).toBeTruthy()
-    fireEvent.click(screen.getByRole('button', { name: /@fixture\/tool/ }))
-    expect(screen.getByText('@fixture/tool/client')).toBeTruthy()
-    expect(screen.getByText('@fixture/tool/host')).toBeTruthy()
+    expect(screen.queryByText('@fixture/tool/client')).toBeNull()
+    expect(screen.queryByText('@fixture/tool/host')).toBeNull()
+    expect(screen.queryByRole('button', { name: /@fixture\/tool/ })).toBeNull()
 
     fireEvent.change(screen.getByRole('searchbox'), { target: { value: 'manager' } })
-    expect(screen.queryByText('@fixture/tool/client')).toBeNull()
-    fireEvent.click(screen.getByRole('button', { name: /dsh-plugin-manager/ }))
+    expect(screen.queryByText('tool-client')).toBeNull()
     expect(screen.getByText(en.protected)).toBeTruthy()
-    expect(screen.getByRole('checkbox', { name: /dsh-plugin-manager/ })).toHaveProperty('disabled', true)
+    expect(screen.getByRole('checkbox', { name: /manager/ })).toHaveProperty('disabled', true)
   })
 
-  it('runs package and entry mutations and adopts their authoritative snapshots', async () => {
-    const setPackageEnabled = vi.fn(async () => receipt({ ...snapshot, entries: snapshot.entries.map(entry => entry.packageName === '@fixture/tool' ? { ...entry, enabled: true } : entry) }, true))
+  it('runs entry mutations and adopts their authoritative snapshots', async () => {
     const setEnabled = vi.fn(async () => receipt(snapshot, false, 'tool-client'))
-    render(<PluginManagerTab {...props({ setPackageEnabled, setEnabled })} />)
-    await screen.findByText('@fixture/tool')
+    render(<PluginManagerTab {...props({ setEnabled })} />)
+    await screen.findByText('tool-client')
 
-    fireEvent.click(screen.getByRole('checkbox', { name: en.enablePackage }))
-    await waitFor(() => { expect(setPackageEnabled).toHaveBeenCalledWith('@fixture/tool', true) })
-    fireEvent.click(screen.getByRole('button', { name: /@fixture\/tool/ }))
-    fireEvent.click(screen.getByRole('checkbox', { name: '@fixture/tool/client: Disable plugin' }))
+    fireEvent.click(screen.getByRole('checkbox', { name: 'tool-client: Disable plugin' }))
     await waitFor(() => { expect(setEnabled).toHaveBeenCalledWith('tool-client', false) })
   })
 
   it('shows operation failures and retries a failed initial load', async () => {
     const list = vi.fn().mockRejectedValueOnce(new Error('private')).mockResolvedValueOnce(snapshot)
-    const setPackageEnabled = vi.fn(async (): Promise<MutationReceipt> => ({
+    const setEnabled = vi.fn(async (): Promise<MutationReceipt> => ({
       enabled: true,
       items: [{ entryId: 'tool-host', status: 'failed', message: 'HMR rejected the patch.' }],
       snapshot,
     }))
-    render(<PluginManagerTab {...props({ list, setPackageEnabled })} />)
+    render(<PluginManagerTab {...props({ list, setEnabled })} />)
     expect((await screen.findByRole('alert')).textContent).toContain(`${en.error} private`)
     fireEvent.click(screen.getByRole('button', { name: en.retry }))
-    await screen.findByText('@fixture/tool')
-    fireEvent.click(screen.getByRole('checkbox', { name: en.enablePackage }))
+    await screen.findByText('tool-host')
+    fireEvent.click(screen.getByRole('checkbox', { name: 'tool-host: Enable plugin' }))
     expect((await screen.findByRole('alert')).textContent).toContain('HMR rejected the patch.')
   })
 
   it('shows a restart-required result as a non-error status', async () => {
-    const setPackageEnabled = vi.fn(async (): Promise<MutationReceipt> => ({
+    const setEnabled = vi.fn(async (): Promise<MutationReceipt> => ({
       enabled: true,
       items: [{ entryId: 'tool-host', status: 'restart-required', message: en.restartRequired }],
       snapshot,
     }))
-    render(<PluginManagerTab {...props({ setPackageEnabled })} />)
-    await screen.findByText('@fixture/tool')
-    fireEvent.click(screen.getByRole('checkbox', { name: en.enablePackage }))
+    render(<PluginManagerTab {...props({ setEnabled })} />)
+    await screen.findByText('tool-host')
+    fireEvent.click(screen.getByRole('checkbox', { name: 'tool-host: Enable plugin' }))
     const status = await screen.findByRole('status')
     expect(status.textContent).toContain(en.restartRequired)
     expect(screen.queryByRole('alert')).toBeNull()

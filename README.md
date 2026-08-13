@@ -10,7 +10,7 @@ This is a community project, not an official DeepSeek Harness package.
 
 - Inspect the current Cordis Loader entries and lifecycle state.
 - Enable or disable one plugin without deleting its npm package.
-- Browse official plugins by their Harness workspace group, then collapse entries by npm package root and enable or disable a package in one action.
+- Browse official plugins by their Harness workspace group and enable or disable individual Loader entries by their configured names.
 - Persist desired state in the active profile's `cordis.patch.yml` so it survives restart.
 - Protect the manager itself and the Web management surface from accidental shutdown.
 - Use Harness's existing trusted-host transport policy; the plugin does not open another server.
@@ -25,7 +25,7 @@ dsh plugin --profile web add dsh-plugin-manager
 dsh --profile web
 ```
 
-Open **Settings -> Plugins -> Plugin list**. The manager replaces Harness's read-only list while keeping runtime status visible and adding search, package grouping, and enable/disable controls. Removing the package later uses:
+Open **Settings -> Plugins -> Plugin list**. The manager replaces Harness's read-only list while keeping runtime status visible and adding category grouping, search, and enable/disable controls. Removing the package later uses:
 
 ```sh
 dsh plugin --profile web remove dsh-plugin-manager
@@ -58,9 +58,9 @@ By default, the manager protects its own entry and Loader ancestors, the root In
 
 The Web API follows the same trusted-host decision as the Harness connection. Anyone allowed to use the trusted Web control plane can invoke plugin enablement, so do not expose the Harness Web server to untrusted networks.
 
-## Categories and package grouping
+## Categories and entry names
 
-Official `@deepseek-ai/dsh-*` packages are categorized by the Harness workspace groups for the supported release, including `core`, `bundle`, `boot`, `session`, `interaction`, `extensions`, and `llm`. Each category then groups imported module entries by npm package root: `@scope/package/client` and `@scope/package/host` appear under `@scope/package`. Cordis infrastructure and community or local packages have separate categories. The `bundle` category describes the package's official workspace ownership; Cordis does not retain which installed profile bundle contributed an individual runtime row.
+Official `@deepseek-ai/dsh-*` packages are categorized by the Harness workspace groups for the supported release, including `core`, `bundle`, `boot`, `session`, `interaction`, `extensions`, and `llm`. Each category directly lists Loader entries by their configured ids, such as `include`, `timer`, and `tool-web`; imported module specifiers are intentionally hidden. Cordis infrastructure and community or local packages have separate categories. The package-level mutation API remains available for future grouped views, but the current Web UI exposes individual entries only.
 
 ## Development
 

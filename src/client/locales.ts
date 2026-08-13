@@ -9,7 +9,7 @@ export const zh = {
   categoryCordis: 'Cordis 基础设施', categoryCore: '产品 API 主干', categoryBundle: '配置组合层', categoryBoot: '启动',
   categorySession: '会话与持久化', categoryInteraction: '人机交互', categoryExtensions: '扩展与自修改', categoryLlm: '模型',
   categoryApi: '远程接口', categoryClient: '浏览器客户端', categoryHost: '宿主服务', categorySettings: '设置', categoryTools: '工具与命令',
-  categoryHarnessOther: '其他 Harness 插件', categoryCommunity: '社区与本地', packagesCount: '个包',
+  categoryHarnessOther: '其他 Harness 插件', categoryCommunity: '社区与本地', entriesCount: '个插件',
 } as const
 
 export type LocaleKey = keyof typeof zh
@@ -25,5 +25,5 @@ export const en: Record<LocaleKey, string> = {
   categoryCordis: 'Cordis infrastructure', categoryCore: 'Product API spine', categoryBundle: 'Configuration bundles', categoryBoot: 'Boot',
   categorySession: 'Sessions and persistence', categoryInteraction: 'Human interaction', categoryExtensions: 'Extensions and self-modification', categoryLlm: 'Models',
   categoryApi: 'Remote API', categoryClient: 'Browser client', categoryHost: 'Host services', categorySettings: 'Settings', categoryTools: 'Tools and commands',
-  categoryHarnessOther: 'Other Harness plugins', categoryCommunity: 'Community and local', packagesCount: 'packages',
+  categoryHarnessOther: 'Other Harness plugins', categoryCommunity: 'Community and local', entriesCount: 'plugins',
 }

@@ -10,7 +10,7 @@
 
 - 查看当前 Cordis Loader 条目与生命周期状态。
 - 启用或停用单个插件，不删除其 npm 软件包。
-- 先按 Harness 官方工作区包组分类，再按 npm 包根名折叠条目，并批量启用或停用整个包。
+- 先按 Harness 官方工作区包组分类，再按配置名称直接启用或停用单个 Loader 条目。
 - 把目标状态持久化到当前 profile 的 `cordis.patch.yml`，重启后仍然生效。
 - 保护管理器自身及 Web 管理界面的基础插件，避免意外关闭恢复入口。
 - 复用 Harness 现有的受信任 Host 策略，不额外开放服务器端口。
@@ -23,7 +23,7 @@ dsh plugin --profile web add dsh-plugin-manager
 dsh --profile web
 ```
 
-进入“设置 -> 插件 -> 插件列表”。管理器会替代 Harness 原有的只读列表，在保留运行状态信息的同时加入搜索、包分组和启停控制。移除软件包使用：
+进入“设置 -> 插件 -> 插件列表”。管理器会替代 Harness 原有的只读列表，在保留运行状态信息的同时加入分类、搜索和启停控制。移除软件包使用：
 
 ```sh
 dsh plugin --profile web remove dsh-plugin-manager
@@ -58,9 +58,9 @@ Web API 沿用 Harness 连接层的受信任 Host 判定。能够使用受信任
 
 管理器默认保护自身条目及其 Loader 祖先、根 Include、配置 HMR 服务，以及远程接口、Web 服务、客户端运行时、设置页、模块加载、连接和语言服务。这些条目维持配置刷新和管理页面本身，不能从该页面安全停用。
 
-## 分类与分组语义
+## 分类与条目名称
 
-官方 `@deepseek-ai/dsh-*` 包先按当前兼容 Harness 版本的工作区包组分类，包括 `core`、`bundle`、`boot`、`session`、`interaction`、`extensions` 和 `llm`。每个分类内再按导入模块的 npm 包根名分组：`@scope/package/client` 和 `@scope/package/host` 会归到 `@scope/package`。Cordis 基础设施和社区或本地包各有独立分类。这里的 `bundle` 表示该包在官方仓库中的归属；Cordis 运行时不会保留某个条目最初来自哪个已安装 profile bundle。
+官方 `@deepseek-ai/dsh-*` 包先按当前兼容 Harness 版本的工作区包组分类，包括 `core`、`bundle`、`boot`、`session`、`interaction`、`extensions` 和 `llm`。每个分类直接显示 Loader 配置名称，例如 `include`、`timer` 和 `tool-web`，界面不显示导入模块名。Cordis 基础设施和社区或本地包各有独立分类。整包操作接口暂时保留供未来分组视图使用，但当前 Web 界面只提供单个条目操作。
 
 ## 开发与路线图
 
