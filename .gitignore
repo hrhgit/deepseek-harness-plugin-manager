@@ -1,0 +1,7 @@
+node_modules/
+lib/
+coverage/
+*.tgz
+.tmp-*/
+.qa-home/
+.DS_Store

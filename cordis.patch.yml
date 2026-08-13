@@ -1,0 +1,6 @@
+- id: ui-settings-plugin-inventory
+  disabled: true
+
+- insert:
+    - id: dsh-plugin-manager
+      name: dsh-plugin-manager
