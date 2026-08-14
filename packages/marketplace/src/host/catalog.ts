@@ -129,22 +129,34 @@ export class CatalogService {
     const warnings: DiscoveryWarning[] = []
     try {
       const q = [`topic:${this.githubTopic}`, 'archived:false', 'fork:false', normalized].filter(Boolean).join(' ')
-      const url = new URL(`${this.githubApiUrl}/search/repositories`)
-      url.searchParams.set('q', q)
-      url.searchParams.set('sort', 'updated')
-      url.searchParams.set('order', 'desc')
-      url.searchParams.set('per_page', '30')
-      const response = await this.request(url, { headers: { accept: 'application/vnd.github+json' } })
-      if (!response.ok) throw new Error(`GitHub search returned HTTP ${response.status}`)
-      const result = searchSchema.parse(await response.json())
-      const repositories = result.items.filter(item => !item.archived && !item.fork)
-      const settled = await Promise.allSettled(repositories.map(item => this.readRepository(item.full_name, item.default_branch)))
+      const repositories = new Map<string, z.infer<typeof searchSchema>['items'][number]>()
+      for (let page = 1; page <= 10; page += 1) {
+        const url = new URL(`${this.githubApiUrl}/search/repositories`)
+        url.searchParams.set('q', q)
+        url.searchParams.set('sort', 'updated')
+        url.searchParams.set('order', 'desc')
+        url.searchParams.set('per_page', '100')
+        url.searchParams.set('page', String(page))
+        const response = await this.request(url, { headers: { accept: 'application/vnd.github+json' } })
+        if (!response.ok) throw new Error(`GitHub search page ${page} returned HTTP ${response.status}`)
+        const result = searchSchema.parse(await response.json())
+        for (const item of result.items) {
+          if (!item.archived && !item.fork) repositories.set(item.full_name, item)
+        }
+        const hasNext = /(?:^|,)\s*<[^>]+>;\s*rel="next"(?:\s*(?:,|$))/.test(response.headers.get('link') ?? '')
+        if (!hasNext) break
+        if (page === 10) {
+          warnings.push({ source: 'github-topic', code: 'github-results-truncated', message: 'GitHub search exceeded its 1,000 result limit.' })
+        }
+      }
+      const settled = await Promise.allSettled([...repositories.values()].map(item => this.readRepository(item.full_name, item.default_branch)))
       for (const result of settled) {
         if (result.status === 'rejected') {
           warnings.push(this.warning('github-topic', 'candidate-rejected', result.reason))
           continue
         }
-        for (const plugin of result.value) {
+        warnings.push(...result.value.warnings)
+        for (const plugin of result.value.plugins) {
           const existing = this.candidates.get(plugin.packageName)
           if (existing !== undefined && existing.repositoryUrl !== plugin.repositoryUrl) {
             warnings.push({ source: 'github-topic', code: 'candidate-conflict', message: `Conflicting repositories claim ${plugin.packageName}.` })
@@ -163,7 +175,10 @@ export class CatalogService {
     return state
   }
 
-  private async readRepository(fullName: string, branch: string): Promise<readonly MarketplacePlugin[]> {
+  private async readRepository(
+    fullName: string,
+    branch: string,
+  ): Promise<{ readonly plugins: readonly MarketplacePlugin[], readonly warnings: readonly DiscoveryWarning[] }> {
     if (!/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(fullName)) throw new Error(`invalid GitHub repository ${fullName}`)
     const commitResponse = await this.request(`${this.githubApiUrl}/repos/${fullName}/commits/${encodeURIComponent(branch)}`, {
       headers: { accept: 'application/vnd.github+json' },
@@ -172,23 +187,33 @@ export class CatalogService {
     const { sha } = commitSchema.parse(await commitResponse.json())
     const rootUrl = `${this.rawGithubUrl}/${fullName}/${sha}/package.json`
     const root = await this.readJson(rootUrl)
-    const paths = dshCatalogRootSchema.safeParse((root as { dsh?: { catalog?: unknown } }).dsh?.catalog)
-    const manifests = paths.success
-      ? await Promise.all(paths.data.packages.map(async path => ({
+    const catalog = (root as { dsh?: { catalog?: unknown } }).dsh?.catalog
+    const paths = catalog === undefined ? undefined : dshCatalogRootSchema.parse(catalog).packages
+    const manifests = paths === undefined
+      ? [{ label: '.', url: rootUrl }]
+      : paths.map(path => ({
+          label: path,
           url: `${this.rawGithubUrl}/${fullName}/${sha}/${path}/package.json`,
-          value: await this.readJson(`${this.rawGithubUrl}/${fullName}/${sha}/${path}/package.json`),
-        })))
-      : [{ url: rootUrl, value: root }]
+        }))
     const expected = canonicalGithubRepository(`https://github.com/${fullName}`)
-    const plugins: MarketplacePlugin[] = []
-    for (const item of manifests) {
-      const manifest = packageManifestSchema.parse(item.value)
+    const settled = await Promise.allSettled(manifests.map(async item => {
+      const manifest = packageManifestSchema.parse(await this.readJson(item.url))
       const source = catalogPluginFromManifest(manifest, item.url)
       if (source.repositoryUrl !== expected) throw new Error(`${manifest.name} repository does not match ${fullName}`)
-      const hydrated = await this.hydrate(source, 'github-topic')
-      plugins.push(hydrated)
+      return await this.hydrate(source, 'github-topic')
+    }))
+    const plugins: MarketplacePlugin[] = []
+    const warnings: DiscoveryWarning[] = []
+    for (const [index, result] of settled.entries()) {
+      if (result.status === 'fulfilled') {
+        plugins.push(result.value)
+        continue
+      }
+      const label = manifests[index]?.label ?? 'unknown package'
+      const message = result.reason instanceof Error ? result.reason.message : String(result.reason)
+      warnings.push({ source: 'github-topic', code: 'candidate-rejected', message: `${fullName}/${label}: ${message}` })
     }
-    return plugins
+    return { plugins, warnings }
   }
 
   private async hydrateAll(

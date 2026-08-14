@@ -23,14 +23,14 @@ const parameter = (name: string, schema: z.ZodType) => ({
   name, wire: name, source: 'json' as const, codec: strict(`dsh-plugin-marketplace/types#${name}`, schema),
 })
 const descriptor = (method: string, parameters: readonly ReturnType<typeof parameter>[], result: z.ZodType, type: string) => ({
-  id: `dsh-plugin-marketplace#pluginMarketplace/${method}`,
-  service: 'pluginMarketplace', namespace: 'pluginMarketplace', method, invocation: { kind: 'direct' as const }, parameters,
+  id: `dsh-plugin-marketplace#marketplace/${method}`,
+  service: 'marketplace', namespace: 'marketplace', method, invocation: { kind: 'direct' as const }, parameters,
   result: strict(`dsh-plugin-marketplace/types#${type}`, result),
 })
 const descriptors = [
   descriptor('list', [parameter('refresh', z.boolean())], snapshot, 'MarketplaceSnapshot'),
   descriptor('searchGithub', [parameter('query', z.string())], snapshot, 'MarketplaceSnapshot'),
-  descriptor('install', [parameter('packageName', z.string()), parameter('version', z.string())], receipt, 'InstallReceipt'),
+  descriptor('installPlugin', [parameter('packageName', z.string()), parameter('version', z.string())], receipt, 'InstallReceipt'),
 ] as const
 
 export const TYPERT_REMOTE: TypertRemoteContribution = { package: 'dsh-plugin-marketplace', descriptors }
@@ -41,15 +41,15 @@ export const TYPERT = {
 
 declare module '@deepseek-ai/dsh-typert-protocol' {
   interface TypertRemoteMap {
-    'pluginMarketplace/list': (refresh: boolean) => Promise<RemoteResult<MarketplaceSnapshot>>
-    'pluginMarketplace/searchGithub': (query: string) => Promise<RemoteResult<MarketplaceSnapshot>>
-    'pluginMarketplace/install': (packageName: string, version: string) => Promise<RemoteResult<InstallReceipt>>
+    'marketplace/list': (refresh: boolean) => Promise<RemoteResult<MarketplaceSnapshot>>
+    'marketplace/searchGithub': (query: string) => Promise<RemoteResult<MarketplaceSnapshot>>
+    'marketplace/installPlugin': (packageName: string, version: string) => Promise<RemoteResult<InstallReceipt>>
   }
   interface TypertRemoteNamespaceMap {
-    pluginMarketplace: {
+    marketplace: {
       list: (refresh: boolean) => Promise<RemoteResult<MarketplaceSnapshot>>
       searchGithub: (query: string) => Promise<RemoteResult<MarketplaceSnapshot>>
-      install: (packageName: string, version: string) => Promise<RemoteResult<InstallReceipt>>
+      installPlugin: (packageName: string, version: string) => Promise<RemoteResult<InstallReceipt>>
     }
   }
 }

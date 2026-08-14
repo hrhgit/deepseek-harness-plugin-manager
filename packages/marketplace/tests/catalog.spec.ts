@@ -22,6 +22,19 @@ const packageManifest = {
     bundle: { patch: './cordis.patch.yml' },
   },
 }
+const marketplaceManifest = {
+  ...packageManifest,
+  name: 'dsh-plugin-marketplace',
+  repository: { ...packageManifest.repository, directory: 'packages/marketplace' },
+  dsh: {
+    ...packageManifest.dsh,
+    plugin: {
+      ...packageManifest.dsh.plugin,
+      displayName: { 'zh-CN': '插件市场', en: 'Plugin Marketplace' },
+      summary: { 'zh-CN': '发现和安装插件。', en: 'Discover and install plugins.' },
+    },
+  },
+}
 
 describe('marketplace catalog sources', () => {
   let server: Server
@@ -41,16 +54,26 @@ describe('marketplace catalog sources', () => {
         response.end(JSON.stringify({ schemaVersion: 1, plugins: [plugin] })); return
       }
       if (url.pathname === '/github/search/repositories') {
+        if (url.searchParams.get('page') === '1') {
+          response.setHeader('link', `<${origin}/github/search/repositories?page=2>; rel="next"`)
+          response.end(JSON.stringify({ items: [
+            { full_name: 'example/archived-plugin', default_branch: 'main', archived: true, fork: false },
+            { full_name: 'example/forked-plugin', default_branch: 'main', archived: false, fork: true },
+          ] })); return
+        }
         response.end(JSON.stringify({ items: [{ full_name: 'hrhgit/deepseek-harness-plugin-manager', default_branch: 'main', archived: false, fork: false }] })); return
       }
       if (url.pathname === '/github/repos/hrhgit/deepseek-harness-plugin-manager/commits/main') {
         response.end(JSON.stringify({ sha })); return
       }
       if (url.pathname === `/raw/hrhgit/deepseek-harness-plugin-manager/${sha}/package.json`) {
-        response.end(JSON.stringify({ private: true, dsh: { catalog: { schemaVersion: 1, packages: ['packages/manager'] } } })); return
+        response.end(JSON.stringify({ private: true, dsh: { catalog: { schemaVersion: 1, packages: ['packages/manager', 'packages/marketplace'] } } })); return
       }
       if (url.pathname === `/raw/hrhgit/deepseek-harness-plugin-manager/${sha}/packages/manager/package.json`) {
         response.end(JSON.stringify(packageManifest)); return
+      }
+      if (url.pathname === `/raw/hrhgit/deepseek-harness-plugin-manager/${sha}/packages/marketplace/package.json`) {
+        response.end(JSON.stringify(marketplaceManifest)); return
       }
       if (url.pathname === '/npm/dsh-plugin-manager') {
         response.end(JSON.stringify({
@@ -90,12 +113,19 @@ describe('marketplace catalog sources', () => {
     expect(JSON.parse(await readFile(join(directory, 'catalog.json'), 'utf8')).plugins).toHaveLength(1)
   })
 
-  it('discovers a monorepo package from the GitHub topic with pinned commit provenance', async () => {
+  it('keeps valid monorepo packages when an unpublished sibling is rejected', async () => {
     const catalog = service(`${origin}/missing-catalog`)
     const snapshot = await catalog.searchGithub('manager')
     expect(snapshot.plugins).toHaveLength(1)
+    expect(snapshot.plugins[0]?.packageName).toBe('dsh-plugin-manager')
     expect(snapshot.plugins[0]?.sources).toEqual(['github-topic'])
     expect(snapshot.plugins[0]?.manifestUrl).toContain(`/${sha}/packages/manager/package.json`)
+    expect(snapshot.warnings.every(item => !item.message.includes('example/'))).toBe(true)
+    expect(snapshot.warnings).toContainEqual(expect.objectContaining({
+      source: 'github-topic',
+      code: 'candidate-rejected',
+      message: expect.stringContaining('packages/marketplace'),
+    }))
   })
 
   it('falls back to the persistent cache when the catalog source fails', async () => {

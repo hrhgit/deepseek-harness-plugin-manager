@@ -13,12 +13,12 @@ export const inject = ['slots', 'locale', 'remote']
 export async function apply(ctx: ClientContext): Promise<() => Promise<void>> {
   const disposeRemote = await ctx.remote.$mount(remoteContribution)
   const disposeLocale = ctx.locale.register('settings.pluginMarketplace', { zh, en })
-  const feature = ctx.inject(['remote.pluginMarketplace'], (scope: ClientContext) => {
+  const feature = ctx.inject(['remote.marketplace'], (scope: ClientContext) => {
     const t = scope.locale.bind('settings.pluginMarketplace')
     const api: PluginMarketplaceTabApi = {
-      list: async refresh => unwrap(await scope.remote.pluginMarketplace.list(refresh)),
-      searchGithub: async query => unwrap(await scope.remote.pluginMarketplace.searchGithub(query)),
-      install: async (packageName, version) => unwrap(await scope.remote.pluginMarketplace.install(packageName, version)),
+      list: async refresh => unwrap(await scope.remote.marketplace.list(refresh)),
+      searchGithub: async query => unwrap(await scope.remote.marketplace.searchGithub(query)),
+      install: async (packageName, version) => unwrap(await scope.remote.marketplace.installPlugin(packageName, version)),
     }
     scope.slots.inject('settings.plugins.tab', () => scope.slots.register({
       name: 'settings.plugins.tab', id: 'marketplace', order: 0, label: () => t('tab'), locale: 'settings.pluginMarketplace',

@@ -32,7 +32,7 @@ export class PluginMarketplace extends TypertRemoteService {
   private latest = new Map<string, MarketplacePlugin>()
 
   constructor(ctx: Context, config: Config = {}) {
-    super(ctx, 'pluginMarketplace')
+    super(ctx, 'marketplace')
     const baseUrl = ctx.loader.ctx.baseUrl
     if (baseUrl === undefined) throw new Error('dsh-plugin-marketplace requires a file-backed Loader root')
     this.location = profileLocation(baseUrl)
@@ -58,7 +58,7 @@ export class PluginMarketplace extends TypertRemoteService {
     return await this.project(await this.catalog.searchGithub(query))
   }
 
-  @Remote('install')
+  @Remote('installPlugin')
   async install(packageName: string, version: string): Promise<InstallReceipt> {
     const plugin = this.latest.get(packageName)
     if (plugin === undefined || plugin.version !== version) {
