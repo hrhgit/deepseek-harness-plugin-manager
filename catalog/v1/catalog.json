@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-08-14T12:45:00.404Z",
+  "generatedAt": "2026-08-14T12:56:57.210Z",
   "entries": [
     {
       "id": "01Virex/dsh-foxy-jumpscare:.",
@@ -643,10 +643,10 @@
       "license": "MIT",
       "repositoryDirectory": null,
       "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/2472786266-spec/deepseek-hsrness-devkit/07ca7a88e8463837e8797dd088e8c10643956cf1/package.json",
+      "manifestUrl": "https://raw.githubusercontent.com/2472786266-spec/deepseek-hsrness-devkit/500fb18e9fcced05e86e7f1dc5d5194eaa6f79b8/package.json",
       "verification": "rejected",
       "issueCode": "manifest-unavailable",
-      "issue": "https://raw.githubusercontent.com/2472786266-spec/deepseek-hsrness-devkit/07ca7a88e8463837e8797dd088e8c10643956cf1/package.json returned HTTP 404",
+      "issue": "https://raw.githubusercontent.com/2472786266-spec/deepseek-hsrness-devkit/500fb18e9fcced05e86e7f1dc5d5194eaa6f79b8/package.json returned HTTP 404",
       "installable": false
     },
     {
@@ -787,7 +787,7 @@
       "repositoryFullName": "610la/dsh-notification-center",
       "repositoryUrl": "https://github.com/610la/dsh-notification-center",
       "packageName": "@lyhalal/dsh-notification-center",
-      "version": "0.1.11",
+      "version": "0.1.13",
       "displayName": {
         "zh-CN": "@lyhalal/dsh-notification-center",
         "en": "@lyhalal/dsh-notification-center"
@@ -805,7 +805,7 @@
       "license": "MIT",
       "repositoryDirectory": null,
       "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/610la/dsh-notification-center/dc1b7fc9cc81418ff837b50acd6d5ee402e233aa/package.json",
+      "manifestUrl": "https://raw.githubusercontent.com/610la/dsh-notification-center/88d57e7f204c43d053fd9e5db2bea5986172c7bb/package.json",
       "verification": "rejected",
       "issueCode": "package-invalid",
       "issue": "@lyhalal/dsh-notification-center has invalid npm metadata: versions.0.1.0.repository: Invalid input",
@@ -1164,10 +1164,10 @@
       "license": "MIT",
       "repositoryDirectory": null,
       "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/AdamPlatin123/awesome-dsh-plugins/53c2ff9da81a07c19b31f2b8d7e1d88a98eeb94d/package.json",
+      "manifestUrl": "https://raw.githubusercontent.com/AdamPlatin123/awesome-dsh-plugins/08f7ff8d066e2e1371b8e607f7cb2e49fc5778cf/package.json",
       "verification": "rejected",
       "issueCode": "manifest-unavailable",
-      "issue": "https://raw.githubusercontent.com/AdamPlatin123/awesome-dsh-plugins/53c2ff9da81a07c19b31f2b8d7e1d88a98eeb94d/package.json returned HTTP 404",
+      "issue": "https://raw.githubusercontent.com/AdamPlatin123/awesome-dsh-plugins/08f7ff8d066e2e1371b8e607f7cb2e49fc5778cf/package.json returned HTTP 404",
       "installable": false
     },
     {
@@ -1296,35 +1296,35 @@
       "installable": false
     },
     {
-      "id": "Adkid-Zephyr/dsh-liltloom:.",
-      "repositoryFullName": "Adkid-Zephyr/dsh-liltloom",
-      "repositoryUrl": "https://github.com/Adkid-Zephyr/dsh-liltloom",
-      "packageName": "dsh-liltloom",
-      "version": "0.1.0",
+      "id": "Adkid-Zephyr/liltloom:.",
+      "repositoryFullName": "Adkid-Zephyr/liltloom",
+      "repositoryUrl": "https://github.com/Adkid-Zephyr/liltloom",
+      "packageName": "liltloom",
+      "version": "0.2.0",
       "displayName": {
-        "zh-CN": "dsh-liltloom",
-        "en": "dsh-liltloom"
+        "zh-CN": "liltloom",
+        "en": "liltloom"
       },
       "summary": {
-        "zh-CN": "Liltloom — quiet, user-owned writing-style memory for DeepSeek Harness",
-        "en": "Liltloom — quiet, user-owned writing-style memory for DeepSeek Harness"
+        "zh-CN": "Portable, user-owned writing-style memory for AI writing tools",
+        "en": "Portable, user-owned writing-style memory for AI writing tools"
       },
       "category": null,
       "keywords": [
-        "deepseek-harness",
-        "dsh",
-        "dsh-plugin",
         "writing-style",
         "personal-memory",
-        "ai-agent"
+        "ai-plugin",
+        "ai-agent",
+        "deepseek-harness",
+        "dsh-plugin"
       ],
       "license": "MIT",
       "repositoryDirectory": null,
-      "homepage": "https://github.com/Adkid-Zephyr/dsh-liltloom#readme",
-      "manifestUrl": "https://raw.githubusercontent.com/Adkid-Zephyr/dsh-liltloom/714e978f32478489d4ea66d851637175684d2fa3/package.json",
+      "homepage": "https://github.com/Adkid-Zephyr/liltloom#readme",
+      "manifestUrl": "https://raw.githubusercontent.com/Adkid-Zephyr/liltloom/6614f1e610abe1dd82c12e6e17b9dfcf5a542714/package.json",
       "verification": "rejected",
       "issueCode": "package-unpublished",
-      "issue": "dsh-liltloom is not published on npm",
+      "issue": "liltloom is not published on npm",
       "installable": false
     },
     {
@@ -1349,51 +1349,18 @@
       "license": null,
       "repositoryDirectory": null,
       "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/adlternative/dsh-subagent-qoder-cloud/4e9a81867e0bc262d378ea0475c895f5d4dfbf8d/package.json",
+      "manifestUrl": "https://raw.githubusercontent.com/adlternative/dsh-subagent-qoder-cloud/398e3643d04242266240e33d5832b18b860940d1/package.json",
       "verification": "rejected",
       "issueCode": "package-unpublished",
       "issue": "dsh-subagent-qoder-cloud is not published on npm",
       "installable": false
     },
     {
-      "id": "Aeanfx/dsh-plugin-dated-folders:.",
-      "repositoryFullName": "Aeanfx/dsh-plugin-dated-folders",
-      "repositoryUrl": "https://github.com/Aeanfx/dsh-plugin-dated-folders",
-      "packageName": "dsh-plugin-dated-folders",
-      "version": "0.1.1",
-      "displayName": {
-        "zh-CN": "dsh-plugin-dated-folders",
-        "en": "dsh-plugin-dated-folders"
-      },
-      "summary": {
-        "zh-CN": "Tidy by date — every file your agent generates is archived into a YYYY-MM-DD_<topic> folder automatically. One folder per day, zero clutter.",
-        "en": "Tidy by date — every file your agent generates is archived into a YYYY-MM-DD_<topic> folder automatically. One folder per day, zero clutter."
-      },
-      "category": null,
-      "keywords": [
-        "dsh",
-        "deepseek-harness",
-        "cordis",
-        "plugin",
-        "file-organization",
-        "dated-folders",
-        "agent"
-      ],
-      "license": "MIT",
-      "repositoryDirectory": null,
-      "homepage": "https://github.com/Aeanfx/dsh-plugin-dated-folders#readme",
-      "manifestUrl": "https://raw.githubusercontent.com/Aeanfx/dsh-plugin-dated-folders/290c7ae5e87a757a05298f10e3e3ee1c51279af4/package.json",
-      "verification": "unverified",
-      "issueCode": "manifest-invalid",
-      "issue": "dsh: Invalid input: expected object, received undefined",
-      "installable": true
-    },
-    {
       "id": "AHGGG/dsh-side-chat:.",
       "repositoryFullName": "AHGGG/dsh-side-chat",
       "repositoryUrl": "https://github.com/AHGGG/dsh-side-chat",
       "packageName": "@ahggg/dsh-side-chat",
-      "version": "0.1.0-alpha.1",
+      "version": "0.2.0-alpha.1",
       "displayName": {
         "zh-CN": "@ahggg/dsh-side-chat",
         "en": "@ahggg/dsh-side-chat"
@@ -1411,11 +1378,11 @@
       "license": "MIT",
       "repositoryDirectory": null,
       "homepage": "https://github.com/AHGGG/dsh-side-chat#readme",
-      "manifestUrl": "https://raw.githubusercontent.com/AHGGG/dsh-side-chat/f0e7a047b693855c0e63e10a06e8d8855c377b4d/package.json",
-      "verification": "unverified",
-      "issueCode": "manifest-invalid",
-      "issue": "dsh.plugin: Invalid input: expected object, received undefined",
-      "installable": true
+      "manifestUrl": "https://raw.githubusercontent.com/AHGGG/dsh-side-chat/745bb5dd6006f395266ba221ca77e6206d882baf/package.json",
+      "verification": "rejected",
+      "issueCode": "package-unpublished",
+      "issue": "@ahggg/dsh-side-chat@0.2.0-alpha.1 is not published on npm",
+      "installable": false
     },
     {
       "id": "ahren112/ds-image-skin:.",
@@ -2040,11 +2007,11 @@
       "id": "Anionex/dsh-computer-use:.",
       "repositoryFullName": "Anionex/dsh-computer-use",
       "repositoryUrl": "https://github.com/Anionex/dsh-computer-use",
-      "packageName": "@dsh-external/dsh-computer-use",
+      "packageName": "@anionex/dsh-computer-use",
       "version": "0.1.0",
       "displayName": {
-        "zh-CN": "@dsh-external/dsh-computer-use",
-        "en": "@dsh-external/dsh-computer-use"
+        "zh-CN": "@anionex/dsh-computer-use",
+        "en": "@anionex/dsh-computer-use"
       },
       "summary": {
         "zh-CN": "Accessibility-first macOS Computer Use capability for DeepSeek Harness with stale-observation protection, app leases, confirmations, screenshots, and Web diagnostics",
@@ -2062,11 +2029,74 @@
       "license": "MIT",
       "repositoryDirectory": null,
       "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/Anionex/dsh-computer-use/9817dee87463ebf50bc2cdfe0b5a8719c993ed7a/package.json",
-      "verification": "rejected",
-      "issueCode": "package-unpublished",
-      "issue": "@dsh-external/dsh-computer-use is not published on npm",
-      "installable": false
+      "manifestUrl": "https://raw.githubusercontent.com/Anionex/dsh-computer-use/76bfe8607f61945c1cbb84e73976e601100c13a2/package.json",
+      "verification": "unverified",
+      "issueCode": "manifest-invalid",
+      "issue": "dsh.plugin: Invalid input: expected object, received undefined",
+      "installable": true
+    },
+    {
+      "id": "Anionex/dsh-eye-care:.",
+      "repositoryFullName": "Anionex/dsh-eye-care",
+      "repositoryUrl": "https://github.com/Anionex/dsh-eye-care",
+      "packageName": "@anionex/dsh-eye-care",
+      "version": "0.1.0",
+      "displayName": {
+        "zh-CN": "@anionex/dsh-eye-care",
+        "en": "@anionex/dsh-eye-care"
+      },
+      "summary": {
+        "zh-CN": "Warm light, warm dark, and system-aware eye-care themes for DSH Web",
+        "en": "Warm light, warm dark, and system-aware eye-care themes for DSH Web"
+      },
+      "category": null,
+      "keywords": [
+        "deepseek",
+        "deepseek-harness",
+        "eye-care",
+        "theme",
+        "dark-mode",
+        "accessibility"
+      ],
+      "license": "MIT",
+      "repositoryDirectory": null,
+      "homepage": null,
+      "manifestUrl": "https://raw.githubusercontent.com/Anionex/dsh-eye-care/4f87acff00135317134e61a580c86198dad907c2/package.json",
+      "verification": "unverified",
+      "issueCode": "manifest-invalid",
+      "issue": "dsh.plugin: Invalid input: expected object, received undefined",
+      "installable": true
+    },
+    {
+      "id": "Anionex/dsh-suggested-replies:.",
+      "repositoryFullName": "Anionex/dsh-suggested-replies",
+      "repositoryUrl": "https://github.com/Anionex/dsh-suggested-replies",
+      "packageName": "@anionex/dsh-suggested-replies",
+      "version": "0.1.0",
+      "displayName": {
+        "zh-CN": "@anionex/dsh-suggested-replies",
+        "en": "@anionex/dsh-suggested-replies"
+      },
+      "summary": {
+        "zh-CN": "DSH Web plugin that proposes concise next user messages above the composer and inserts a selected reply into the draft without sending it.",
+        "en": "DSH Web plugin that proposes concise next user messages above the composer and inserts a selected reply into the draft without sending it."
+      },
+      "category": null,
+      "keywords": [
+        "deepseek",
+        "deepseek-harness",
+        "suggested-replies",
+        "web",
+        "plugin"
+      ],
+      "license": "MIT",
+      "repositoryDirectory": null,
+      "homepage": null,
+      "manifestUrl": "https://raw.githubusercontent.com/Anionex/dsh-suggested-replies/eb7e41b82ae80d01ae09b6e2641156dc21fdd01e/package.json",
+      "verification": "unverified",
+      "issueCode": "manifest-invalid",
+      "issue": "dsh.plugin: Invalid input: expected object, received undefined",
+      "installable": true
     },
     {
       "id": "Anionex/dsh-turn-rewind:.",
@@ -2257,7 +2287,7 @@
       "license": "MIT",
       "repositoryDirectory": null,
       "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/antinomie1/deepseek-harness-desktop/b5c1779eabf1740e5fe34a9ea861bcec344582dd/package.json",
+      "manifestUrl": "https://raw.githubusercontent.com/antinomie1/deepseek-harness-desktop/ce763e4cf4150d4e46318035158a7f0b592f833e/package.json",
       "verification": "rejected",
       "issueCode": "package-unpublished",
       "issue": "dsh-desktop@0.1.0 is not published on npm",
@@ -2608,40 +2638,6 @@
       "installable": false
     },
     {
-      "id": "AtlasCloudAI/dsh-atlascloud:.",
-      "repositoryFullName": "AtlasCloudAI/dsh-atlascloud",
-      "repositoryUrl": "https://github.com/AtlasCloudAI/dsh-atlascloud",
-      "packageName": "dsh-atlascloud",
-      "version": "0.1.0",
-      "displayName": {
-        "zh-CN": "dsh-atlascloud",
-        "en": "dsh-atlascloud"
-      },
-      "summary": {
-        "zh-CN": "Atlas Cloud skills and opt-in MCP tools for DeepSeek Harness.",
-        "en": "Atlas Cloud skills and opt-in MCP tools for DeepSeek Harness."
-      },
-      "category": null,
-      "keywords": [
-        "atlascloud",
-        "deepseek-harness",
-        "dsh",
-        "dsh-plugin",
-        "agent-skills",
-        "mcp",
-        "image-generation",
-        "video-generation"
-      ],
-      "license": "MIT",
-      "repositoryDirectory": null,
-      "homepage": "https://github.com/AtlasCloudAI/dsh-atlascloud#readme",
-      "manifestUrl": "https://raw.githubusercontent.com/AtlasCloudAI/dsh-atlascloud/0071fbd1d441c17a602683074b2d07d555c057fc/package.json",
-      "verification": "rejected",
-      "issueCode": "package-unpublished",
-      "issue": "dsh-atlascloud is not published on npm",
-      "installable": false
-    },
-    {
       "id": "Auran-Lu/dsh-client-ui-monitor:.",
       "repositoryFullName": "Auran-Lu/dsh-client-ui-monitor",
       "repositoryUrl": "https://github.com/Auran-Lu/dsh-client-ui-monitor",
@@ -2726,11 +2722,41 @@
       "license": "CC0-1.0",
       "repositoryDirectory": null,
       "homepage": "https://awesome-dsh-plugin.com/",
-      "manifestUrl": "https://raw.githubusercontent.com/awesome-dsh-plugin/awesome-dsh-plugin/a17a5f392c2061dc16cc4601b7bb280b49b85a20/package.json",
+      "manifestUrl": "https://raw.githubusercontent.com/awesome-dsh-plugin/awesome-dsh-plugin/af334edcabf88f8c6f357f06ffffce2bb2f4c8e4/package.json",
       "verification": "unverified",
       "issueCode": "manifest-invalid",
       "issue": "dsh: Invalid input: expected object, received undefined",
       "installable": true
+    },
+    {
+      "id": "AwesomeHou/dsh-plugin-marketplace:.",
+      "repositoryFullName": "AwesomeHou/dsh-plugin-marketplace",
+      "repositoryUrl": "https://github.com/AwesomeHou/dsh-plugin-marketplace",
+      "packageName": "dsh-plugin-marketplace",
+      "version": "0.1.0",
+      "displayName": {
+        "zh-CN": "dsh-plugin-marketplace",
+        "en": "dsh-plugin-marketplace"
+      },
+      "summary": {
+        "zh-CN": "实时同步 GitHub dsh-plugin topic 的插件市场：Host 定时抓取并缓存，Web 设置页展示可搜索的插件列表。",
+        "en": "实时同步 GitHub dsh-plugin topic 的插件市场：Host 定时抓取并缓存，Web 设置页展示可搜索的插件列表。"
+      },
+      "category": null,
+      "keywords": [
+        "dsh",
+        "dsh-plugin",
+        "plugin-marketplace",
+        "deepseek-harness"
+      ],
+      "license": "MIT",
+      "repositoryDirectory": null,
+      "homepage": null,
+      "manifestUrl": "https://raw.githubusercontent.com/AwesomeHou/dsh-plugin-marketplace/eec30574f72adff1273788ad89c2901cce2a37df/package.json",
+      "verification": "rejected",
+      "issueCode": "package-invalid",
+      "issue": "dsh-plugin-marketplace has invalid npm metadata: versions.0.1.0.dsh.bundle: Invalid input: expected object, received undefined",
+      "installable": false
     },
     {
       "id": "Awu12277/dsh-stock-watch:.",
@@ -2856,34 +2882,6 @@
       "verification": "rejected",
       "issueCode": "package-unpublished",
       "issue": "gal-view is not published on npm",
-      "installable": false
-    },
-    {
-      "id": "baidd1011/dsh-code-impact:.",
-      "repositoryFullName": "baidd1011/dsh-code-impact",
-      "repositoryUrl": "https://github.com/baidd1011/dsh-code-impact",
-      "packageName": "dsh-code-impact",
-      "version": "0.2.0",
-      "displayName": {
-        "zh-CN": "dsh-code-impact",
-        "en": "dsh-code-impact"
-      },
-      "summary": {
-        "zh-CN": "Read-only TypeScript and JavaScript change-impact analysis for DeepSeek Harness",
-        "en": "Read-only TypeScript and JavaScript change-impact analysis for DeepSeek Harness"
-      },
-      "category": null,
-      "keywords": [
-        "dsh",
-        "dsh-plugin"
-      ],
-      "license": "MIT",
-      "repositoryDirectory": null,
-      "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/baidd1011/dsh-code-impact/1d100eda8949c30e5426143f6b607981a100b097/package.json",
-      "verification": "rejected",
-      "issueCode": "package-unpublished",
-      "issue": "dsh-code-impact is not published on npm",
       "installable": false
     },
     {
@@ -3957,38 +3955,6 @@
       "installable": false
     },
     {
-      "id": "bluecobaltum/dsh-lan-proxy:.",
-      "repositoryFullName": "bluecobaltum/dsh-lan-proxy",
-      "repositoryUrl": "https://github.com/bluecobaltum/dsh-lan-proxy",
-      "packageName": "dsh-lan-proxy",
-      "version": "0.1.0",
-      "displayName": {
-        "zh-CN": "dsh-lan-proxy",
-        "en": "dsh-lan-proxy"
-      },
-      "summary": {
-        "zh-CN": "LAN access for DeepSeek Harness Web UI: loopback-preserving reverse proxy with Host/Origin rewrite, in-app browse directory picker, and a secure-context UUID polyfill. For trusted LANs only — the harness web control plane has no authentication.",
-        "en": "LAN access for DeepSeek Harness Web UI: loopback-preserving reverse proxy with Host/Origin rewrite, in-app browse directory picker, and a secure-context UUID polyfill. For trusted LANs only — the harness web control plane has no authentication."
-      },
-      "category": null,
-      "keywords": [
-        "deepseek-harness",
-        "dsh",
-        "dsh-plugin",
-        "lan",
-        "remote",
-        "proxy"
-      ],
-      "license": "MIT",
-      "repositoryDirectory": null,
-      "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/bluecobaltum/dsh-lan-proxy/40a09d5815c006e6cdc0eb9bf26ff1da83a2ef31/package.json",
-      "verification": "rejected",
-      "issueCode": "package-invalid",
-      "issue": "dsh-lan-proxy has invalid npm metadata: versions.0.1.0.repository: Invalid input",
-      "installable": false
-    },
-    {
       "id": "bnqzzdf/dsh-web-open:.",
       "repositoryFullName": "bnqzzdf/dsh-web-open",
       "repositoryUrl": "https://github.com/bnqzzdf/dsh-web-open",
@@ -4115,45 +4081,11 @@
       "installable": false
     },
     {
-      "id": "bpc-oss/dsh-web-billing:.",
-      "repositoryFullName": "bpc-oss/dsh-web-billing",
-      "repositoryUrl": "https://github.com/bpc-oss/dsh-web-billing",
-      "packageName": "dsh-web-billing",
-      "version": "1.0.0",
-      "displayName": {
-        "zh-CN": "dsh-web-billing",
-        "en": "dsh-web-billing"
-      },
-      "summary": {
-        "zh-CN": "RMB/USD token-billing plugin for DSH web: official-policy auto pricing (incl. peak/off-peak), per-message ledger, account balance, locale-driven currency display",
-        "en": "RMB/USD token-billing plugin for DSH web: official-policy auto pricing (incl. peak/off-peak), per-message ledger, account balance, locale-driven currency display"
-      },
-      "category": null,
-      "keywords": [
-        "dsh",
-        "deepseek-harness",
-        "billing",
-        "token",
-        "pricing",
-        "rmb",
-        "usd",
-        "cordis"
-      ],
-      "license": "MIT",
-      "repositoryDirectory": null,
-      "homepage": "https://github.com/bpc-oss/dsh-web-billing#readme",
-      "manifestUrl": "https://raw.githubusercontent.com/bpc-oss/dsh-web-billing/17779fcb644ba75df5704962baacc79e0aa0e56a/package.json",
-      "verification": "rejected",
-      "issueCode": "package-unpublished",
-      "issue": "dsh-web-billing is not published on npm",
-      "installable": false
-    },
-    {
       "id": "bradeGithub/DSH-Plugins-Marketplace:.",
       "repositoryFullName": "bradeGithub/DSH-Plugins-Marketplace",
       "repositoryUrl": "https://github.com/bradeGithub/DSH-Plugins-Marketplace",
       "packageName": "dsh-plugin-marketplace",
-      "version": "1.3.5",
+      "version": "1.3.6",
       "displayName": {
         "zh-CN": "dsh-plugin-marketplace",
         "en": "dsh-plugin-marketplace"
@@ -4180,101 +4112,10 @@
       "license": "MIT",
       "repositoryDirectory": null,
       "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/bradeGithub/DSH-Plugins-Marketplace/59ba2cd8676d30c4e47c5c9acb5fd6217ac55c0c/package.json",
+      "manifestUrl": "https://raw.githubusercontent.com/bradeGithub/DSH-Plugins-Marketplace/2fecc8a3b48003fa1b3dc8336297e5ad3835d58e/package.json",
       "verification": "rejected",
       "issueCode": "package-invalid",
       "issue": "dsh-plugin-marketplace has invalid npm metadata: versions.0.1.0.dsh.bundle: Invalid input: expected object, received undefined",
-      "installable": false
-    },
-    {
-      "id": "BrambleXu/dsh-annotate:.",
-      "repositoryFullName": "BrambleXu/dsh-annotate",
-      "repositoryUrl": "https://github.com/BrambleXu/dsh-annotate",
-      "packageName": "dsh-annotate",
-      "version": "0.1.0",
-      "displayName": {
-        "zh-CN": "dsh-annotate",
-        "en": "dsh-annotate"
-      },
-      "summary": {
-        "zh-CN": "Browser element annotation bridge for DeepSeek Harness",
-        "en": "Browser element annotation bridge for DeepSeek Harness"
-      },
-      "category": null,
-      "keywords": [
-        "deepseek-harness",
-        "dsh-plugin",
-        "annotation",
-        "browser",
-        "visual-debugging"
-      ],
-      "license": "MIT",
-      "repositoryDirectory": null,
-      "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/BrambleXu/dsh-annotate/43f39543f720d6f8851924f1387c797f04debd21/package.json",
-      "verification": "rejected",
-      "issueCode": "package-unpublished",
-      "issue": "dsh-annotate is not published on npm",
-      "installable": false
-    },
-    {
-      "id": "BrambleXu/dsh-prompt-profile:.",
-      "repositoryFullName": "BrambleXu/dsh-prompt-profile",
-      "repositoryUrl": "https://github.com/BrambleXu/dsh-prompt-profile",
-      "packageName": "dsh-prompt-profile",
-      "version": "0.1.0",
-      "displayName": {
-        "zh-CN": "dsh-prompt-profile",
-        "en": "dsh-prompt-profile"
-      },
-      "summary": {
-        "zh-CN": "Reusable prompt profiles with per-turn model selection for DeepSeek Harness",
-        "en": "Reusable prompt profiles with per-turn model selection for DeepSeek Harness"
-      },
-      "category": null,
-      "keywords": [
-        "deepseek-harness",
-        "dsh-plugin",
-        "prompt-template",
-        "model-profile"
-      ],
-      "license": "MIT",
-      "repositoryDirectory": null,
-      "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/BrambleXu/dsh-prompt-profile/c205d44e88e64b5126fa2615a7122e684e3af7f5/package.json",
-      "verification": "rejected",
-      "issueCode": "package-unpublished",
-      "issue": "dsh-prompt-profile is not published on npm",
-      "installable": false
-    },
-    {
-      "id": "BrambleXu/dsh-revdiff:.",
-      "repositoryFullName": "BrambleXu/dsh-revdiff",
-      "repositoryUrl": "https://github.com/BrambleXu/dsh-revdiff",
-      "packageName": "dsh-revdiff",
-      "version": "0.1.0",
-      "displayName": {
-        "zh-CN": "dsh-revdiff",
-        "en": "dsh-revdiff"
-      },
-      "summary": {
-        "zh-CN": "Native interactive diff review for DeepSeek Harness",
-        "en": "Native interactive diff review for DeepSeek Harness"
-      },
-      "category": null,
-      "keywords": [
-        "deepseek-harness",
-        "dsh-plugin",
-        "code-review",
-        "diff"
-      ],
-      "license": "MIT",
-      "repositoryDirectory": null,
-      "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/BrambleXu/dsh-revdiff/90e7f41040ede308314395b06c51c218e18e4d47/package.json",
-      "verification": "rejected",
-      "issueCode": "package-unpublished",
-      "issue": "dsh-revdiff is not published on npm",
       "installable": false
     },
     {
@@ -5034,7 +4875,7 @@
       "license": "MIT",
       "repositoryDirectory": null,
       "homepage": "https://github.com/causebefore/dsh-pomodoro#readme",
-      "manifestUrl": "https://raw.githubusercontent.com/causebefore/dsh-pomodoro/d2eafffd7b20eb611a7887fd94abf026100fb3d4/package.json",
+      "manifestUrl": "https://raw.githubusercontent.com/causebefore/dsh-pomodoro/274451b1cde6791a02a233caf112861e8b150e50/package.json",
       "verification": "rejected",
       "issueCode": "package-invalid",
       "issue": "dsh-pomodoro has invalid npm metadata: versions.0.1.0.repository: Invalid input",
@@ -5194,7 +5035,7 @@
       "license": "MIT",
       "repositoryDirectory": null,
       "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/Ch0uHuaZ1/DeepSeek-Harness-Desktop/f3f9e200f1594fbbdc50a2eda93ea351c9e10908/package.json",
+      "manifestUrl": "https://raw.githubusercontent.com/Ch0uHuaZ1/DeepSeek-Harness-Desktop/861eed003714cab3aa29002718d8d1d4004ce7a6/package.json",
       "verification": "rejected",
       "issueCode": "package-unpublished",
       "issue": "dsh-desktop@1.0.0 is not published on npm",
@@ -5264,6 +5105,35 @@
       "verification": "unverified",
       "issueCode": "manifest-invalid",
       "issue": "dsh.plugin: Invalid input: expected object, received undefined",
+      "installable": true
+    },
+    {
+      "id": "chen-001/dsh-grok-tui:.",
+      "repositoryFullName": "chen-001/dsh-grok-tui",
+      "repositoryUrl": "https://github.com/chen-001/dsh-grok-tui",
+      "packageName": "dsh-grok-tui",
+      "version": "0.3.8",
+      "displayName": {
+        "zh-CN": "dsh-grok-tui",
+        "en": "dsh-grok-tui"
+      },
+      "summary": {
+        "zh-CN": "Use dsh via grok-build's TUI.",
+        "en": "Use dsh via grok-build's TUI."
+      },
+      "category": null,
+      "keywords": [
+        "deepseek-harness",
+        "dsh",
+        "dsh-plugin"
+      ],
+      "license": "MIT",
+      "repositoryDirectory": null,
+      "homepage": null,
+      "manifestUrl": "https://raw.githubusercontent.com/chen-001/dsh-grok-tui/6a70dddcf52550fcafcf62b8f52764876268b61a/package.json",
+      "verification": "unverified",
+      "issueCode": "manifest-invalid",
+      "issue": "dsh: Invalid input: expected object, received undefined",
       "installable": true
     },
     {
@@ -5366,41 +5236,6 @@
       "repositoryDirectory": null,
       "homepage": "https://github.com/ChengChe106/dsh-session-cost",
       "manifestUrl": "https://raw.githubusercontent.com/ChengChe106/dsh-session-cost/a858eaaa116f83e0adbf546ce82c27a91e4d478e/package.json",
-      "verification": "unverified",
-      "issueCode": "manifest-invalid",
-      "issue": "dsh.plugin: Invalid input: expected object, received undefined",
-      "installable": true
-    },
-    {
-      "id": "ChengChe106/dsh-web-auto-open:.",
-      "repositoryFullName": "ChengChe106/dsh-web-auto-open",
-      "repositoryUrl": "https://github.com/ChengChe106/dsh-web-auto-open",
-      "packageName": "dsh-web-auto-open",
-      "version": "0.1.3",
-      "displayName": {
-        "zh-CN": "dsh-web-auto-open",
-        "en": "dsh-web-auto-open"
-      },
-      "summary": {
-        "zh-CN": "dsh plugin: auto-open the default browser as soon as the dsh web GUI server is listening — one-step startup for `dsh web`",
-        "en": "dsh plugin: auto-open the default browser as soon as the dsh web GUI server is listening — one-step startup for `dsh web`"
-      },
-      "category": null,
-      "keywords": [
-        "dsh",
-        "deepseek-harness",
-        "plugin",
-        "bundle",
-        "web",
-        "browser",
-        "auto-open",
-        "launcher",
-        "one-step"
-      ],
-      "license": "MIT",
-      "repositoryDirectory": null,
-      "homepage": "https://github.com/ChengChe106/dsh-web-auto-open",
-      "manifestUrl": "https://raw.githubusercontent.com/ChengChe106/dsh-web-auto-open/5ac6359f9b115efec3fc72b37fb3cac15d9a75f7/package.json",
       "verification": "unverified",
       "issueCode": "manifest-invalid",
       "issue": "dsh.plugin: Invalid input: expected object, received undefined",
@@ -6431,7 +6266,7 @@
       "license": "MIT",
       "repositoryDirectory": null,
       "homepage": "https://github.com/CriscolTheCoder/dsh-plugin-browser",
-      "manifestUrl": "https://raw.githubusercontent.com/CriscolTheCoder/dsh-plugin-browser/91a7645bb78c00192b011df6b23ef87b8f3cc510/package.json",
+      "manifestUrl": "https://raw.githubusercontent.com/CriscolTheCoder/dsh-plugin-browser/c5a83f16d2358789e0387efc976a8f1531dbf210/package.json",
       "verification": "rejected",
       "issueCode": "package-invalid",
       "issue": "dsh-plugin-browser has invalid npm metadata: versions.0.1.0.repository: Invalid input",
@@ -6881,10 +6716,10 @@
       "license": "MIT",
       "repositoryDirectory": null,
       "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/DDDFXYqiming/Agent_Extensions/e353406f82114abee98dc22f3abb5d364cb6aabc/package.json",
+      "manifestUrl": "https://raw.githubusercontent.com/DDDFXYqiming/Agent_Extensions/305e54d4193f6655b3a99385d67b3ff4238c21d4/package.json",
       "verification": "rejected",
       "issueCode": "manifest-unavailable",
-      "issue": "https://raw.githubusercontent.com/DDDFXYqiming/Agent_Extensions/e353406f82114abee98dc22f3abb5d364cb6aabc/package.json returned HTTP 404",
+      "issue": "https://raw.githubusercontent.com/DDDFXYqiming/Agent_Extensions/305e54d4193f6655b3a99385d67b3ff4238c21d4/package.json returned HTTP 404",
       "installable": false
     },
     {
@@ -7078,7 +6913,7 @@
       "license": "MIT",
       "repositoryDirectory": null,
       "homepage": "https://github.com/DietCokewithSugar/dsh-user-experience#readme",
-      "manifestUrl": "https://raw.githubusercontent.com/DietCokewithSugar/dsh-user-experience/12c77968097cd2d265b20b36f50adda2cba938cf/package.json",
+      "manifestUrl": "https://raw.githubusercontent.com/DietCokewithSugar/dsh-user-experience/c4a9ad971897480ba31179b9eb8edf92a83e29da/package.json",
       "verification": "rejected",
       "issueCode": "package-unpublished",
       "issue": "dsh-user-experience is not published on npm",
@@ -8841,7 +8676,7 @@
       "license": "BSD-3-Clause",
       "repositoryDirectory": null,
       "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/fakechris/dsh-track/d0a3c105dce2f5a71b208538e8bf037d0f4fe9bd/package.json",
+      "manifestUrl": "https://raw.githubusercontent.com/fakechris/dsh-track/409cab2c1001b9709d4850c963e0c5839f5352fd/package.json",
       "verification": "rejected",
       "issueCode": "package-invalid",
       "issue": "@fakechris/dsh-track has invalid npm metadata: versions.0.2.1.repository: Invalid input",
@@ -8881,6 +8716,35 @@
       "verification": "rejected",
       "issueCode": "manifest-unavailable",
       "issue": "https://raw.githubusercontent.com/fan969690/dsh-desktop-tools/7c7904ff52d180765e5fb3a994b1da12dc6d7994/package.json returned HTTP 404",
+      "installable": false
+    },
+    {
+      "id": "FantasticCode2019/computer-control-plugin:.",
+      "repositoryFullName": "FantasticCode2019/computer-control-plugin",
+      "repositoryUrl": "https://github.com/FantasticCode2019/computer-control-plugin",
+      "packageName": null,
+      "version": null,
+      "displayName": {
+        "zh-CN": "computer-control-plugin",
+        "en": "computer-control-plugin"
+      },
+      "summary": {
+        "zh-CN": "control your computer quickly",
+        "en": "control your computer quickly"
+      },
+      "category": null,
+      "keywords": [
+        "dsh-plugin",
+        "dsh-plugin-market",
+        "dsh-plugins"
+      ],
+      "license": null,
+      "repositoryDirectory": null,
+      "homepage": null,
+      "manifestUrl": "https://raw.githubusercontent.com/FantasticCode2019/computer-control-plugin/5e9dd0f203f3955d371f448bc037741ef3894038/package.json",
+      "verification": "rejected",
+      "issueCode": "manifest-unavailable",
+      "issue": "https://raw.githubusercontent.com/FantasticCode2019/computer-control-plugin/5e9dd0f203f3955d371f448bc037741ef3894038/package.json returned HTTP 404",
       "installable": false
     },
     {
@@ -9189,7 +9053,7 @@
       "license": "MIT",
       "repositoryDirectory": null,
       "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/flyemFSB/dsh-reasoning-effort-hdbzq/8f048a6695146b891555a648cb029bbcb309826d/package.json",
+      "manifestUrl": "https://raw.githubusercontent.com/flyemFSB/dsh-reasoning-effort-hdbzq/76783058bb7a3bbeac133964abcc2d9fa32ad84e/package.json",
       "verification": "rejected",
       "issueCode": "package-unpublished",
       "issue": "dsh-reasoning-effort-hdbzq is not published on npm",
@@ -9264,7 +9128,7 @@
       "repositoryFullName": "Flyvhidbwo/dsh-vision-proxy",
       "repositoryUrl": "https://github.com/Flyvhidbwo/dsh-vision-proxy",
       "packageName": "dsh-vision-proxy",
-      "version": "0.1.9",
+      "version": "0.1.11",
       "displayName": {
         "zh-CN": "dsh-vision-proxy",
         "en": "dsh-vision-proxy"
@@ -9291,7 +9155,7 @@
       "license": "MIT",
       "repositoryDirectory": null,
       "homepage": "https://github.com/Flyvhidbwo/dsh-vision-proxy#readme",
-      "manifestUrl": "https://raw.githubusercontent.com/Flyvhidbwo/dsh-vision-proxy/090957136da6d9bc07dc531ec3d03a16281d0a8b/package.json",
+      "manifestUrl": "https://raw.githubusercontent.com/Flyvhidbwo/dsh-vision-proxy/a88bbf4caad6d293c937cd7d7b1616e8813b82ad/package.json",
       "verification": "unverified",
       "issueCode": "manifest-invalid",
       "issue": "dsh.plugin: Invalid input: expected object, received undefined",
@@ -9643,10 +9507,10 @@
       "license": "CC0-1.0",
       "repositoryDirectory": null,
       "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/FuRongJun-1999/CommonTrustProtocol/54c5604d1c6163e544cbfc81dea635a7e0e37482/package.json",
+      "manifestUrl": "https://raw.githubusercontent.com/FuRongJun-1999/CommonTrustProtocol/78be5091be9e1792fc3decebad9ce2b83c528f14/package.json",
       "verification": "rejected",
       "issueCode": "manifest-unavailable",
-      "issue": "https://raw.githubusercontent.com/FuRongJun-1999/CommonTrustProtocol/54c5604d1c6163e544cbfc81dea635a7e0e37482/package.json returned HTTP 404",
+      "issue": "https://raw.githubusercontent.com/FuRongJun-1999/CommonTrustProtocol/78be5091be9e1792fc3decebad9ce2b83c528f14/package.json returned HTTP 404",
       "installable": false
     },
     {
@@ -9922,10 +9786,10 @@
       "repositoryDirectory": null,
       "homepage": "https://github.com/GIT121995/dsh-memory-gate#readme",
       "manifestUrl": "https://raw.githubusercontent.com/GIT121995/dsh-memory-gate/4988e8fab444bd85a1ce80ab0cd82798570fbd3a/package.json",
-      "verification": "rejected",
-      "issueCode": "package-unpublished",
-      "issue": "dsh-memory-gate is not published on npm",
-      "installable": false
+      "verification": "unverified",
+      "issueCode": "manifest-invalid",
+      "issue": "dsh.plugin: Invalid input: expected object, received undefined",
+      "installable": true
     },
     {
       "id": "gmryuuko/dsh-gui:.",
@@ -9970,7 +9834,9 @@
       },
       "category": null,
       "keywords": [
-        "dsh-plugin"
+        "deepseek-harness",
+        "dsh-plugin",
+        "dsh-plugins"
       ],
       "license": "MIT",
       "repositoryDirectory": null,
@@ -10111,10 +9977,10 @@
       "repositoryDirectory": null,
       "homepage": "https://github.com/gtaifu/dsh-wechat-bridge#readme",
       "manifestUrl": "https://raw.githubusercontent.com/gtaifu/dsh-wechat-bridge/9c7f544b734988955fd5c0afb33c5eb352ce7a1d/package.json",
-      "verification": "rejected",
-      "issueCode": "package-unpublished",
-      "issue": "dsh-wechat-bridge is not published on npm",
-      "installable": false
+      "verification": "unverified",
+      "issueCode": "manifest-invalid",
+      "issue": "dsh: Invalid input: expected object, received undefined",
+      "installable": true
     },
     {
       "id": "Gu-ZT/dsh-auxiliary:.",
@@ -10349,10 +10215,10 @@
       "license": "CC-BY-4.0",
       "repositoryDirectory": null,
       "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/HackSing/dsh-plugins/6d2b0e1275dea4537563d62feb9f739dddebeca7/package.json",
+      "manifestUrl": "https://raw.githubusercontent.com/HackSing/dsh-plugins/49a4f601e8b8b637820b35b1b9953dda4eee6f8c/package.json",
       "verification": "rejected",
       "issueCode": "manifest-unavailable",
-      "issue": "https://raw.githubusercontent.com/HackSing/dsh-plugins/6d2b0e1275dea4537563d62feb9f739dddebeca7/package.json returned HTTP 404",
+      "issue": "https://raw.githubusercontent.com/HackSing/dsh-plugins/49a4f601e8b8b637820b35b1b9953dda4eee6f8c/package.json returned HTTP 404",
       "installable": false
     },
     {
@@ -10656,7 +10522,7 @@
       "license": "MIT",
       "repositoryDirectory": null,
       "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/hccccc01333/dsh-report-html/688158959044fa45193a8a1a52c144c137746d4a/package.json",
+      "manifestUrl": "https://raw.githubusercontent.com/hccccc01333/dsh-report-html/62de07a9b7d7b2f9b0d2089ee67726534b0b644a/package.json",
       "verification": "rejected",
       "issueCode": "package-invalid",
       "issue": "dsh-report-html has invalid npm metadata: versions.0.8.0.repository: Invalid input",
@@ -11395,6 +11261,76 @@
       "installable": false
     },
     {
+      "id": "hrhgit/deepseek-harness-plugin-manager:packages/manager",
+      "repositoryFullName": "hrhgit/deepseek-harness-plugin-manager",
+      "repositoryUrl": "https://github.com/hrhgit/deepseek-harness-plugin-manager",
+      "packageName": "dsh-plugin-manager",
+      "version": "0.1.0",
+      "displayName": {
+        "zh-CN": "插件管理器",
+        "en": "Plugin Manager"
+      },
+      "summary": {
+        "zh-CN": "查看并控制当前 profile 中已安装插件的启停和 Cordis 运行状态。",
+        "en": "Inspect and control installed plugin enablement and Cordis runtime state for the current profile."
+      },
+      "category": "plugin-management",
+      "keywords": [
+        "deepseek-harness",
+        "dsh-plugin",
+        "deepseek",
+        "dsh",
+        "cordis",
+        "plugin-manager",
+        "plugin-management",
+        "web-ui",
+        "enable-plugins",
+        "disable-plugins",
+        "plugin-bundle"
+      ],
+      "license": "MIT",
+      "repositoryDirectory": "packages/manager",
+      "homepage": "https://github.com/hrhgit/deepseek-harness-plugin-manager#readme",
+      "manifestUrl": "https://raw.githubusercontent.com/hrhgit/deepseek-harness-plugin-manager/d6f25bce8ab8893490db1efedcb2f78552e16605/packages/manager/package.json",
+      "verification": "verified",
+      "issueCode": null,
+      "issue": null,
+      "installable": true
+    },
+    {
+      "id": "hrhgit/deepseek-harness-plugin-manager:packages/marketplace",
+      "repositoryFullName": "hrhgit/deepseek-harness-plugin-manager",
+      "repositoryUrl": "https://github.com/hrhgit/deepseek-harness-plugin-manager",
+      "packageName": "dsh-plugin-marketplace",
+      "version": "0.1.0",
+      "displayName": {
+        "zh-CN": "插件市场",
+        "en": "Plugin Marketplace"
+      },
+      "summary": {
+        "zh-CN": "从自动更新的插件目录中发现并安装经过校验的 DSH 插件。",
+        "en": "Discover and install validated DSH plugins from an automatically updated catalog."
+      },
+      "category": "plugin-marketplace",
+      "keywords": [
+        "deepseek-harness",
+        "dsh",
+        "dsh-plugin",
+        "plugin-marketplace",
+        "plugin-discovery",
+        "cordis",
+        "web-ui"
+      ],
+      "license": "MIT",
+      "repositoryDirectory": null,
+      "homepage": "https://github.com/hrhgit/deepseek-harness-plugin-manager#readme",
+      "manifestUrl": "https://raw.githubusercontent.com/hrhgit/deepseek-harness-plugin-manager/d6f25bce8ab8893490db1efedcb2f78552e16605/packages/marketplace/package.json",
+      "verification": "rejected",
+      "issueCode": "package-invalid",
+      "issue": "dsh-plugin-marketplace has invalid npm metadata: versions.0.1.0.dsh.bundle: Invalid input: expected object, received undefined",
+      "installable": false
+    },
+    {
       "id": "HsiangNianian/dsh-auto-continue:.",
       "repositoryFullName": "HsiangNianian/dsh-auto-continue",
       "repositoryUrl": "https://github.com/HsiangNianian/dsh-auto-continue",
@@ -11462,18 +11398,18 @@
       "installable": false
     },
     {
-      "id": "huahua233/dsh-opencode-go-usage:.",
-      "repositoryFullName": "huahua233/dsh-opencode-go-usage",
-      "repositoryUrl": "https://github.com/huahua233/dsh-opencode-go-usage",
-      "packageName": "dsh-opencode-go-usage",
-      "version": "0.1.0",
+      "id": "HuanLinOTO/dsh-plugin-aigc-canvas:.",
+      "repositoryFullName": "HuanLinOTO/dsh-plugin-aigc-canvas",
+      "repositoryUrl": "https://github.com/HuanLinOTO/dsh-plugin-aigc-canvas",
+      "packageName": "@huanlin/dsh-plugin-aigc-canvas",
+      "version": "0.1.1",
       "displayName": {
-        "zh-CN": "dsh-opencode-go-usage",
-        "en": "dsh-opencode-go-usage"
+        "zh-CN": "@huanlin/dsh-plugin-aigc-canvas",
+        "en": "@huanlin/dsh-plugin-aigc-canvas"
       },
       "summary": {
-        "zh-CN": "OpenCode Go 订阅用量小部件：滚动/周/月用量百分比与重置倒计时，右下偏中悬浮显示（服务端代理 opencode.ai/zen/go/v1/usage + 浏览器小部件，key 不落浏览器）",
-        "en": "OpenCode Go 订阅用量小部件：滚动/周/月用量百分比与重置倒计时，右下偏中悬浮显示（服务端代理 opencode.ai/zen/go/v1/usage + 浏览器小部件，key 不落浏览器）"
+        "zh-CN": "DSH plugin: an infinite free canvas for the better-sidebar plus provider-agnostic generation. Exposes aigc_get_provider_info / aigc_http_request (endpoint + apiKey auto-attached) / aigc_provider_set_instructions / aigc_canvas_place / aigc_canvas_link / aigc_canvas_unlink / aigc_canvas_list_elements tools; generated files are placed at arbitrary canvas positi",
+        "en": "DSH plugin: an infinite free canvas for the better-sidebar plus provider-agnostic generation. Exposes aigc_get_provider_info / aigc_http_request (endpoint + apiKey auto-attached) / aigc_provider_set_instructions / aigc_canvas_place / aigc_canvas_link / aigc_canvas_unlink / aigc_canvas_list_elements tools; generated files are placed at arbitrary canvas positi"
       },
       "category": null,
       "keywords": [
@@ -11482,64 +11418,280 @@
       "license": "MIT",
       "repositoryDirectory": null,
       "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/huahua233/dsh-opencode-go-usage/7a5ed86ffa51d760e9fe867f798d0c649c977026/package.json",
+      "manifestUrl": "https://raw.githubusercontent.com/HuanLinOTO/dsh-plugin-aigc-canvas/682d277bd00bbe5974eca306358ae662dc9a306d/package.json",
       "verification": "rejected",
       "issueCode": "package-invalid",
-      "issue": "dsh-opencode-go-usage has invalid npm metadata: versions.1.0.0.repository: Invalid input",
+      "issue": "@huanlin/dsh-plugin-aigc-canvas has invalid npm metadata: versions.0.1.0.repository: Invalid input",
       "installable": false
     },
     {
-      "id": "huahua233/dsh-session-repacker:.",
-      "repositoryFullName": "huahua233/dsh-session-repacker",
-      "repositoryUrl": "https://github.com/huahua233/dsh-session-repacker",
-      "packageName": "dsh-session-repacker",
-      "version": "0.1.0",
+      "id": "HuanLinOTO/dsh-plugin-anti-ads:.",
+      "repositoryFullName": "HuanLinOTO/dsh-plugin-anti-ads",
+      "repositoryUrl": "https://github.com/HuanLinOTO/dsh-plugin-anti-ads",
+      "packageName": "@huanlin/dsh-plugin-anti-ads",
+      "version": "0.2.0",
       "displayName": {
-        "zh-CN": "dsh-session-repacker",
-        "en": "dsh-session-repacker"
+        "zh-CN": "@huanlin/dsh-plugin-anti-ads",
+        "en": "@huanlin/dsh-plugin-anti-ads"
       },
       "summary": {
-        "zh-CN": "会话日志 zstd 帧重打包：把逐批写入的成千上万个独立 zstd 帧合并为官方标准形态（头部帧 + 单事件帧），大幅降低旧会话打开时的解压开销；后台自动维护 + 独立 CLI 一键执行。",
-        "en": "会话日志 zstd 帧重打包：把逐批写入的成千上万个独立 zstd 帧合并为官方标准形态（头部帧 + 单事件帧），大幅降低旧会话打开时的解压开销；后台自动维护 + 独立 CLI 一键执行。"
+        "zh-CN": "DSH ad-suppression plugin: writes dsh-ads's own settings key to all-false, broadcasts its retire event, scrubs its portal from the DOM, and short-circuits its dynamic-tier fetch. Four layers, all client-side, all removable from a settings page of its own.",
+        "en": "DSH ad-suppression plugin: writes dsh-ads's own settings key to all-false, broadcasts its retire event, scrubs its portal from the DOM, and short-circuits its dynamic-tier fetch. Four layers, all client-side, all removable from a settings page of its own."
       },
       "category": null,
       "keywords": [
         "dsh-plugin"
       ],
-      "license": "MIT",
+      "license": "AGPL-3.0",
       "repositoryDirectory": null,
       "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/huahua233/dsh-session-repacker/f5afcec1ed5cb2753781cbecd8df6df05a823174/package.json",
+      "manifestUrl": "https://raw.githubusercontent.com/HuanLinOTO/dsh-plugin-anti-ads/0ab4a3942ed77a47528e0bae231bcbcfe3b346d5/package.json",
       "verification": "rejected",
-      "issueCode": "package-unpublished",
-      "issue": "dsh-session-repacker is not published on npm",
+      "issueCode": "package-invalid",
+      "issue": "@huanlin/dsh-plugin-anti-ads has invalid npm metadata: versions.0.2.0.repository: Invalid input",
       "installable": false
     },
     {
-      "id": "huahua233/dsh-usage-record:.",
-      "repositoryFullName": "huahua233/dsh-usage-record",
-      "repositoryUrl": "https://github.com/huahua233/dsh-usage-record",
-      "packageName": "dsh-usage-record",
+      "id": "HuanLinOTO/dsh-plugin-auto-blame:.",
+      "repositoryFullName": "HuanLinOTO/dsh-plugin-auto-blame",
+      "repositoryUrl": "https://github.com/HuanLinOTO/dsh-plugin-auto-blame",
+      "packageName": "@huanlin/dsh-plugin-auto-blame",
       "version": "0.1.0",
       "displayName": {
-        "zh-CN": "dsh-usage-record",
-        "en": "dsh-usage-record"
+        "zh-CN": "@huanlin/dsh-plugin-auto-blame",
+        "en": "@huanlin/dsh-plugin-auto-blame"
       },
       "summary": {
-        "zh-CN": "每轮提问的 LLM 用量记录：左侧栏按钮 + 抽屉面板，列出每轮的 tokens/耗时/工具调用，点击跳转到对应会话",
-        "en": "每轮提问的 LLM 用量记录：左侧栏按钮 + 抽屉面板，列出每轮的 tokens/耗时/工具调用，点击跳转到对应会话"
+        "zh-CN": "Auto-blame: when a turn closes, asks an LLM for three cynical follow-up prompts and shows them as click-to-send bubbles above the composer. Host-gated master toggle in the settings page.",
+        "en": "Auto-blame: when a turn closes, asks an LLM for three cynical follow-up prompts and shows them as click-to-send bubbles above the composer. Host-gated master toggle in the settings page."
       },
       "category": null,
       "keywords": [
         "dsh-plugin"
       ],
-      "license": "MIT",
+      "license": "AGPL-3.0",
       "repositoryDirectory": null,
       "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/huahua233/dsh-usage-record/e2b99652846d29ebe66179eaa05a92ca0e3b302c/package.json",
+      "manifestUrl": "https://raw.githubusercontent.com/HuanLinOTO/dsh-plugin-auto-blame/72d77ddc4c3906031c96f0b856b82c58360eaf35/package.json",
       "verification": "rejected",
-      "issueCode": "package-unpublished",
-      "issue": "dsh-usage-record is not published on npm",
+      "issueCode": "package-invalid",
+      "issue": "@huanlin/dsh-plugin-auto-blame has invalid npm metadata: versions.0.1.0.repository: Invalid input",
+      "installable": false
+    },
+    {
+      "id": "HuanLinOTO/dsh-plugin-better-sidebar-plugin-office:.",
+      "repositoryFullName": "HuanLinOTO/dsh-plugin-better-sidebar-plugin-office",
+      "repositoryUrl": "https://github.com/HuanLinOTO/dsh-plugin-better-sidebar-plugin-office",
+      "packageName": "@huanlin/dsh-plugin-better-sidebar-plugin-office",
+      "version": "0.1.0",
+      "displayName": {
+        "zh-CN": "@huanlin/dsh-plugin-better-sidebar-plugin-office",
+        "en": "@huanlin/dsh-plugin-better-sidebar-plugin-office"
+      },
+      "summary": {
+        "zh-CN": "DSH web plugin: Office file previewers (.docx/.xlsx/.pptx) for the better-sidebar editor. Registers the docx/xlsx/pptx file viewers through ctx.betterSidebar.registerFileViewer, keeping the heavy Office render libraries (docx-preview / Univer / SheetJS / pptx-renderer) out of the better-sidebar bundle.",
+        "en": "DSH web plugin: Office file previewers (.docx/.xlsx/.pptx) for the better-sidebar editor. Registers the docx/xlsx/pptx file viewers through ctx.betterSidebar.registerFileViewer, keeping the heavy Office render libraries (docx-preview / Univer / SheetJS / pptx-renderer) out of the better-sidebar bundle."
+      },
+      "category": null,
+      "keywords": [
+        "dsh-plugin"
+      ],
+      "license": "AGPL-3.0",
+      "repositoryDirectory": null,
+      "homepage": null,
+      "manifestUrl": "https://raw.githubusercontent.com/HuanLinOTO/dsh-plugin-better-sidebar-plugin-office/b8ae09cf4350f370403203969b54a80b7f64d555/package.json",
+      "verification": "rejected",
+      "issueCode": "package-invalid",
+      "issue": "@huanlin/dsh-plugin-better-sidebar-plugin-office has invalid npm metadata: versions.0.1.0.repository: Invalid input",
+      "installable": false
+    },
+    {
+      "id": "HuanLinOTO/dsh-plugin-d399:.",
+      "repositoryFullName": "HuanLinOTO/dsh-plugin-d399",
+      "repositoryUrl": "https://github.com/HuanLinOTO/dsh-plugin-d399",
+      "packageName": "@huanlin/dsh-plugin-d399",
+      "version": "0.1.0",
+      "displayName": {
+        "zh-CN": "@huanlin/dsh-plugin-d399",
+        "en": "@huanlin/dsh-plugin-d399"
+      },
+      "summary": {
+        "zh-CN": "贪玩蓝鲸 — 模型生成时右下角弹出小游戏菜单（wordle / 消消乐，可拓展游戏注册表）",
+        "en": "贪玩蓝鲸 — 模型生成时右下角弹出小游戏菜单（wordle / 消消乐，可拓展游戏注册表）"
+      },
+      "category": null,
+      "keywords": [
+        "dsh-plugin"
+      ],
+      "license": "AGPL-3.0",
+      "repositoryDirectory": null,
+      "homepage": null,
+      "manifestUrl": "https://raw.githubusercontent.com/HuanLinOTO/dsh-plugin-d399/3258a2e6f848f99bec6a53ca52994cd4a334a85a/package.json",
+      "verification": "rejected",
+      "issueCode": "package-invalid",
+      "issue": "@huanlin/dsh-plugin-d399 has invalid npm metadata: versions.0.1.0.repository: Invalid input",
+      "installable": false
+    },
+    {
+      "id": "HuanLinOTO/dsh-plugin-interpreters:.",
+      "repositoryFullName": "HuanLinOTO/dsh-plugin-interpreters",
+      "repositoryUrl": "https://github.com/HuanLinOTO/dsh-plugin-interpreters",
+      "packageName": "@huanlin/dsh-plugin-interpreters",
+      "version": "0.1.0",
+      "displayName": {
+        "zh-CN": "@huanlin/dsh-plugin-interpreters",
+        "en": "@huanlin/dsh-plugin-interpreters"
+      },
+      "summary": {
+        "zh-CN": "Exposes run_python and run_node tools with configurable interpreter paths; settings card (via /interpreters/api HTTP route) lets users set the executable locations.",
+        "en": "Exposes run_python and run_node tools with configurable interpreter paths; settings card (via /interpreters/api HTTP route) lets users set the executable locations."
+      },
+      "category": null,
+      "keywords": [
+        "dsh-plugin"
+      ],
+      "license": "AGPL-3.0",
+      "repositoryDirectory": null,
+      "homepage": null,
+      "manifestUrl": "https://raw.githubusercontent.com/HuanLinOTO/dsh-plugin-interpreters/d814c7605a1e7c6b369d2cea35b73554237c6888/package.json",
+      "verification": "rejected",
+      "issueCode": "package-invalid",
+      "issue": "@huanlin/dsh-plugin-interpreters has invalid npm metadata: versions.0.1.0.repository: Invalid input",
+      "installable": false
+    },
+    {
+      "id": "HuanLinOTO/dsh-plugin-mineru:.",
+      "repositoryFullName": "HuanLinOTO/dsh-plugin-mineru",
+      "repositoryUrl": "https://github.com/HuanLinOTO/dsh-plugin-mineru",
+      "packageName": "@huanlin/dsh-plugin-mineru",
+      "version": "0.2.2",
+      "displayName": {
+        "zh-CN": "@huanlin/dsh-plugin-mineru",
+        "en": "@huanlin/dsh-plugin-mineru"
+      },
+      "summary": {
+        "zh-CN": "DSH plugin exposing MinerU document parsing tools to the model, with a web UI settings page for the API base URL.",
+        "en": "DSH plugin exposing MinerU document parsing tools to the model, with a web UI settings page for the API base URL."
+      },
+      "category": null,
+      "keywords": [
+        "dsh-plugin"
+      ],
+      "license": "AGPL-3.0",
+      "repositoryDirectory": null,
+      "homepage": null,
+      "manifestUrl": "https://raw.githubusercontent.com/HuanLinOTO/dsh-plugin-mineru/44eb87f008f8ec07a9714ef3a63bdfc7141cd0e9/package.json",
+      "verification": "rejected",
+      "issueCode": "package-invalid",
+      "issue": "@huanlin/dsh-plugin-mineru has invalid npm metadata: versions.0.2.0.repository: Invalid input",
+      "installable": false
+    },
+    {
+      "id": "HuanLinOTO/dsh-plugin-sleep:.",
+      "repositoryFullName": "HuanLinOTO/dsh-plugin-sleep",
+      "repositoryUrl": "https://github.com/HuanLinOTO/dsh-plugin-sleep",
+      "packageName": "@huanlin/dsh-plugin-sleep",
+      "version": "0.1.0",
+      "displayName": {
+        "zh-CN": "@huanlin/dsh-plugin-sleep",
+        "en": "@huanlin/dsh-plugin-sleep"
+      },
+      "summary": {
+        "zh-CN": "DSH plugin exposing a single `sleep` tool that lets the model pause for a configurable number of milliseconds, honoring cancellation.",
+        "en": "DSH plugin exposing a single `sleep` tool that lets the model pause for a configurable number of milliseconds, honoring cancellation."
+      },
+      "category": null,
+      "keywords": [
+        "dsh-plugin"
+      ],
+      "license": "AGPL-3.0",
+      "repositoryDirectory": null,
+      "homepage": null,
+      "manifestUrl": "https://raw.githubusercontent.com/HuanLinOTO/dsh-plugin-sleep/4bfc588035d5c18e3b4743d10f7e527765fc423c/package.json",
+      "verification": "rejected",
+      "issueCode": "package-invalid",
+      "issue": "@huanlin/dsh-plugin-sleep has invalid npm metadata: versions.0.1.0.repository: Invalid input",
+      "installable": false
+    },
+    {
+      "id": "HuanLinOTO/dsh-plugin-spur:.",
+      "repositoryFullName": "HuanLinOTO/dsh-plugin-spur",
+      "repositoryUrl": "https://github.com/HuanLinOTO/dsh-plugin-spur",
+      "packageName": "@huanlin/dsh-plugin-spur",
+      "version": "0.1.0",
+      "displayName": {
+        "zh-CN": "@huanlin/dsh-plugin-spur",
+        "en": "@huanlin/dsh-plugin-spur"
+      },
+      "summary": {
+        "zh-CN": "A braided whip (辫子) hanging in the chat-flow — grab the tip and swing to send \"go work!\" to the agent.",
+        "en": "A braided whip (辫子) hanging in the chat-flow — grab the tip and swing to send \"go work!\" to the agent."
+      },
+      "category": null,
+      "keywords": [
+        "dsh-plugin"
+      ],
+      "license": "AGPL-3.0",
+      "repositoryDirectory": null,
+      "homepage": null,
+      "manifestUrl": "https://raw.githubusercontent.com/HuanLinOTO/dsh-plugin-spur/e4363f77561acd9c1e838ccd2c41ee679afc8b96/package.json",
+      "verification": "rejected",
+      "issueCode": "package-invalid",
+      "issue": "@huanlin/dsh-plugin-spur has invalid npm metadata: versions.0.1.0.repository: Invalid input",
+      "installable": false
+    },
+    {
+      "id": "HuanLinOTO/dsh-plugin-ya-workspace-sidebar:.",
+      "repositoryFullName": "HuanLinOTO/dsh-plugin-ya-workspace-sidebar",
+      "repositoryUrl": "https://github.com/HuanLinOTO/dsh-plugin-ya-workspace-sidebar",
+      "packageName": "@huanlin/dsh-plugin-ya-workspace-sidebar",
+      "version": "0.1.0",
+      "displayName": {
+        "zh-CN": "@huanlin/dsh-plugin-ya-workspace-sidebar",
+        "en": "@huanlin/dsh-plugin-ya-workspace-sidebar"
+      },
+      "summary": {
+        "zh-CN": "Two-level DSH workspace sidebar with global recent sessions and breadcrumb navigation.",
+        "en": "Two-level DSH workspace sidebar with global recent sessions and breadcrumb navigation."
+      },
+      "category": null,
+      "keywords": [
+        "dsh-plugin"
+      ],
+      "license": "AGPL-3.0",
+      "repositoryDirectory": null,
+      "homepage": null,
+      "manifestUrl": "https://raw.githubusercontent.com/HuanLinOTO/dsh-plugin-ya-workspace-sidebar/6c99b1aae56feeac42b30b459b6fd031b87cb4e5/package.json",
+      "verification": "rejected",
+      "issueCode": "package-invalid",
+      "issue": "@huanlin/dsh-plugin-ya-workspace-sidebar has invalid npm metadata: versions.0.1.0.repository: Invalid input",
+      "installable": false
+    },
+    {
+      "id": "HuanLinOTO/dsh-plugin-yet-another-subagent:.",
+      "repositoryFullName": "HuanLinOTO/dsh-plugin-yet-another-subagent",
+      "repositoryUrl": "https://github.com/HuanLinOTO/dsh-plugin-yet-another-subagent",
+      "packageName": "@huanlin/dsh-plugin-yet-another-subagent",
+      "version": "0.1.1",
+      "displayName": {
+        "zh-CN": "@huanlin/dsh-plugin-yet-another-subagent",
+        "en": "@huanlin/dsh-plugin-yet-another-subagent"
+      },
+      "summary": {
+        "zh-CN": "Configurable subagent profiles with web UI settings, real-time toolcall/token display, and click-to-navigate child sessions.",
+        "en": "Configurable subagent profiles with web UI settings, real-time toolcall/token display, and click-to-navigate child sessions."
+      },
+      "category": null,
+      "keywords": [
+        "dsh-plugin"
+      ],
+      "license": "AGPL-3.0",
+      "repositoryDirectory": null,
+      "homepage": null,
+      "manifestUrl": "https://raw.githubusercontent.com/HuanLinOTO/dsh-plugin-yet-another-subagent/d4babcc3eea8f245fccc995a96ca592b73fc597b/package.json",
+      "verification": "rejected",
+      "issueCode": "package-invalid",
+      "issue": "@huanlin/dsh-plugin-yet-another-subagent has invalid npm metadata: versions.0.1.1.repository: Invalid input",
       "installable": false
     },
     {
@@ -11815,7 +11967,7 @@
       "license": "MIT",
       "repositoryDirectory": null,
       "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/hxwi1/dsh-desktop-window/d31356f72e1ab74002fd933087a20038c15af3ae/package.json",
+      "manifestUrl": "https://raw.githubusercontent.com/hxwi1/dsh-desktop-window/dcf09612a4ec4605decaaae30992b967ae68628a/package.json",
       "verification": "rejected",
       "issueCode": "package-unpublished",
       "issue": "dsh-desktop-window is not published on npm",
@@ -11846,34 +11998,6 @@
       "verification": "rejected",
       "issueCode": "package-unpublished",
       "issue": "dsh-hxyz-archived-conversations is not published on npm",
-      "installable": false
-    },
-    {
-      "id": "hyizhou/dsh-spark-input:.",
-      "repositoryFullName": "hyizhou/dsh-spark-input",
-      "repositoryUrl": "https://github.com/hyizhou/dsh-spark-input",
-      "packageName": "dsh-spark-input",
-      "version": "0.1.0",
-      "displayName": {
-        "zh-CN": "dsh-spark-input",
-        "en": "dsh-spark-input"
-      },
-      "summary": {
-        "zh-CN": "Input spark particles: golden-orange glowing particles burst at the caret position on every keystroke, following the caret as you type",
-        "en": "Input spark particles: golden-orange glowing particles burst at the caret position on every keystroke, following the caret as you type"
-      },
-      "category": null,
-      "keywords": [
-        "dsh-plugin",
-        "dsh-plugins"
-      ],
-      "license": "MIT",
-      "repositoryDirectory": null,
-      "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/hyizhou/dsh-spark-input/f933677907bb7a2c74e913ebcc5ecf01f3d2ced7/package.json",
-      "verification": "rejected",
-      "issueCode": "package-unpublished",
-      "issue": "dsh-spark-input is not published on npm",
       "installable": false
     },
     {
@@ -12133,39 +12257,6 @@
       "verification": "rejected",
       "issueCode": "package-invalid",
       "issue": "dsh-plugin-finder has invalid npm metadata: versions.0.1.0.repository: Invalid input",
-      "installable": false
-    },
-    {
-      "id": "imetn/dsh-lark-bridge:.",
-      "repositoryFullName": "imetn/dsh-lark-bridge",
-      "repositoryUrl": "https://github.com/imetn/dsh-lark-bridge",
-      "packageName": "dsh-lark-bridge",
-      "version": "0.1.0",
-      "displayName": {
-        "zh-CN": "dsh-lark-bridge",
-        "en": "dsh-lark-bridge"
-      },
-      "summary": {
-        "zh-CN": "Bidirectional Lark/Feishu control bridge for DeepSeek Harness",
-        "en": "Bidirectional Lark/Feishu control bridge for DeepSeek Harness"
-      },
-      "category": null,
-      "keywords": [
-        "dsh-plugin",
-        "deepseek",
-        "deepseek-harness",
-        "feishu",
-        "lark",
-        "agent",
-        "bot"
-      ],
-      "license": "MIT",
-      "repositoryDirectory": null,
-      "homepage": "https://github.com/imetn/dsh-lark-bridge#readme",
-      "manifestUrl": "https://raw.githubusercontent.com/imetn/dsh-lark-bridge/f1e544cce5108873e238313bf7c5ccf092827e2a/package.json",
-      "verification": "rejected",
-      "issueCode": "package-unpublished",
-      "issue": "dsh-lark-bridge is not published on npm",
       "installable": false
     },
     {
@@ -12783,6 +12874,38 @@
       "installable": false
     },
     {
+      "id": "jinguanghai/deepseek-harness-forge-plugins:.",
+      "repositoryFullName": "jinguanghai/deepseek-harness-forge-plugins",
+      "repositoryUrl": "https://github.com/jinguanghai/deepseek-harness-forge-plugins",
+      "packageName": null,
+      "version": null,
+      "displayName": {
+        "zh-CN": "deepseek-harness-forge-plugins",
+        "en": "deepseek-harness-forge-plugins"
+      },
+      "summary": {
+        "zh-CN": "Forge-plus: math/logic/regex/eprover/system/repair gates + TCM diagnosis + memory recall plugins for DeepSeek Harness (dsh)",
+        "en": "Forge-plus: math/logic/regex/eprover/system/repair gates + TCM diagnosis + memory recall plugins for DeepSeek Harness (dsh)"
+      },
+      "category": null,
+      "keywords": [
+        "agent",
+        "deepseek-harness",
+        "dsh-plugin",
+        "forge",
+        "plugin",
+        "tcm"
+      ],
+      "license": "MIT",
+      "repositoryDirectory": null,
+      "homepage": null,
+      "manifestUrl": "https://raw.githubusercontent.com/jinguanghai/deepseek-harness-forge-plugins/e6cc27c161ae8de06fac640bc7fe678f4f71cf13/package.json",
+      "verification": "rejected",
+      "issueCode": "manifest-unavailable",
+      "issue": "https://raw.githubusercontent.com/jinguanghai/deepseek-harness-forge-plugins/e6cc27c161ae8de06fac640bc7fe678f4f71cf13/package.json returned HTTP 404",
+      "installable": false
+    },
+    {
       "id": "jiruidai/dsh-meta-orchestrator:.",
       "repositoryFullName": "jiruidai/dsh-meta-orchestrator",
       "repositoryUrl": "https://github.com/jiruidai/dsh-meta-orchestrator",
@@ -13124,7 +13247,7 @@
       "license": "MIT",
       "repositoryDirectory": null,
       "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/juhe291/dsh-token-panel/4556ffd079f8d2708c4d7e8c013085dec43ac300/package.json",
+      "manifestUrl": "https://raw.githubusercontent.com/juhe291/dsh-token-panel/d0a0d4a35bbe6acd0004c31ac459af94a03d23da/package.json",
       "verification": "rejected",
       "issueCode": "package-unpublished",
       "issue": "dsh-token-panel is not published on npm",
@@ -13371,6 +13494,37 @@
       "installable": false
     },
     {
+      "id": "Karbo123/DSH-EvoResearch:.",
+      "repositoryFullName": "Karbo123/DSH-EvoResearch",
+      "repositoryUrl": "https://github.com/Karbo123/DSH-EvoResearch",
+      "packageName": null,
+      "version": "0.1.0-rc.1",
+      "displayName": {
+        "zh-CN": "DSH-EvoResearch",
+        "en": "DSH-EvoResearch"
+      },
+      "summary": {
+        "zh-CN": "基于 deepseek-harness 的 EvoResearch TypeScript 复刻 —— DSH 插件（科研记忆 / 项目工作区 / 多智能体团队 / 定时任务 / 多通道 / WebUI 扩展 / Windows 桌面版）",
+        "en": "基于 deepseek-harness 的 EvoResearch TypeScript 复刻 —— DSH 插件（科研记忆 / 项目工作区 / 多智能体团队 / 定时任务 / 多通道 / WebUI 扩展 / Windows 桌面版）"
+      },
+      "category": null,
+      "keywords": [
+        "autonomous-research",
+        "deepseek-harness",
+        "dsh-plugin",
+        "dsh-plugins",
+        "self-evolving"
+      ],
+      "license": "MIT",
+      "repositoryDirectory": null,
+      "homepage": null,
+      "manifestUrl": "https://raw.githubusercontent.com/Karbo123/DSH-EvoResearch/b7593f3f84e5203442b0bd827543d227ed28202c/package.json",
+      "verification": "rejected",
+      "issueCode": "package-unpublished",
+      "issue": "dsh-EvoResearch is not published on npm",
+      "installable": false
+    },
+    {
       "id": "kazecreator/dsh-plugins:.",
       "repositoryFullName": "kazecreator/dsh-plugins",
       "repositoryUrl": "https://github.com/kazecreator/dsh-plugins",
@@ -13394,7 +13548,7 @@
       "license": "MIT",
       "repositoryDirectory": null,
       "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/kazecreator/dsh-plugins/c04c197d16692297961efe3a48d5263327f38689/package.json",
+      "manifestUrl": "https://raw.githubusercontent.com/kazecreator/dsh-plugins/ea545e3578dadb7746c24daae938fa12a96f938b/package.json",
       "verification": "rejected",
       "issueCode": "package-invalid",
       "issue": "dsh-plugins has invalid npm metadata: versions.0.1.2.repository: Invalid input",
@@ -13723,6 +13877,41 @@
       "installable": false
     },
     {
+      "id": "Khorsheed/dsh-ankh-guard:.",
+      "repositoryFullName": "Khorsheed/dsh-ankh-guard",
+      "repositoryUrl": "https://github.com/Khorsheed/dsh-ankh-guard",
+      "packageName": "@khorsheed/dsh-ankh-guard",
+      "version": "0.1.0-rc.6.2",
+      "displayName": {
+        "zh-CN": "@khorsheed/dsh-ankh-guard",
+        "en": "@khorsheed/dsh-ankh-guard"
+      },
+      "summary": {
+        "zh-CN": "Hard gate for self-modification restarts: a green-build credential bound to the git HEAD, checked before any restart of the running instance",
+        "en": "Hard gate for self-modification restarts: a green-build credential bound to the git HEAD, checked before any restart of the running instance"
+      },
+      "category": null,
+      "keywords": [
+        "dsh",
+        "dsh-plugin",
+        "cordis",
+        "guard",
+        "self-modification",
+        "self-restart",
+        "watchdog",
+        "canary",
+        "rollback"
+      ],
+      "license": "MIT",
+      "repositoryDirectory": null,
+      "homepage": null,
+      "manifestUrl": "https://raw.githubusercontent.com/Khorsheed/dsh-ankh-guard/264fa0de3c1910e202d8d235eda8e57c464d48c6/package.json",
+      "verification": "rejected",
+      "issueCode": "package-unpublished",
+      "issue": "@khorsheed/dsh-ankh-guard@0.1.0-rc.6.2 is not published on npm",
+      "installable": false
+    },
+    {
       "id": "kirkchinese/Claudecode--DSH:.",
       "repositoryFullName": "kirkchinese/Claudecode--DSH",
       "repositoryUrl": "https://github.com/kirkchinese/Claudecode--DSH",
@@ -13822,6 +14011,87 @@
       "verification": "rejected",
       "issueCode": "package-invalid",
       "issue": "dsh-compaction-instant has invalid npm metadata: versions.0.1.0.repository: Invalid input",
+      "installable": false
+    },
+    {
+      "id": "kkishapppy/dsh-opencode-go-usage:.",
+      "repositoryFullName": "kkishapppy/dsh-opencode-go-usage",
+      "repositoryUrl": "https://github.com/kkishapppy/dsh-opencode-go-usage",
+      "packageName": "dsh-opencode-go-usage",
+      "version": "0.1.0",
+      "displayName": {
+        "zh-CN": "dsh-opencode-go-usage",
+        "en": "dsh-opencode-go-usage"
+      },
+      "summary": {
+        "zh-CN": "OpenCode Go 订阅用量小部件：滚动/周/月用量百分比与重置倒计时，右下偏中悬浮显示（服务端代理 opencode.ai/zen/go/v1/usage + 浏览器小部件，key 不落浏览器）",
+        "en": "OpenCode Go 订阅用量小部件：滚动/周/月用量百分比与重置倒计时，右下偏中悬浮显示（服务端代理 opencode.ai/zen/go/v1/usage + 浏览器小部件，key 不落浏览器）"
+      },
+      "category": null,
+      "keywords": [
+        "dsh-plugin"
+      ],
+      "license": "MIT",
+      "repositoryDirectory": null,
+      "homepage": null,
+      "manifestUrl": "https://raw.githubusercontent.com/kkishapppy/dsh-opencode-go-usage/7a5ed86ffa51d760e9fe867f798d0c649c977026/package.json",
+      "verification": "rejected",
+      "issueCode": "package-invalid",
+      "issue": "dsh-opencode-go-usage has invalid npm metadata: versions.1.0.0.repository: Invalid input",
+      "installable": false
+    },
+    {
+      "id": "kkishapppy/dsh-session-repacker:.",
+      "repositoryFullName": "kkishapppy/dsh-session-repacker",
+      "repositoryUrl": "https://github.com/kkishapppy/dsh-session-repacker",
+      "packageName": "dsh-session-repacker",
+      "version": "0.1.0",
+      "displayName": {
+        "zh-CN": "dsh-session-repacker",
+        "en": "dsh-session-repacker"
+      },
+      "summary": {
+        "zh-CN": "会话日志 zstd 帧重打包：把逐批写入的成千上万个独立 zstd 帧合并为官方标准形态（头部帧 + 单事件帧），大幅降低旧会话打开时的解压开销；后台自动维护 + 独立 CLI 一键执行。",
+        "en": "会话日志 zstd 帧重打包：把逐批写入的成千上万个独立 zstd 帧合并为官方标准形态（头部帧 + 单事件帧），大幅降低旧会话打开时的解压开销；后台自动维护 + 独立 CLI 一键执行。"
+      },
+      "category": null,
+      "keywords": [
+        "dsh-plugin"
+      ],
+      "license": "MIT",
+      "repositoryDirectory": null,
+      "homepage": null,
+      "manifestUrl": "https://raw.githubusercontent.com/kkishapppy/dsh-session-repacker/f5afcec1ed5cb2753781cbecd8df6df05a823174/package.json",
+      "verification": "rejected",
+      "issueCode": "package-unpublished",
+      "issue": "dsh-session-repacker is not published on npm",
+      "installable": false
+    },
+    {
+      "id": "kkishapppy/dsh-usage-record:.",
+      "repositoryFullName": "kkishapppy/dsh-usage-record",
+      "repositoryUrl": "https://github.com/kkishapppy/dsh-usage-record",
+      "packageName": "dsh-usage-record",
+      "version": "0.1.0",
+      "displayName": {
+        "zh-CN": "dsh-usage-record",
+        "en": "dsh-usage-record"
+      },
+      "summary": {
+        "zh-CN": "每轮提问的 LLM 用量记录：左侧栏按钮 + 抽屉面板，列出每轮的 tokens/耗时/工具调用，点击跳转到对应会话",
+        "en": "每轮提问的 LLM 用量记录：左侧栏按钮 + 抽屉面板，列出每轮的 tokens/耗时/工具调用，点击跳转到对应会话"
+      },
+      "category": null,
+      "keywords": [
+        "dsh-plugin"
+      ],
+      "license": "MIT",
+      "repositoryDirectory": null,
+      "homepage": null,
+      "manifestUrl": "https://raw.githubusercontent.com/kkishapppy/dsh-usage-record/e2b99652846d29ebe66179eaa05a92ca0e3b302c/package.json",
+      "verification": "rejected",
+      "issueCode": "package-unpublished",
+      "issue": "dsh-usage-record is not published on npm",
       "installable": false
     },
     {
@@ -13974,7 +14244,7 @@
       "license": "MIT",
       "repositoryDirectory": null,
       "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/Kristin130/dsh-commandcode-provider/548e2e8879f448ad16b23700f9a806e16c8b14f1/package.json",
+      "manifestUrl": "https://raw.githubusercontent.com/Kristin130/dsh-commandcode-provider/4b87fae962b158c47deb2c853e32377d92d8c904/package.json",
       "verification": "unverified",
       "issueCode": "manifest-invalid",
       "issue": "dsh.plugin: Invalid input: expected object, received undefined",
@@ -14133,7 +14403,7 @@
       "license": "MIT",
       "repositoryDirectory": null,
       "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/LAN-TINA-WS/dsh-gui-customization/9a33025838db33bf8c6871f2e1fadeef9dd01961/package.json",
+      "manifestUrl": "https://raw.githubusercontent.com/LAN-TINA-WS/dsh-gui-customization/3b77c12738e26b9de42dcb76f999747a8dce8172/package.json",
       "verification": "rejected",
       "issueCode": "package-unpublished",
       "issue": "core-dsh-plugins is not published on npm",
@@ -14285,7 +14555,7 @@
       "license": "MIT",
       "repositoryDirectory": null,
       "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/lco117/dsh-think-any-lang/2a34cd0f977129b496a4a7a5b7d32515e1dac414/package.json",
+      "manifestUrl": "https://raw.githubusercontent.com/lco117/dsh-think-any-lang/16fe3ffc2ceccea5dfb90c57a9fa8664c51ab898/package.json",
       "verification": "rejected",
       "issueCode": "package-unpublished",
       "issue": "dsh-think-any-lang is not published on npm",
@@ -14380,7 +14650,7 @@
       "license": "MIT",
       "repositoryDirectory": null,
       "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/leavestring/awesome-dsh-background-plugin/b39361951c3710c1a0b102560e909b740a86c91a/package.json",
+      "manifestUrl": "https://raw.githubusercontent.com/leavestring/awesome-dsh-background-plugin/2e52a402f16608886d36050c30950ea69d233f60/package.json",
       "verification": "rejected",
       "issueCode": "package-unpublished",
       "issue": "awesome-dsh-background-plugin is not published on npm",
@@ -14410,10 +14680,10 @@
       "license": "MIT",
       "repositoryDirectory": null,
       "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/Leawind/dsh-minecraft-dev/f4d376c420cd3cfe90ee43be4effe373b31ea297/package.json",
+      "manifestUrl": "https://raw.githubusercontent.com/Leawind/dsh-minecraft-dev/b3437b775e68fe3387ad49019391841dc04de2a5/package.json",
       "verification": "rejected",
       "issueCode": "manifest-unavailable",
-      "issue": "https://raw.githubusercontent.com/Leawind/dsh-minecraft-dev/f4d376c420cd3cfe90ee43be4effe373b31ea297/package.json returned HTTP 404",
+      "issue": "https://raw.githubusercontent.com/Leawind/dsh-minecraft-dev/b3437b775e68fe3387ad49019391841dc04de2a5/package.json returned HTTP 404",
       "installable": false
     },
     {
@@ -14535,7 +14805,7 @@
       "license": "MIT",
       "repositoryDirectory": null,
       "homepage": "https://github.com/LeemanCheung/dsh-token-usage#readme",
-      "manifestUrl": "https://raw.githubusercontent.com/LeemanCheung/dsh-token-usage/0ea9f740dd69d218ab1707afafd8475d0720b98e/package.json",
+      "manifestUrl": "https://raw.githubusercontent.com/LeemanCheung/dsh-token-usage/7e0f31fc218df5605c7066c005a8e6c66c415fc2/package.json",
       "verification": "rejected",
       "issueCode": "package-invalid",
       "issue": "dsh-token-usage has invalid npm metadata: versions.0.1.0.repository: Invalid input",
@@ -14650,7 +14920,7 @@
       "license": "BSD-3-Clause",
       "repositoryDirectory": null,
       "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/lehhair/dsh-home-ui/d4143f10bee3cd3fc98c56feef40e31b3707769c/package.json",
+      "manifestUrl": "https://raw.githubusercontent.com/lehhair/dsh-home-ui/e34ba50eefb5b5f9352485ad91f861b93ce2c07b/package.json",
       "verification": "rejected",
       "issueCode": "package-unpublished",
       "issue": "@dsh-external/dsh-home-ui is not published on npm",
@@ -14770,7 +15040,7 @@
       "license": "MIT",
       "repositoryDirectory": null,
       "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/LeslieWylie/agent-loop-workflow/2b7066d7e9f0e4f48e761eee9c0a0d14a18b1ad2/package.json",
+      "manifestUrl": "https://raw.githubusercontent.com/LeslieWylie/agent-loop-workflow/9b84df14df9c0785be1a69d7f98f98a48f575d90/package.json",
       "verification": "rejected",
       "issueCode": "package-unpublished",
       "issue": "@dsh-agent-loop/agent-loop-workflow is not published on npm",
@@ -14832,7 +15102,7 @@
       "license": "MIT",
       "repositoryDirectory": null,
       "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/LeslieWylie/dsh-fleet-audit/8d45cf33dc0c59dc4d0c0b0cbf715a3b072c1ddb/package.json",
+      "manifestUrl": "https://raw.githubusercontent.com/LeslieWylie/dsh-fleet-audit/1ceb72724ab5912669a1b828a326f70d64118cd4/package.json",
       "verification": "rejected",
       "issueCode": "package-unpublished",
       "issue": "dsh-fleet-audit is not published on npm",
@@ -14843,7 +15113,7 @@
       "repositoryFullName": "LeslieWylie/dsh-md-preview",
       "repositoryUrl": "https://github.com/LeslieWylie/dsh-md-preview",
       "packageName": "dsh-md-preview",
-      "version": "0.2.0",
+      "version": "0.2.1",
       "displayName": {
         "zh-CN": "dsh-md-preview",
         "en": "dsh-md-preview"
@@ -14868,7 +15138,7 @@
       "license": "MIT",
       "repositoryDirectory": null,
       "homepage": "https://github.com/LeslieWylie/dsh-md-preview#readme",
-      "manifestUrl": "https://raw.githubusercontent.com/LeslieWylie/dsh-md-preview/e9f8f635787895eae934e076083fb94d5610d7df/package.json",
+      "manifestUrl": "https://raw.githubusercontent.com/LeslieWylie/dsh-md-preview/211c3178eb0cf638cd68dc212a40c449dabf8b18/package.json",
       "verification": "rejected",
       "issueCode": "package-unpublished",
       "issue": "dsh-md-preview is not published on npm",
@@ -14966,7 +15236,7 @@
       "license": "MIT",
       "repositoryDirectory": null,
       "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/LeslieWylie/dsh-task-relay/0d84e1e44d7df7eb51de749e3e23a7d5cca78486/package.json",
+      "manifestUrl": "https://raw.githubusercontent.com/LeslieWylie/dsh-task-relay/7e109ddf82e07a05f6d940cb3680e915f78e3288/package.json",
       "verification": "rejected",
       "issueCode": "package-unpublished",
       "issue": "@deepseek-ai/dsh-task-relay is not published on npm",
@@ -14998,7 +15268,7 @@
       "license": "MIT",
       "repositoryDirectory": null,
       "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/LeslieWylie/review-workflow/4c043f595e5225a87cf356bd4493f61b7364c4a9/package.json",
+      "manifestUrl": "https://raw.githubusercontent.com/LeslieWylie/review-workflow/33e37e8ebb577ae0b75012304a99d2e41e2aa89a/package.json",
       "verification": "rejected",
       "issueCode": "package-unpublished",
       "issue": "@dsh-review/review-workflow is not published on npm",
@@ -15139,7 +15409,7 @@
       "repositoryFullName": "LiangYin233/dsh-provider-model-configurator",
       "repositoryUrl": "https://github.com/LiangYin233/dsh-provider-model-configurator",
       "packageName": "dsh-provider-model-configurator",
-      "version": "0.3.2",
+      "version": "0.3.3",
       "displayName": {
         "zh-CN": "dsh-provider-model-configurator",
         "en": "dsh-provider-model-configurator"
@@ -15162,7 +15432,7 @@
       "license": "MIT",
       "repositoryDirectory": null,
       "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/LiangYin233/dsh-provider-model-configurator/29a02f42e9dfa5a26c38f0be624a35110d759740/package.json",
+      "manifestUrl": "https://raw.githubusercontent.com/LiangYin233/dsh-provider-model-configurator/38f07814c2940711d7196e214c77d3f150690d43/package.json",
       "verification": "rejected",
       "issueCode": "package-unpublished",
       "issue": "dsh-provider-model-configurator is not published on npm",
@@ -15401,33 +15671,6 @@
       "installable": false
     },
     {
-      "id": "linhx1999/dsh-writing-pad:.",
-      "repositoryFullName": "linhx1999/dsh-writing-pad",
-      "repositoryUrl": "https://github.com/linhx1999/dsh-writing-pad",
-      "packageName": "dsh-writing-pad",
-      "version": "0.1.0",
-      "displayName": {
-        "zh-CN": "dsh-writing-pad",
-        "en": "dsh-writing-pad"
-      },
-      "summary": {
-        "zh-CN": "Session-scoped writing pad for the DeepSeek Harness web GUI: a right-details-column Markdown editor with preview, AI-assisted rewrite through the conversation, workspace file save/load, and the writing_draft agent tool.",
-        "en": "Session-scoped writing pad for the DeepSeek Harness web GUI: a right-details-column Markdown editor with preview, AI-assisted rewrite through the conversation, workspace file save/load, and the writing_draft agent tool."
-      },
-      "category": null,
-      "keywords": [
-        "dsh-plugin"
-      ],
-      "license": "MIT",
-      "repositoryDirectory": null,
-      "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/linhx1999/dsh-writing-pad/d04caeeaea61f7e25270069cd0d07b37ce2f8775/package.json",
-      "verification": "rejected",
-      "issueCode": "package-unpublished",
-      "issue": "dsh-writing-pad is not published on npm",
-      "installable": false
-    },
-    {
       "id": "linqunxun/dsh-plugins:.",
       "repositoryFullName": "linqunxun/dsh-plugins",
       "repositoryUrl": "https://github.com/linqunxun/dsh-plugins",
@@ -15584,7 +15827,7 @@
       "repositoryFullName": "liustack/modlens",
       "repositoryUrl": "https://github.com/liustack/modlens",
       "packageName": "@liustack/modlens",
-      "version": "3.16.0",
+      "version": "3.16.1",
       "displayName": {
         "zh-CN": "@liustack/modlens",
         "en": "@liustack/modlens"
@@ -15609,7 +15852,7 @@
       "license": "MIT",
       "repositoryDirectory": null,
       "homepage": "https://github.com/liustack/modlens#readme",
-      "manifestUrl": "https://raw.githubusercontent.com/liustack/modlens/ceede0b78940161d6264ddcfe61ac5f7bac7dc5b/package.json",
+      "manifestUrl": "https://raw.githubusercontent.com/liustack/modlens/0a55db25891dab4db3030b8e44b1d7ffd385cbb7/package.json",
       "verification": "unverified",
       "issueCode": "manifest-invalid",
       "issue": "dsh.plugin: Invalid input: expected object, received undefined",
@@ -15681,38 +15924,6 @@
       "verification": "rejected",
       "issueCode": "package-unpublished",
       "issue": "dsh-client-ui-peak-valley is not published on npm",
-      "installable": false
-    },
-    {
-      "id": "liyupi/dsh-kun-like-pet:.",
-      "repositoryFullName": "liyupi/dsh-kun-like-pet",
-      "repositoryUrl": "https://github.com/liyupi/dsh-kun-like-pet",
-      "packageName": "dsh-kun-like-pet",
-      "version": "1.0.0",
-      "displayName": {
-        "zh-CN": "dsh-kun-like-pet",
-        "en": "dsh-kun-like-pet"
-      },
-      "summary": {
-        "zh-CN": "Kun Like 桌宠 —— DeepSeek Harness 桌面宠物插件：Web 界面右下角的小坤宠，随 Agent 工作状态切换 9 种动作，任务完成时播放「你干嘛~哎哟」",
-        "en": "Kun Like 桌宠 —— DeepSeek Harness 桌面宠物插件：Web 界面右下角的小坤宠，随 Agent 工作状态切换 9 种动作，任务完成时播放「你干嘛~哎哟」"
-      },
-      "category": null,
-      "keywords": [
-        "deepseek-harness",
-        "dsh",
-        "plugin",
-        "desktop-pet",
-        "kun",
-        "桌宠"
-      ],
-      "license": "MIT",
-      "repositoryDirectory": null,
-      "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/liyupi/dsh-kun-like-pet/87bb6e1762618dd7727d285ffeeadd86a3799425/package.json",
-      "verification": "rejected",
-      "issueCode": "package-unpublished",
-      "issue": "dsh-kun-like-pet is not published on npm",
       "installable": false
     },
     {
@@ -16127,10 +16338,10 @@
       "license": null,
       "repositoryDirectory": null,
       "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/lsz-asd/dsh-chameleon/84f713908d99adfe794826af660a372d456458e0/package.json",
+      "manifestUrl": "https://raw.githubusercontent.com/lsz-asd/dsh-chameleon/b8eba6447665bf4f54537bed3117ed4f823b6678/package.json",
       "verification": "rejected",
       "issueCode": "manifest-unavailable",
-      "issue": "https://raw.githubusercontent.com/lsz-asd/dsh-chameleon/84f713908d99adfe794826af660a372d456458e0/package.json returned HTTP 404",
+      "issue": "https://raw.githubusercontent.com/lsz-asd/dsh-chameleon/b8eba6447665bf4f54537bed3117ed4f823b6678/package.json returned HTTP 404",
       "installable": false
     },
     {
@@ -16181,7 +16392,7 @@
       "license": "MIT",
       "repositoryDirectory": null,
       "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/lsz-asd/dsh-plugin-session-delete/60a3e224d68aa84216d152ea4e89ba5a826861fa/package.json",
+      "manifestUrl": "https://raw.githubusercontent.com/lsz-asd/dsh-plugin-session-delete/b2458ce0ff402d49a0695f53c22764433f763362/package.json",
       "verification": "rejected",
       "issueCode": "package-unpublished",
       "issue": "@huanlin/dsh-plugin-session-delete is not published on npm",
@@ -16609,7 +16820,7 @@
       "repositoryFullName": "mafeis/dsh-net-proxy",
       "repositoryUrl": "https://github.com/mafeis/dsh-net-proxy",
       "packageName": "dsh-net-proxy",
-      "version": "0.1.0",
+      "version": "0.2.2",
       "displayName": {
         "zh-CN": "dsh-net-proxy",
         "en": "dsh-net-proxy"
@@ -16632,7 +16843,7 @@
       "license": "MIT",
       "repositoryDirectory": null,
       "homepage": "https://github.com/mafeis/dsh-net-proxy",
-      "manifestUrl": "https://raw.githubusercontent.com/mafeis/dsh-net-proxy/6bfd8879096f02c4978e2f70e8e17d481ae2b7c6/package.json",
+      "manifestUrl": "https://raw.githubusercontent.com/mafeis/dsh-net-proxy/ebebe8d36de9153dd710018702103b2225c8d08b/package.json",
       "verification": "rejected",
       "issueCode": "package-unpublished",
       "issue": "dsh-net-proxy is not published on npm",
@@ -16770,7 +16981,7 @@
       "repositoryFullName": "Mars-Sea/dsh-commandcode-provider",
       "repositoryUrl": "https://github.com/Mars-Sea/dsh-commandcode-provider",
       "packageName": "@mars-sea/dsh-commandcode-provider",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "displayName": {
         "zh-CN": "@mars-sea/dsh-commandcode-provider",
         "en": "@mars-sea/dsh-commandcode-provider"
@@ -16794,7 +17005,7 @@
       "license": "MIT",
       "repositoryDirectory": null,
       "homepage": "https://github.com/Mars-Sea/dsh-commandcode-provider#readme",
-      "manifestUrl": "https://raw.githubusercontent.com/Mars-Sea/dsh-commandcode-provider/7b0735619046ba2a33d4e81245081ddeedb283d6/package.json",
+      "manifestUrl": "https://raw.githubusercontent.com/Mars-Sea/dsh-commandcode-provider/805060acbb5178b5fefb885509cc3718a9a75f17/package.json",
       "verification": "unverified",
       "issueCode": "manifest-invalid",
       "issue": "dsh.plugin: Invalid input: expected object, received undefined",
@@ -16954,35 +17165,6 @@
       "verification": "rejected",
       "issueCode": "package-unpublished",
       "issue": "dsh-approval-comment is not published on npm",
-      "installable": false
-    },
-    {
-      "id": "mbj733/dsh-hermes-memory:.",
-      "repositoryFullName": "mbj733/dsh-hermes-memory",
-      "repositoryUrl": "https://github.com/mbj733/dsh-hermes-memory",
-      "packageName": null,
-      "version": null,
-      "displayName": {
-        "zh-CN": "dsh-hermes-memory",
-        "en": "dsh-hermes-memory"
-      },
-      "summary": {
-        "zh-CN": "DSH (DeepSeek Harness) agent preset + plugin: Hermes-style cross-session memory & autonomous skill learning.",
-        "en": "DSH (DeepSeek Harness) agent preset + plugin: Hermes-style cross-session memory & autonomous skill learning."
-      },
-      "category": null,
-      "keywords": [
-        "dsh",
-        "dsh-plugin",
-        "dsh-plugins"
-      ],
-      "license": null,
-      "repositoryDirectory": null,
-      "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/mbj733/dsh-hermes-memory/204f998ec6421bfc917f2947d479a30d26bd886e/package.json",
-      "verification": "rejected",
-      "issueCode": "manifest-unavailable",
-      "issue": "https://raw.githubusercontent.com/mbj733/dsh-hermes-memory/204f998ec6421bfc917f2947d479a30d26bd886e/package.json returned HTTP 404",
       "installable": false
     },
     {
@@ -17168,7 +17350,7 @@
       "license": "MIT",
       "repositoryDirectory": null,
       "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/mervyn-teo/dsh-plugin-qr-connect/ff18d675934c920b0ed47da8e24449fa6bcaa556/package.json",
+      "manifestUrl": "https://raw.githubusercontent.com/mervyn-teo/dsh-plugin-qr-connect/6c8faa692dab9d6ae53a4567abfba264a749ff25/package.json",
       "verification": "rejected",
       "issueCode": "package-unpublished",
       "issue": "dsh-plugin-qr-connect is not published on npm",
@@ -17551,6 +17733,36 @@
       "installable": false
     },
     {
+      "id": "MoFeng2223/dsh-claude-provider:.",
+      "repositoryFullName": "MoFeng2223/dsh-claude-provider",
+      "repositoryUrl": "https://github.com/MoFeng2223/dsh-claude-provider",
+      "packageName": "@mofeng2223/dsh-claude-provider",
+      "version": "0.1.0",
+      "displayName": {
+        "zh-CN": "@mofeng2223/dsh-claude-provider",
+        "en": "@mofeng2223/dsh-claude-provider"
+      },
+      "summary": {
+        "zh-CN": "Custom Claude provider support for DeepSeek Harness",
+        "en": "Custom Claude provider support for DeepSeek Harness"
+      },
+      "category": null,
+      "keywords": [
+        "deepseek-harness",
+        "dsh-plugin",
+        "claude",
+        "anthropic"
+      ],
+      "license": "MIT",
+      "repositoryDirectory": null,
+      "homepage": "https://github.com/MoFeng2223/dsh-claude-provider#readme",
+      "manifestUrl": "https://raw.githubusercontent.com/MoFeng2223/dsh-claude-provider/a0e93d67d4b405a76ba8e59d3511042cc1274cb5/package.json",
+      "verification": "rejected",
+      "issueCode": "package-invalid",
+      "issue": "@mofeng2223/dsh-claude-provider has invalid npm metadata: versions.0.1.0.repository: Invalid input",
+      "installable": false
+    },
+    {
       "id": "Momojie-S/deepseek-harness-101:.",
       "repositoryFullName": "Momojie-S/deepseek-harness-101",
       "repositoryUrl": "https://github.com/Momojie-S/deepseek-harness-101",
@@ -17572,10 +17784,38 @@
       "license": null,
       "repositoryDirectory": null,
       "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/Momojie-S/deepseek-harness-101/12f656cf99d1ea43859411e6371853004a25ac6a/package.json",
+      "manifestUrl": "https://raw.githubusercontent.com/Momojie-S/deepseek-harness-101/0aeb641c8219a20ed386beeac9235437d9d4de8f/package.json",
       "verification": "rejected",
       "issueCode": "manifest-unavailable",
-      "issue": "https://raw.githubusercontent.com/Momojie-S/deepseek-harness-101/12f656cf99d1ea43859411e6371853004a25ac6a/package.json returned HTTP 404",
+      "issue": "https://raw.githubusercontent.com/Momojie-S/deepseek-harness-101/0aeb641c8219a20ed386beeac9235437d9d4de8f/package.json returned HTTP 404",
+      "installable": false
+    },
+    {
+      "id": "Momojie-S/dsh-subagent-model:.",
+      "repositoryFullName": "Momojie-S/dsh-subagent-model",
+      "repositoryUrl": "https://github.com/Momojie-S/dsh-subagent-model",
+      "packageName": "@momojie-s/dsh-subagent-model",
+      "version": "0.1.0",
+      "displayName": {
+        "zh-CN": "@momojie-s/dsh-subagent-model",
+        "en": "@momojie-s/dsh-subagent-model"
+      },
+      "summary": {
+        "zh-CN": "DSH 插件: 可按次指定模型路由的 subagent 委派工具（fork 自 @deepseek-ai/dsh-tool-subagent，最小 diff）",
+        "en": "DSH 插件: 可按次指定模型路由的 subagent 委派工具（fork 自 @deepseek-ai/dsh-tool-subagent，最小 diff）"
+      },
+      "category": null,
+      "keywords": [
+        "deepseek-harness",
+        "dsh-plugin"
+      ],
+      "license": "MIT",
+      "repositoryDirectory": null,
+      "homepage": null,
+      "manifestUrl": "https://raw.githubusercontent.com/Momojie-S/dsh-subagent-model/205c56ba86ba61e17a50e5a324fe727327c810c2/package.json",
+      "verification": "rejected",
+      "issueCode": "package-unpublished",
+      "issue": "@momojie-s/dsh-subagent-model is not published on npm",
       "installable": false
     },
     {
@@ -17852,8 +18092,8 @@
       "homepage": null,
       "manifestUrl": "https://raw.githubusercontent.com/MorGogh/widget-dock/8db622a44a971f2a67fe85e41197f4e0021de563/package.json",
       "verification": "rejected",
-      "issueCode": "package-unpublished",
-      "issue": "widget-dock is not published on npm",
+      "issueCode": "package-invalid",
+      "issue": "widget-dock has invalid npm metadata: versions.1.0.0.repository: Invalid input",
       "installable": false
     },
     {
@@ -17992,39 +18232,6 @@
       "verification": "rejected",
       "issueCode": "manifest-unavailable",
       "issue": "https://raw.githubusercontent.com/morluto/leantoken/66b37498403971f065a1d23f4c1de0fde82c2681/package.json returned HTTP 404",
-      "installable": false
-    },
-    {
-      "id": "moxingovo/dsh-web-panel:.",
-      "repositoryFullName": "moxingovo/dsh-web-panel",
-      "repositoryUrl": "https://github.com/moxingovo/dsh-web-panel",
-      "packageName": "dsh-webview",
-      "version": "0.2.1",
-      "displayName": {
-        "zh-CN": "dsh-webview",
-        "en": "dsh-webview"
-      },
-      "summary": {
-        "zh-CN": "Embed the DeepSeek Harness web GUI inside VS Code: attaches to (or auto-starts) the local dsh web server and renders it in a sidebar view and an editor-tab panel.",
-        "en": "Embed the DeepSeek Harness web GUI inside VS Code: attaches to (or auto-starts) the local dsh web server and renders it in a sidebar view and an editor-tab panel."
-      },
-      "category": null,
-      "keywords": [
-        "deepseek",
-        "deepseek-harness",
-        "dsh",
-        "vscode-extension",
-        "webview",
-        "ai-agent",
-        "coding-assistant"
-      ],
-      "license": "MIT",
-      "repositoryDirectory": null,
-      "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/moxingovo/dsh-web-panel/e6b5ca1ea125e16fd827b58a14ddf0cbd058defa/package.json",
-      "verification": "rejected",
-      "issueCode": "package-unpublished",
-      "issue": "dsh-webview is not published on npm",
       "installable": false
     },
     {
@@ -18229,10 +18436,10 @@
       "license": "MIT",
       "repositoryDirectory": null,
       "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/N0zoM1z0/th08/9fa431a065bec436e510acc3f1efa1cb8f1b375d/package.json",
+      "manifestUrl": "https://raw.githubusercontent.com/N0zoM1z0/th08/9bed609743887b1a637c21fbe25fcb4784fcf70e/package.json",
       "verification": "rejected",
       "issueCode": "manifest-unavailable",
-      "issue": "https://raw.githubusercontent.com/N0zoM1z0/th08/9fa431a065bec436e510acc3f1efa1cb8f1b375d/package.json returned HTTP 404",
+      "issue": "https://raw.githubusercontent.com/N0zoM1z0/th08/9bed609743887b1a637c21fbe25fcb4784fcf70e/package.json returned HTTP 404",
       "installable": false
     },
     {
@@ -18297,7 +18504,7 @@
       "license": "MIT",
       "repositoryDirectory": null,
       "homepage": "https://github.com/NanmiCoder/dsh-agent-teams#readme",
-      "manifestUrl": "https://raw.githubusercontent.com/NanmiCoder/dsh-agent-teams/f5f60d16c8673f59951c80f04d6211f56b5453f2/package.json",
+      "manifestUrl": "https://raw.githubusercontent.com/NanmiCoder/dsh-agent-teams/8edd7fd58f6de1d0ce5ed05f03905db8d05bc78c/package.json",
       "verification": "rejected",
       "issueCode": "package-unpublished",
       "issue": "@nanmicoder/dsh-agent-teams@0.1.2 is not published on npm",
@@ -18401,7 +18608,7 @@
       "license": "Apache-2.0",
       "repositoryDirectory": null,
       "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/nexu-io/open-design/58bbef53468177635f9de81840b4897bbf24a9f5/package.json",
+      "manifestUrl": "https://raw.githubusercontent.com/nexu-io/open-design/cf094aad1cbb1987e47403b0e8085f2a50a135d8/package.json",
       "verification": "rejected",
       "issueCode": "package-invalid",
       "issue": "open-design has invalid npm metadata: versions: Invalid input: expected record, received undefined",
@@ -18440,42 +18647,6 @@
       "repositoryDirectory": null,
       "homepage": "https://github.com/NexusAgentX/dsh-lens#readme",
       "manifestUrl": "https://raw.githubusercontent.com/NexusAgentX/dsh-lens/01bdc8435e0de3e45bc0f15fb55d2c30da748291/package.json",
-      "verification": "unverified",
-      "issueCode": "manifest-invalid",
-      "issue": "dsh.plugin: Invalid input: expected object, received undefined",
-      "installable": true
-    },
-    {
-      "id": "NexusAgentX/dsh-web-access:.",
-      "repositoryFullName": "NexusAgentX/dsh-web-access",
-      "repositoryUrl": "https://github.com/NexusAgentX/dsh-web-access",
-      "packageName": "dsh-web-access",
-      "version": "0.2.4",
-      "displayName": {
-        "zh-CN": "dsh-web-access",
-        "en": "dsh-web-access"
-      },
-      "summary": {
-        "zh-CN": "Web access for DeepSeek Harness — multi-provider search/fetch on ctx.web, plus GitHub/PDF/YouTube extraction.",
-        "en": "Web access for DeepSeek Harness — multi-provider search/fetch on ctx.web, plus GitHub/PDF/YouTube extraction."
-      },
-      "category": null,
-      "keywords": [
-        "dsh",
-        "dsh-plugin",
-        "deepseek-harness",
-        "web-search",
-        "web-fetch",
-        "exa",
-        "brave",
-        "searxng",
-        "ai",
-        "coding-agent"
-      ],
-      "license": "MIT",
-      "repositoryDirectory": null,
-      "homepage": "https://github.com/NexusAgentX/dsh-web-access#readme",
-      "manifestUrl": "https://raw.githubusercontent.com/NexusAgentX/dsh-web-access/74e9653a5a506376b7e09209fa537bd14eabfa39/package.json",
       "verification": "unverified",
       "issueCode": "manifest-invalid",
       "issue": "dsh.plugin: Invalid input: expected object, received undefined",
@@ -18532,42 +18703,10 @@
       "license": null,
       "repositoryDirectory": null,
       "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/NinjaSln-labs/dsh-plugins/c82ee8ad2a6200be45a64ea373b4d7c1b93716fb/package.json",
+      "manifestUrl": "https://raw.githubusercontent.com/NinjaSln-labs/dsh-plugins/b6b2fb10249e264bc55dc9e916e57f313572d929/package.json",
       "verification": "rejected",
       "issueCode": "manifest-invalid",
       "issue": "version: Invalid input: expected string, received undefined",
-      "installable": false
-    },
-    {
-      "id": "nitrazepam01/dsh-web-search-tavily:.",
-      "repositoryFullName": "nitrazepam01/dsh-web-search-tavily",
-      "repositoryUrl": "https://github.com/nitrazepam01/dsh-web-search-tavily",
-      "packageName": "dsh-web-search-tavily",
-      "version": "0.1.0",
-      "displayName": {
-        "zh-CN": "dsh-web-search-tavily",
-        "en": "dsh-web-search-tavily"
-      },
-      "summary": {
-        "zh-CN": "Tavily-backed search provider (native web_search via the Tavily /search API) for the DeepSeek Harness web capability seam (ctx.web)",
-        "en": "Tavily-backed search provider (native web_search via the Tavily /search API) for the DeepSeek Harness web capability seam (ctx.web)"
-      },
-      "category": null,
-      "keywords": [
-        "dsh-plugin",
-        "deepseek-harness",
-        "dsh",
-        "cordis",
-        "web-search",
-        "tavily"
-      ],
-      "license": "MIT",
-      "repositoryDirectory": null,
-      "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/nitrazepam01/dsh-web-search-tavily/4dac8613b8d3f09ba3e24cb9750b93ea1fefd912/package.json",
-      "verification": "rejected",
-      "issueCode": "package-unpublished",
-      "issue": "dsh-web-search-tavily is not published on npm",
       "installable": false
     },
     {
@@ -18609,14 +18748,14 @@
       "repositoryFullName": "Niuniu-Sir/dsh-data-ledger",
       "repositoryUrl": "https://github.com/Niuniu-Sir/dsh-data-ledger",
       "packageName": "dsh-data-ledger",
-      "version": "0.2.1",
+      "version": "0.2.4",
       "displayName": {
         "zh-CN": "dsh-data-ledger",
         "en": "dsh-data-ledger"
       },
       "summary": {
-        "zh-CN": "数据台账 + AI 管家：统一本地数据看板（来源/位置/摘要、回收站删除），并给智能体装上看懂与清理数据的 ledger_* 工具",
-        "en": "数据台账 + AI 管家：统一本地数据看板（来源/位置/摘要、回收站删除），并给智能体装上看懂与清理数据的 ledger_* 工具"
+        "zh-CN": "数据管理 + AI 管家：统一本地数据看板（来源/位置/摘要、回收站删除），并给智能体装上看懂与清理数据的 ledger_* 工具",
+        "en": "数据管理 + AI 管家：统一本地数据看板（来源/位置/摘要、回收站删除），并给智能体装上看懂与清理数据的 ledger_* 工具"
       },
       "category": null,
       "keywords": [
@@ -18628,7 +18767,7 @@
       "license": "MIT",
       "repositoryDirectory": null,
       "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/Niuniu-Sir/dsh-data-ledger/00fa9ab146a4ede22c75a66d1e34fc91fac5ed7e/package.json",
+      "manifestUrl": "https://raw.githubusercontent.com/Niuniu-Sir/dsh-data-ledger/c20f34f1e2bb1ad14120392fddbeba14ecc94f00/package.json",
       "verification": "rejected",
       "issueCode": "package-unpublished",
       "issue": "dsh-data-ledger is not published on npm",
@@ -18725,7 +18864,7 @@
       "license": "MIT",
       "repositoryDirectory": null,
       "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/Noob-stupid/dsh-plugin-hub/bf58e9605263040863d639f8001e033120275497/package.json",
+      "manifestUrl": "https://raw.githubusercontent.com/Noob-stupid/dsh-plugin-hub/c8dc7c5062404d0f7f265d74fb776c0965f06823/package.json",
       "verification": "rejected",
       "issueCode": "package-unpublished",
       "issue": "@deepseek-ai/dsh-plugin-console is not published on npm",
@@ -18832,7 +18971,7 @@
       "license": "MIT",
       "repositoryDirectory": null,
       "homepage": "https://github.com/Nwflower/dsh-chat-import",
-      "manifestUrl": "https://raw.githubusercontent.com/Nwflower/dsh-chat-import/795a3856bf9eebca8440c0b0062860951f291f3f/package.json",
+      "manifestUrl": "https://raw.githubusercontent.com/Nwflower/dsh-chat-import/16ae7014ba783c312905da2b12759e2a6bb52c4f/package.json",
       "verification": "unverified",
       "issueCode": "manifest-invalid",
       "issue": "dsh.plugin: Invalid input: expected object, received undefined",
@@ -19141,33 +19280,6 @@
       "installable": false
     },
     {
-      "id": "omdsh-dev/dsh-fusion:.",
-      "repositoryFullName": "omdsh-dev/dsh-fusion",
-      "repositoryUrl": "https://github.com/omdsh-dev/dsh-fusion",
-      "packageName": "@deepseek-ai/dsh-fusion",
-      "version": "0.1.0",
-      "displayName": {
-        "zh-CN": "@deepseek-ai/dsh-fusion",
-        "en": "@deepseek-ai/dsh-fusion"
-      },
-      "summary": {
-        "zh-CN": "Fuse two or more DeepSeek Harness conversations into one durable, continuable session",
-        "en": "Fuse two or more DeepSeek Harness conversations into one durable, continuable session"
-      },
-      "category": null,
-      "keywords": [
-        "dsh-plugin"
-      ],
-      "license": "MIT",
-      "repositoryDirectory": null,
-      "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/omdsh-dev/dsh-fusion/5c2863934552fc5bcaa69d039a4a53d0a0edbec0/package.json",
-      "verification": "rejected",
-      "issueCode": "package-unpublished",
-      "issue": "@deepseek-ai/dsh-fusion is not published on npm",
-      "installable": false
-    },
-    {
       "id": "omdsh-dev/dsh-genui:.",
       "repositoryFullName": "omdsh-dev/dsh-genui",
       "repositoryUrl": "https://github.com/omdsh-dev/dsh-genui",
@@ -19342,61 +19454,6 @@
       "issueCode": "manifest-invalid",
       "issue": "dsh.plugin: Invalid input: expected object, received undefined",
       "installable": true
-    },
-    {
-      "id": "omdsh-dev/dsh-scout:.",
-      "repositoryFullName": "omdsh-dev/dsh-scout",
-      "repositoryUrl": "https://github.com/omdsh-dev/dsh-scout",
-      "packageName": "@deepseek-ai/dsh-tool-scout",
-      "version": "0.0.1-rc.2",
-      "displayName": {
-        "zh-CN": "@deepseek-ai/dsh-tool-scout",
-        "en": "@deepseek-ai/dsh-tool-scout"
-      },
-      "summary": {
-        "zh-CN": "Model-facing environment probe tool for DeepSeek Harness: runtime environment, PATH commands, software versions, and host resources on demand",
-        "en": "Model-facing environment probe tool for DeepSeek Harness: runtime environment, PATH commands, software versions, and host resources on demand"
-      },
-      "category": null,
-      "keywords": [
-        "dsh",
-        "dsh-plugin"
-      ],
-      "license": "MIT",
-      "repositoryDirectory": null,
-      "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/omdsh-dev/dsh-scout/40a0e89b8f8b2b72bd47df615803cbe09e8df9d0/package.json",
-      "verification": "rejected",
-      "issueCode": "package-unpublished",
-      "issue": "@deepseek-ai/dsh-tool-scout is not published on npm",
-      "installable": false
-    },
-    {
-      "id": "omdsh-dev/dsh-shuttle:.",
-      "repositoryFullName": "omdsh-dev/dsh-shuttle",
-      "repositoryUrl": "https://github.com/omdsh-dev/dsh-shuttle",
-      "packageName": "@deepseek-ai/dsh-shuttle",
-      "version": "0.1.0",
-      "displayName": {
-        "zh-CN": "@deepseek-ai/dsh-shuttle",
-        "en": "@deepseek-ai/dsh-shuttle"
-      },
-      "summary": {
-        "zh-CN": "Bidirectional conversation migration between DeepSeek Harness, Codex, Claude Code, Pi, Reasonix, and OpenCode",
-        "en": "Bidirectional conversation migration between DeepSeek Harness, Codex, Claude Code, Pi, Reasonix, and OpenCode"
-      },
-      "category": null,
-      "keywords": [
-        "dsh-plugin"
-      ],
-      "license": "MIT",
-      "repositoryDirectory": null,
-      "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/omdsh-dev/dsh-shuttle/e54f7efd9c42441a744c1cdc1a9db0ad7984414a/package.json",
-      "verification": "rejected",
-      "issueCode": "package-unpublished",
-      "issue": "@deepseek-ai/dsh-shuttle is not published on npm",
-      "installable": false
     },
     {
       "id": "omdsh-dev/fabric:.",
@@ -19598,7 +19655,7 @@
       "repositoryFullName": "openma-ai/deepseek-harness-acp",
       "repositoryUrl": "https://github.com/openma-ai/deepseek-harness-acp",
       "packageName": "@openma/deepseek-harness-acp",
-      "version": "0.4.0",
+      "version": "0.4.1",
       "displayName": {
         "zh-CN": "@openma/deepseek-harness-acp",
         "en": "@openma/deepseek-harness-acp"
@@ -19618,11 +19675,11 @@
       "license": "Apache-2.0",
       "repositoryDirectory": null,
       "homepage": "https://github.com/openma-ai/deepseek-harness-acp#readme",
-      "manifestUrl": "https://raw.githubusercontent.com/openma-ai/deepseek-harness-acp/ae17b0cbf2ee83e696e780a9e91722ca9b8858ca/package.json",
-      "verification": "unverified",
-      "issueCode": "manifest-invalid",
-      "issue": "dsh.plugin: Invalid input: expected object, received undefined",
-      "installable": true
+      "manifestUrl": "https://raw.githubusercontent.com/openma-ai/deepseek-harness-acp/14c949b024f4963d452da4ce95c62371d6f42a1f/package.json",
+      "verification": "rejected",
+      "issueCode": "package-unpublished",
+      "issue": "@openma/deepseek-harness-acp@0.4.1 is not published on npm",
+      "installable": false
     },
     {
       "id": "openma-ai/deepseek-harness-tui:.",
@@ -20003,33 +20060,6 @@
       "verification": "rejected",
       "issueCode": "package-unpublished",
       "issue": "dsh-tavily-web-search is not published on npm",
-      "installable": false
-    },
-    {
-      "id": "PeanutsDou/peanut-dsh-plugin:.",
-      "repositoryFullName": "PeanutsDou/peanut-dsh-plugin",
-      "repositoryUrl": "https://github.com/PeanutsDou/peanut-dsh-plugin",
-      "packageName": null,
-      "version": null,
-      "displayName": {
-        "zh-CN": "peanut-dsh-plugin",
-        "en": "peanut-dsh-plugin"
-      },
-      "summary": {
-        "zh-CN": "PeanutsDou 的 DeepSeek Harness 插件合集：dsh-launcher 桌面壳等个人维护插件",
-        "en": "PeanutsDou 的 DeepSeek Harness 插件合集：dsh-launcher 桌面壳等个人维护插件"
-      },
-      "category": null,
-      "keywords": [
-        "dsh-plugin"
-      ],
-      "license": null,
-      "repositoryDirectory": null,
-      "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/PeanutsDou/peanut-dsh-plugin/c6df6e9ad265ee3294217fe49c984976d564f259/package.json",
-      "verification": "rejected",
-      "issueCode": "manifest-unavailable",
-      "issue": "https://raw.githubusercontent.com/PeanutsDou/peanut-dsh-plugin/c6df6e9ad265ee3294217fe49c984976d564f259/package.json returned HTTP 404",
       "installable": false
     },
     {
@@ -20567,6 +20597,37 @@
       "installable": false
     },
     {
+      "id": "PivotStackIntelligence/dsh-github:.",
+      "repositoryFullName": "PivotStackIntelligence/dsh-github",
+      "repositoryUrl": "https://github.com/PivotStackIntelligence/dsh-github",
+      "packageName": "dsh-github",
+      "version": "0.1.0",
+      "displayName": {
+        "zh-CN": "dsh-github",
+        "en": "dsh-github"
+      },
+      "summary": {
+        "zh-CN": "Source Control and GitHub panel for DeepSeek Harness.",
+        "en": "Source Control and GitHub panel for DeepSeek Harness."
+      },
+      "category": null,
+      "keywords": [
+        "dsh-plugin",
+        "deepseek-harness",
+        "git",
+        "github",
+        "source-control"
+      ],
+      "license": "MIT",
+      "repositoryDirectory": null,
+      "homepage": "https://github.com/PivotStackIntelligence/dsh-github",
+      "manifestUrl": "https://raw.githubusercontent.com/PivotStackIntelligence/dsh-github/b798d507cd43f79daa12acde03106a26228e2cb3/package.json",
+      "verification": "rejected",
+      "issueCode": "repository-mismatch",
+      "issue": "dsh-github@0.1.0 npm repository does not match its discovery repository",
+      "installable": false
+    },
+    {
       "id": "PixLunaLab/dsh-pixluna:.",
       "repositoryFullName": "PixLunaLab/dsh-pixluna",
       "repositoryUrl": "https://github.com/PixLunaLab/dsh-pixluna",
@@ -20724,6 +20785,40 @@
       "verification": "rejected",
       "issueCode": "package-unpublished",
       "issue": "dsh-vision-opencode is not published on npm",
+      "installable": false
+    },
+    {
+      "id": "poplarity/dsh-science:.",
+      "repositoryFullName": "poplarity/dsh-science",
+      "repositoryUrl": "https://github.com/poplarity/dsh-science",
+      "packageName": "dsh-science",
+      "version": "0.1.0",
+      "displayName": {
+        "zh-CN": "dsh-science",
+        "en": "dsh-science"
+      },
+      "summary": {
+        "zh-CN": "A reproducible science workbench plugin for the DeepSeek Harness: agent-driven cells, inline figures with feedback/rerun, manifest provenance, and environment snapshots.",
+        "en": "A reproducible science workbench plugin for the DeepSeek Harness: agent-driven cells, inline figures with feedback/rerun, manifest provenance, and environment snapshots."
+      },
+      "category": null,
+      "keywords": [
+        "dsh",
+        "deepseek-harness",
+        "dsh-plugin",
+        "bioinformatics",
+        "reproducible-research",
+        "workbench",
+        "jupyter",
+        "agent"
+      ],
+      "license": "MIT",
+      "repositoryDirectory": null,
+      "homepage": null,
+      "manifestUrl": "https://raw.githubusercontent.com/poplarity/dsh-science/cbc882665fd0d875fec9399fe6787a12d4052a7c/package.json",
+      "verification": "rejected",
+      "issueCode": "package-invalid",
+      "issue": "dsh-science has invalid npm metadata: versions.0.1.0.repository: Invalid input",
       "installable": false
     },
     {
@@ -21408,6 +21503,44 @@
       "installable": false
     },
     {
+      "id": "RayYeung1989/dsh-plugin-development:.",
+      "repositoryFullName": "RayYeung1989/dsh-plugin-development",
+      "repositoryUrl": "https://github.com/RayYeung1989/dsh-plugin-development",
+      "packageName": null,
+      "version": null,
+      "displayName": {
+        "zh-CN": "dsh-plugin-development",
+        "en": "dsh-plugin-development"
+      },
+      "summary": {
+        "zh-CN": "通用 dsh 插件开发 Skill：任何 agent 工具加载即会开发符合 DeepSeek Harness 的 dsh 插件 (Agent-tool-agnostic SKILL.md for developing DeepSeek Harness dsh plugins)",
+        "en": "通用 dsh 插件开发 Skill：任何 agent 工具加载即会开发符合 DeepSeek Harness 的 dsh 插件 (Agent-tool-agnostic SKILL.md for developing DeepSeek Harness dsh plugins)"
+      },
+      "category": null,
+      "keywords": [
+        "agent",
+        "agent-skills",
+        "claude-code",
+        "codex",
+        "cordis",
+        "deepseek-harness",
+        "dsh",
+        "dsh-plugin",
+        "hermes",
+        "openclaw",
+        "plugin",
+        "skill"
+      ],
+      "license": "MIT",
+      "repositoryDirectory": null,
+      "homepage": null,
+      "manifestUrl": "https://raw.githubusercontent.com/RayYeung1989/dsh-plugin-development/6f6cd7889a6cd3bd4860a2fb16b8650752eaf7e1/package.json",
+      "verification": "rejected",
+      "issueCode": "manifest-unavailable",
+      "issue": "https://raw.githubusercontent.com/RayYeung1989/dsh-plugin-development/6f6cd7889a6cd3bd4860a2fb16b8650752eaf7e1/package.json returned HTTP 404",
+      "installable": false
+    },
+    {
       "id": "ReachGa0/dsh-desktop:.",
       "repositoryFullName": "ReachGa0/dsh-desktop",
       "repositoryUrl": "https://github.com/ReachGa0/dsh-desktop",
@@ -21795,38 +21928,6 @@
       "issueCode": "manifest-unavailable",
       "issue": "https://raw.githubusercontent.com/RYun601/dsh-launcher/8e79cff84e04f680b9ae232c2f5b754271674858/package.json returned HTTP 404",
       "installable": false
-    },
-    {
-      "id": "SailingLoong/loongport-dsh:.",
-      "repositoryFullName": "SailingLoong/loongport-dsh",
-      "repositoryUrl": "https://github.com/SailingLoong/loongport-dsh",
-      "packageName": "loongport",
-      "version": "0.1.0",
-      "displayName": {
-        "zh-CN": "loongport",
-        "en": "loongport"
-      },
-      "summary": {
-        "zh-CN": "LoongPort setup CLI for DeepSeek Harness (dsh)",
-        "en": "LoongPort setup CLI for DeepSeek Harness (dsh)"
-      },
-      "category": null,
-      "keywords": [
-        "deepseek-harness",
-        "dsh",
-        "dsh-plugin",
-        "loongport",
-        "openai-compatible",
-        "cli"
-      ],
-      "license": "MIT",
-      "repositoryDirectory": null,
-      "homepage": "https://github.com/SailingLoong/loongport-dsh#readme",
-      "manifestUrl": "https://raw.githubusercontent.com/SailingLoong/loongport-dsh/4d516d63007a6cc46558fe5632c23e752a25fb77/package.json",
-      "verification": "unverified",
-      "issueCode": "manifest-invalid",
-      "issue": "dsh: Invalid input: expected object, received undefined",
-      "installable": true
     },
     {
       "id": "SajoLuo/dsh-trellis:.",
@@ -22527,7 +22628,7 @@
       "license": "MIT",
       "repositoryDirectory": null,
       "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/SenmuuuuW/dsh-whale-report/620e8d9f74eca4c92937bf90dcc1edf49c13a3f7/package.json",
+      "manifestUrl": "https://raw.githubusercontent.com/SenmuuuuW/dsh-whale-report/744946289c589e07767a462bf21202e4852baa43/package.json",
       "verification": "rejected",
       "issueCode": "package-unpublished",
       "issue": "dsh-whale-report is not published on npm",
@@ -22604,33 +22705,6 @@
       "verification": "rejected",
       "issueCode": "package-unpublished",
       "issue": "dsh-node-nav is not published on npm",
-      "installable": false
-    },
-    {
-      "id": "Sev7een/dsh-plugin-automations:.",
-      "repositoryFullName": "Sev7een/dsh-plugin-automations",
-      "repositoryUrl": "https://github.com/Sev7een/dsh-plugin-automations",
-      "packageName": "dsh-plugin-automations",
-      "version": "0.2.0",
-      "displayName": {
-        "zh-CN": "dsh-plugin-automations",
-        "en": "dsh-plugin-automations"
-      },
-      "summary": {
-        "zh-CN": "On-time and valley-hour (off-peak) scheduled tasks with daily repeat for the DeepSeek Harness Web profile.",
-        "en": "On-time and valley-hour (off-peak) scheduled tasks with daily repeat for the DeepSeek Harness Web profile."
-      },
-      "category": null,
-      "keywords": [
-        "dsh-plugin"
-      ],
-      "license": "MIT",
-      "repositoryDirectory": null,
-      "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/Sev7een/dsh-plugin-automations/971a53e5eaa1af7edd5b6bb1714001ade6cd8775/package.json",
-      "verification": "rejected",
-      "issueCode": "package-unpublished",
-      "issue": "dsh-plugin-automations is not published on npm",
       "installable": false
     },
     {
@@ -22860,6 +22934,35 @@
       "installable": false
     },
     {
+      "id": "shine-yu-student/dsh-calm:.",
+      "repositoryFullName": "shine-yu-student/dsh-calm",
+      "repositoryUrl": "https://github.com/shine-yu-student/dsh-calm",
+      "packageName": null,
+      "version": null,
+      "displayName": {
+        "zh-CN": "dsh-calm",
+        "en": "dsh-calm"
+      },
+      "summary": {
+        "zh-CN": "An agent preset that simply cut your agent cost down by utilizing the power of PTC.",
+        "en": "An agent preset that simply cut your agent cost down by utilizing the power of PTC."
+      },
+      "category": null,
+      "keywords": [
+        "dsh-ecosystem",
+        "dsh-plugin",
+        "dsh-plugins"
+      ],
+      "license": "MIT",
+      "repositoryDirectory": null,
+      "homepage": null,
+      "manifestUrl": "https://raw.githubusercontent.com/shine-yu-student/dsh-calm/c8d22fe889d3c51efd2168bb9273df6bd803103e/package.json",
+      "verification": "rejected",
+      "issueCode": "manifest-unavailable",
+      "issue": "https://raw.githubusercontent.com/shine-yu-student/dsh-calm/c8d22fe889d3c51efd2168bb9273df6bd803103e/package.json returned HTTP 404",
+      "installable": false
+    },
+    {
       "id": "ShuoSachiko/MathMN:.",
       "repositoryFullName": "ShuoSachiko/MathMN",
       "repositoryUrl": "https://github.com/ShuoSachiko/MathMN",
@@ -23072,38 +23175,6 @@
       "installable": false
     },
     {
-      "id": "SkySheep1999/dsh-polish-prompts:.",
-      "repositoryFullName": "SkySheep1999/dsh-polish-prompts",
-      "repositoryUrl": "https://github.com/SkySheep1999/dsh-polish-prompts",
-      "packageName": "dsh-prompt-polish",
-      "version": "1.0.0",
-      "displayName": {
-        "zh-CN": "dsh-prompt-polish",
-        "en": "dsh-prompt-polish"
-      },
-      "summary": {
-        "zh-CN": "DeepSeek Harness Web plugin that adds a ✨ button beside the composer send control to polish the current prompt with a chosen model.",
-        "en": "DeepSeek Harness Web plugin that adds a ✨ button beside the composer send control to polish the current prompt with a chosen model."
-      },
-      "category": null,
-      "keywords": [
-        "dsh-plugin",
-        "deepseek-harness",
-        "dsh",
-        "cordis",
-        "prompt",
-        "polish"
-      ],
-      "license": "MIT",
-      "repositoryDirectory": null,
-      "homepage": "https://github.com/SkySheep1999/polish-prompts",
-      "manifestUrl": "https://raw.githubusercontent.com/SkySheep1999/dsh-polish-prompts/7851490e39e67e3b974dff0d79c565ade194bf02/package.json",
-      "verification": "rejected",
-      "issueCode": "package-unpublished",
-      "issue": "dsh-prompt-polish is not published on npm",
-      "installable": false
-    },
-    {
       "id": "skyzhao1223/dsh-plugin-scaffold:.",
       "repositoryFullName": "skyzhao1223/dsh-plugin-scaffold",
       "repositoryUrl": "https://github.com/skyzhao1223/dsh-plugin-scaffold",
@@ -23225,37 +23296,6 @@
       "issueCode": "package-invalid",
       "issue": "dsh-rtk-optimizer has invalid npm metadata: versions.0.1.0.repository: Invalid input",
       "installable": false
-    },
-    {
-      "id": "slhssb/dsh-advisor:.",
-      "repositoryFullName": "slhssb/dsh-advisor",
-      "repositoryUrl": "https://github.com/slhssb/dsh-advisor",
-      "packageName": "@slhssb/dsh-advisor",
-      "version": "0.2.0",
-      "displayName": {
-        "zh-CN": "@slhssb/dsh-advisor",
-        "en": "@slhssb/dsh-advisor"
-      },
-      "summary": {
-        "zh-CN": "Independent-model advisory review for DeepSeek Harness: after each tool step, a reviewer model audits the agent's operations and injects concerns/guidance into the next step.",
-        "en": "Independent-model advisory review for DeepSeek Harness: after each tool step, a reviewer model audits the agent's operations and injects concerns/guidance into the next step."
-      },
-      "category": null,
-      "keywords": [
-        "dsh",
-        "deepseek-harness",
-        "advisor",
-        "review",
-        "plugin"
-      ],
-      "license": "MIT",
-      "repositoryDirectory": null,
-      "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/slhssb/dsh-advisor/a27fbbfcbd3c31455b42b98d0654c3c26d687e6b/package.json",
-      "verification": "unverified",
-      "issueCode": "manifest-invalid",
-      "issue": "dsh.plugin: Invalid input: expected object, received undefined",
-      "installable": true
     },
     {
       "id": "slicenferqin/dsh-whale-tui:.",
@@ -24541,6 +24581,34 @@
       "installable": false
     },
     {
+      "id": "SynetAI/LastTokens:.",
+      "repositoryFullName": "SynetAI/LastTokens",
+      "repositoryUrl": "https://github.com/SynetAI/LastTokens",
+      "packageName": null,
+      "version": null,
+      "displayName": {
+        "zh-CN": "LastTokens",
+        "en": "LastTokens"
+      },
+      "summary": {
+        "zh-CN": "实时显示 DeepSeek API 余额、任务消耗记录（tokens 消耗量 / 缓存命中 / 耗时 / 估算金额）， 可拖动悬浮球 + 四主题悬浮仪表盘。",
+        "en": "实时显示 DeepSeek API 余额、任务消耗记录（tokens 消耗量 / 缓存命中 / 耗时 / 估算金额）， 可拖动悬浮球 + 四主题悬浮仪表盘。"
+      },
+      "category": null,
+      "keywords": [
+        "dsh",
+        "dsh-plugin"
+      ],
+      "license": null,
+      "repositoryDirectory": null,
+      "homepage": null,
+      "manifestUrl": "https://raw.githubusercontent.com/SynetAI/LastTokens/30350f34a22f19ca129231e0bf8bc4d957291163/package.json",
+      "verification": "rejected",
+      "issueCode": "manifest-unavailable",
+      "issue": "https://raw.githubusercontent.com/SynetAI/LastTokens/30350f34a22f19ca129231e0bf8bc4d957291163/package.json returned HTTP 404",
+      "installable": false
+    },
+    {
       "id": "synmindai/dsh-nanobananapro:.",
       "repositoryFullName": "synmindai/dsh-nanobananapro",
       "repositoryUrl": "https://github.com/synmindai/dsh-nanobananapro",
@@ -24770,7 +24838,7 @@
       "license": "MIT",
       "repositoryDirectory": null,
       "homepage": "https://github.com/TecFancy/dsh-deeptutor",
-      "manifestUrl": "https://raw.githubusercontent.com/TecFancy/dsh-deeptutor/845144e2c5baf52554d8b3b773fa40f8335573b5/package.json",
+      "manifestUrl": "https://raw.githubusercontent.com/TecFancy/dsh-deeptutor/febdec44f523c243a720557c376493ebfe8d3821/package.json",
       "verification": "rejected",
       "issueCode": "package-invalid",
       "issue": "dsh-deeptutor has invalid npm metadata: versions.0.1.0.repository: Invalid input",
@@ -24806,10 +24874,10 @@
       "license": "MIT",
       "repositoryDirectory": null,
       "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/techysy/deepseek-harness-fnos/f17094416ce52b15cb6664a273e91de488e60969/package.json",
+      "manifestUrl": "https://raw.githubusercontent.com/techysy/deepseek-harness-fnos/be769c5a607f0ad710b38a6e43e4c9b5ba7b11b9/package.json",
       "verification": "rejected",
       "issueCode": "manifest-unavailable",
-      "issue": "https://raw.githubusercontent.com/techysy/deepseek-harness-fnos/f17094416ce52b15cb6664a273e91de488e60969/package.json returned HTTP 404",
+      "issue": "https://raw.githubusercontent.com/techysy/deepseek-harness-fnos/be769c5a607f0ad710b38a6e43e4c9b5ba7b11b9/package.json returned HTTP 404",
       "installable": false
     },
     {
@@ -24847,39 +24915,6 @@
       "installable": false
     },
     {
-      "id": "text2future/flowix:.",
-      "repositoryFullName": "text2future/flowix",
-      "repositoryUrl": "https://github.com/text2future/flowix",
-      "packageName": "flowix",
-      "version": "1.1.16",
-      "displayName": {
-        "zh-CN": "flowix",
-        "en": "flowix"
-      },
-      "summary": {
-        "zh-CN": "Notes for you, Memory for your agents.",
-        "en": "Notes for you, Memory for your agents."
-      },
-      "category": null,
-      "keywords": [
-        "claudecode",
-        "codex",
-        "dsh",
-        "dsh-plugin",
-        "hermes",
-        "markdown",
-        "notebook"
-      ],
-      "license": "MIT",
-      "repositoryDirectory": null,
-      "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/text2future/flowix/b7fc6666e4a3c5df7dc7a9bd1bbb58db6c4860e4/package.json",
-      "verification": "rejected",
-      "issueCode": "package-unpublished",
-      "issue": "flowix is not published on npm",
-      "installable": false
-    },
-    {
       "id": "TheChengXi/intent-flow:.",
       "repositoryFullName": "TheChengXi/intent-flow",
       "repositoryUrl": "https://github.com/TheChengXi/intent-flow",
@@ -24900,7 +24935,10 @@
         "dsh-plugin",
         "intent-driven-development",
         "intent-flow",
-        "mcp-server"
+        "mcp-server",
+        "skill",
+        "workflow",
+        "workflows"
       ],
       "license": "MIT",
       "repositoryDirectory": null,
@@ -25270,38 +25308,6 @@
       "installable": false
     },
     {
-      "id": "titanwings/dsh-automation:.",
-      "repositoryFullName": "titanwings/dsh-automation",
-      "repositoryUrl": "https://github.com/titanwings/dsh-automation",
-      "packageName": "@dsh-external/dsh-automation",
-      "version": "0.1.5",
-      "displayName": {
-        "zh-CN": "@dsh-external/dsh-automation",
-        "en": "@dsh-external/dsh-automation"
-      },
-      "summary": {
-        "zh-CN": "Run coding tasks on schedule in fresh Agent sessions, and manage automations from DeepSeek Harness Web or an Agent",
-        "en": "Run coding tasks on schedule in fresh Agent sessions, and manage automations from DeepSeek Harness Web or an Agent"
-      },
-      "category": null,
-      "keywords": [
-        "deepseek-harness",
-        "dsh",
-        "automation",
-        "scheduled-task",
-        "coding-agent",
-        "cordis"
-      ],
-      "license": "MIT",
-      "repositoryDirectory": null,
-      "homepage": "https://github.com/titanwings/dsh-automation#readme",
-      "manifestUrl": "https://raw.githubusercontent.com/titanwings/dsh-automation/a622b1b1758c6dc6bd476dc66d74a20a4b6762a3/package.json",
-      "verification": "rejected",
-      "issueCode": "package-unpublished",
-      "issue": "@dsh-external/dsh-automation is not published on npm",
-      "installable": false
-    },
-    {
       "id": "TIZ36/evo-memory:.",
       "repositoryFullName": "TIZ36/evo-memory",
       "repositoryUrl": "https://github.com/TIZ36/evo-memory",
@@ -25385,10 +25391,10 @@
       "license": "MIT",
       "repositoryDirectory": null,
       "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/tkdfs/dsh-ptc-auto-preset/8a3dc78caa5e9eb56e412007cca4519ee74466f2/package.json",
+      "manifestUrl": "https://raw.githubusercontent.com/tkdfs/dsh-ptc-auto-preset/2e705e0beaef1ec5db3ad2da16278d452ba0be75/package.json",
       "verification": "rejected",
       "issueCode": "manifest-unavailable",
-      "issue": "https://raw.githubusercontent.com/tkdfs/dsh-ptc-auto-preset/8a3dc78caa5e9eb56e412007cca4519ee74466f2/package.json returned HTTP 404",
+      "issue": "https://raw.githubusercontent.com/tkdfs/dsh-ptc-auto-preset/2e705e0beaef1ec5db3ad2da16278d452ba0be75/package.json returned HTTP 404",
       "installable": false
     },
     {
@@ -25524,7 +25530,7 @@
       "license": "MIT",
       "repositoryDirectory": null,
       "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/TQSY114514/dsh-ui-appearance/afea6892452b6e6dac629dc4d0c4fd6618664ec2/package.json",
+      "manifestUrl": "https://raw.githubusercontent.com/TQSY114514/dsh-ui-appearance/1be947a58f9313f7816c1757219845a38f5a5c80/package.json",
       "verification": "rejected",
       "issueCode": "package-unpublished",
       "issue": "@deepseek-ai/dsh-client-ui-appearance is not published on npm",
@@ -25586,10 +25592,10 @@
       "license": null,
       "repositoryDirectory": null,
       "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/Treasure-hub-agent/dsh-story/3406c84c3553ecf67608c98d125665822d9a05f6/package.json",
+      "manifestUrl": "https://raw.githubusercontent.com/Treasure-hub-agent/dsh-story/f256cbbce706e3efc06715a8cb80e813c3f83153/package.json",
       "verification": "rejected",
       "issueCode": "manifest-unavailable",
-      "issue": "https://raw.githubusercontent.com/Treasure-hub-agent/dsh-story/3406c84c3553ecf67608c98d125665822d9a05f6/package.json returned HTTP 404",
+      "issue": "https://raw.githubusercontent.com/Treasure-hub-agent/dsh-story/f256cbbce706e3efc06715a8cb80e813c3f83153/package.json returned HTTP 404",
       "installable": false
     },
     {
@@ -25782,7 +25788,7 @@
       "license": "MIT",
       "repositoryDirectory": null,
       "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/tsonglew/dsh-workspace-search/955848490561429bd0a7d78c385756064382ebe2/package.json",
+      "manifestUrl": "https://raw.githubusercontent.com/tsonglew/dsh-workspace-search/5f5c6bd39e1366ff08276135b9f8f26cddf30042/package.json",
       "verification": "rejected",
       "issueCode": "package-unpublished",
       "issue": "dsh-workspace-search is not published on npm",
@@ -26035,7 +26041,7 @@
       "repositoryFullName": "Uddoo/dsh-dashboard",
       "repositoryUrl": "https://github.com/Uddoo/dsh-dashboard",
       "packageName": "dsh-dashboard",
-      "version": "0.3.0",
+      "version": "0.4.0",
       "displayName": {
         "zh-CN": "dsh-dashboard",
         "en": "dsh-dashboard"
@@ -26062,11 +26068,11 @@
       "license": "MIT",
       "repositoryDirectory": null,
       "homepage": "https://github.com/Uddoo/dsh-dashboard#readme",
-      "manifestUrl": "https://raw.githubusercontent.com/Uddoo/dsh-dashboard/acab946482d887768714ec91adec271b9b22b305/package.json",
-      "verification": "unverified",
-      "issueCode": "manifest-invalid",
-      "issue": "dsh.plugin: Invalid input: expected object, received undefined",
-      "installable": true
+      "manifestUrl": "https://raw.githubusercontent.com/Uddoo/dsh-dashboard/63ac513b9becd23f0fd06b62dfdc03433e30b390/package.json",
+      "verification": "rejected",
+      "issueCode": "package-unpublished",
+      "issue": "dsh-dashboard@0.4.0 is not published on npm",
+      "installable": false
     },
     {
       "id": "unitarylab/quantum-practices:.",
@@ -26126,11 +26132,11 @@
       "license": "MIT",
       "repositoryDirectory": null,
       "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/urzeye/dsh-outline/b510966c17c17e6b4d05678f5fadfbfa9a7342d2/package.json",
-      "verification": "rejected",
-      "issueCode": "package-unpublished",
-      "issue": "dsh-outline@0.1.2 is not published on npm",
-      "installable": false
+      "manifestUrl": "https://raw.githubusercontent.com/urzeye/dsh-outline/de024b9e2315a17a64c8b54d38f4e66081ea3e83/package.json",
+      "verification": "unverified",
+      "issueCode": "manifest-invalid",
+      "issue": "dsh.plugin: Invalid input: expected object, received undefined",
+      "installable": true
     },
     {
       "id": "UynajGI/dsh-ssh:.",
@@ -26338,7 +26344,7 @@
       "license": "MIT",
       "repositoryDirectory": null,
       "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/vibeinging/dsh-work/e5bea96c42c80db54cbd5c1ff1412df51de2338c/package.json",
+      "manifestUrl": "https://raw.githubusercontent.com/vibeinging/dsh-work/b4c477d554e8f9fbeed212c84d7cf45b043493a8/package.json",
       "verification": "rejected",
       "issueCode": "package-unpublished",
       "issue": "dsh-desktop@0.0.1 is not published on npm",
@@ -26571,7 +26577,7 @@
       "license": "MIT",
       "repositoryDirectory": null,
       "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/w769721503/dsh-plugin-store/1986de3f36e6c0944902454ac7eb5af1bc3839d7/package.json",
+      "manifestUrl": "https://raw.githubusercontent.com/w769721503/dsh-plugin-store/fc9ed12318dda2d6f74dd0d7fc39daea48c261fa/package.json",
       "verification": "rejected",
       "issueCode": "package-unpublished",
       "issue": "dsh-plugin-store is not published on npm",
@@ -26640,37 +26646,6 @@
       "issueCode": "manifest-invalid",
       "issue": "dsh.plugin: Invalid input: expected object, received undefined",
       "installable": true
-    },
-    {
-      "id": "Wanbinyu/dsh-plugins:.",
-      "repositoryFullName": "Wanbinyu/dsh-plugins",
-      "repositoryUrl": "https://github.com/Wanbinyu/dsh-plugins",
-      "packageName": null,
-      "version": null,
-      "displayName": {
-        "zh-CN": "dsh-plugins",
-        "en": "dsh-plugins"
-      },
-      "summary": {
-        "zh-CN": "Community catalog of plugins and tools for DeepSeek Harness (dsh)",
-        "en": "Community catalog of plugins and tools for DeepSeek Harness (dsh)"
-      },
-      "category": null,
-      "keywords": [
-        "cordis",
-        "deepseek-harness",
-        "dsh",
-        "dsh-plugin",
-        "typescript"
-      ],
-      "license": "MIT",
-      "repositoryDirectory": null,
-      "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/Wanbinyu/dsh-plugins/b74c0c68e3d6fa3169cdcea7bd4856d4e3195f99/package.json",
-      "verification": "rejected",
-      "issueCode": "manifest-unavailable",
-      "issue": "https://raw.githubusercontent.com/Wanbinyu/dsh-plugins/b74c0c68e3d6fa3169cdcea7bd4856d4e3195f99/package.json returned HTTP 404",
-      "installable": false
     },
     {
       "id": "wangshunnn/oh-my-dsh:.",
@@ -27299,7 +27274,7 @@
       "license": "MIT",
       "repositoryDirectory": null,
       "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/white0dew/awesome-dsh-plugins/f9012b27536bfe49dfcf043576c9bc142e26f862/package.json",
+      "manifestUrl": "https://raw.githubusercontent.com/white0dew/awesome-dsh-plugins/9d7dff0210edf323c50977c4c1b29da877d23a08/package.json",
       "verification": "rejected",
       "issueCode": "package-invalid",
       "issue": "awesome-dsh-plugins has invalid npm metadata: versions.0.0.1.repository: Invalid input",
@@ -27651,10 +27626,10 @@
       "license": null,
       "repositoryDirectory": null,
       "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/wink-run/dsh-plugin-store/51471db28b8e00ca1bfa2265fc5ce88ae43da5d1/package.json",
+      "manifestUrl": "https://raw.githubusercontent.com/wink-run/dsh-plugin-store/dc67c229ebeb6c055761bb66e746e6c8647c4424/package.json",
       "verification": "rejected",
       "issueCode": "manifest-unavailable",
-      "issue": "https://raw.githubusercontent.com/wink-run/dsh-plugin-store/51471db28b8e00ca1bfa2265fc5ce88ae43da5d1/package.json returned HTTP 404",
+      "issue": "https://raw.githubusercontent.com/wink-run/dsh-plugin-store/dc67c229ebeb6c055761bb66e746e6c8647c4424/package.json returned HTTP 404",
       "installable": false
     },
     {
@@ -28051,6 +28026,40 @@
       "installable": false
     },
     {
+      "id": "x118111/prompt-optimizer:.",
+      "repositoryFullName": "x118111/prompt-optimizer",
+      "repositoryUrl": "https://github.com/x118111/prompt-optimizer",
+      "packageName": "prompt-optimizer",
+      "version": "1.0.0",
+      "displayName": {
+        "zh-CN": "prompt-optimizer",
+        "en": "prompt-optimizer"
+      },
+      "summary": {
+        "zh-CN": "A DeepSeek Harness (DSH) dynamic plugin that adds an ✨ optimize-prompt button to the chat composer. Rewrites the draft with an LLM — context-aware, with model fallback and visible errors.",
+        "en": "A DeepSeek Harness (DSH) dynamic plugin that adds an ✨ optimize-prompt button to the chat composer. Rewrites the draft with an LLM — context-aware, with model fallback and visible errors."
+      },
+      "category": null,
+      "keywords": [
+        "deepseek-harness",
+        "dsh",
+        "cordis",
+        "plugin",
+        "prompt",
+        "prompt-engineering",
+        "prompt-optimizer",
+        "llm"
+      ],
+      "license": "MIT",
+      "repositoryDirectory": null,
+      "homepage": "https://github.com/x118111/prompt-optimizer",
+      "manifestUrl": "https://raw.githubusercontent.com/x118111/prompt-optimizer/c9649481950648ccd0de02e8b0223a4bb26a7a38/package.json",
+      "verification": "rejected",
+      "issueCode": "package-unpublished",
+      "issue": "prompt-optimizer@1.0.0 is not published on npm",
+      "installable": false
+    },
+    {
       "id": "xavier711/dsh-deepseek-usage:.",
       "repositoryFullName": "xavier711/dsh-deepseek-usage",
       "repositoryUrl": "https://github.com/xavier711/dsh-deepseek-usage",
@@ -28134,10 +28143,10 @@
       "license": null,
       "repositoryDirectory": null,
       "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/XDzzzzzZyq/dsh-survival/36db70884dbc67569b5445e166861f9472f1fba5/package.json",
+      "manifestUrl": "https://raw.githubusercontent.com/XDzzzzzZyq/dsh-survival/b7157604aa912bd36c89c2915cd7dbf535d54801/package.json",
       "verification": "rejected",
       "issueCode": "manifest-unavailable",
-      "issue": "https://raw.githubusercontent.com/XDzzzzzZyq/dsh-survival/36db70884dbc67569b5445e166861f9472f1fba5/package.json returned HTTP 404",
+      "issue": "https://raw.githubusercontent.com/XDzzzzzZyq/dsh-survival/b7157604aa912bd36c89c2915cd7dbf535d54801/package.json returned HTTP 404",
       "installable": false
     },
     {
@@ -28543,33 +28552,6 @@
       "verification": "rejected",
       "issueCode": "package-invalid",
       "issue": "dsh-vision-bridge has invalid npm metadata: versions.0.1.0.repository: Invalid input",
-      "installable": false
-    },
-    {
-      "id": "Xin-Zhang-IceMan/dsh-vision-plugin:.",
-      "repositoryFullName": "Xin-Zhang-IceMan/dsh-vision-plugin",
-      "repositoryUrl": "https://github.com/Xin-Zhang-IceMan/dsh-vision-plugin",
-      "packageName": null,
-      "version": null,
-      "displayName": {
-        "zh-CN": "dsh-vision-plugin",
-        "en": "dsh-vision-plugin"
-      },
-      "summary": {
-        "zh-CN": "DeepSeek Harness 视觉插件：让纯文本模型拥有视觉能力 / Vision plugin for DSH: vision_analyze tool + automatic image transcription for text-only models.",
-        "en": "DeepSeek Harness 视觉插件：让纯文本模型拥有视觉能力 / Vision plugin for DSH: vision_analyze tool + automatic image transcription for text-only models."
-      },
-      "category": null,
-      "keywords": [
-        "dsh-plugin"
-      ],
-      "license": "MIT",
-      "repositoryDirectory": null,
-      "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/Xin-Zhang-IceMan/dsh-vision-plugin/606005f46a96d134c3af7d8064c08cbd71b4b141/package.json",
-      "verification": "rejected",
-      "issueCode": "manifest-unavailable",
-      "issue": "https://raw.githubusercontent.com/Xin-Zhang-IceMan/dsh-vision-plugin/606005f46a96d134c3af7d8064c08cbd71b4b141/package.json returned HTTP 404",
       "installable": false
     },
     {
@@ -29357,40 +29339,6 @@
       "installable": false
     },
     {
-      "id": "Yee-h/dsh-zen-proxy:.",
-      "repositoryFullName": "Yee-h/dsh-zen-proxy",
-      "repositoryUrl": "https://github.com/Yee-h/dsh-zen-proxy",
-      "packageName": "dsh-zen-proxy",
-      "version": "0.1.0",
-      "displayName": {
-        "zh-CN": "dsh-zen-proxy",
-        "en": "dsh-zen-proxy"
-      },
-      "summary": {
-        "zh-CN": "dsh plugin: in-process OpenAI-compatible proxy that injects official OpenCode Zen client headers, enabling Zen free models in dsh without the 429 FreeUsageLimitError",
-        "en": "dsh plugin: in-process OpenAI-compatible proxy that injects official OpenCode Zen client headers, enabling Zen free models in dsh without the 429 FreeUsageLimitError"
-      },
-      "category": null,
-      "keywords": [
-        "dsh",
-        "deepseek-harness",
-        "cordis",
-        "plugin",
-        "opencode",
-        "zen",
-        "proxy",
-        "free-model"
-      ],
-      "license": "MIT",
-      "repositoryDirectory": null,
-      "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/Yee-h/dsh-zen-proxy/2cfc4e172bfe3165773e1e137c5f5da3ebcc0046/package.json",
-      "verification": "rejected",
-      "issueCode": "package-unpublished",
-      "issue": "dsh-zen-proxy is not published on npm",
-      "installable": false
-    },
-    {
       "id": "yejiming/MuseAI:.",
       "repositoryFullName": "yejiming/MuseAI",
       "repositoryUrl": "https://github.com/yejiming/MuseAI",
@@ -29944,41 +29892,10 @@
       "license": "MIT",
       "repositoryDirectory": null,
       "homepage": "https://github.com/yoke233/dsh-prime-agent#readme",
-      "manifestUrl": "https://raw.githubusercontent.com/yoke233/dsh-prime-agent/325c1821c4e61d8dabf1761e400184929af8063c/package.json",
+      "manifestUrl": "https://raw.githubusercontent.com/yoke233/dsh-prime-agent/d17b9bae8bfd5a9c8c19fba83e523ec9bd650632/package.json",
       "verification": "rejected",
       "issueCode": "package-unpublished",
       "issue": "dsh-prime-agent is not published on npm",
-      "installable": false
-    },
-    {
-      "id": "Youngxj/dsh-ProjectModel:.",
-      "repositoryFullName": "Youngxj/dsh-ProjectModel",
-      "repositoryUrl": "https://github.com/Youngxj/dsh-ProjectModel",
-      "packageName": null,
-      "version": "1.0.0",
-      "displayName": {
-        "zh-CN": "dsh-ProjectModel",
-        "en": "dsh-ProjectModel"
-      },
-      "summary": {
-        "zh-CN": "DeepSeek Harness 项目组插件：在一个会话中跨多个项目文件夹工作——读写组内文件、运行命令、快速切换当前文件夹。配置持久化（settings），重启不丢。",
-        "en": "DeepSeek Harness 项目组插件：在一个会话中跨多个项目文件夹工作——读写组内文件、运行命令、快速切换当前文件夹。配置持久化（settings），重启不丢。"
-      },
-      "category": null,
-      "keywords": [
-        "dsh",
-        "deepseek-harness",
-        "plugin",
-        "project-groups",
-        "workspace"
-      ],
-      "license": "MIT",
-      "repositoryDirectory": null,
-      "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/Youngxj/dsh-ProjectModel/f2e9062a20b001fa59979b82b0aa442c42a942ad/package.json",
-      "verification": "rejected",
-      "issueCode": "package-unpublished",
-      "issue": "dsh-ProjectModel is not published on npm",
       "installable": false
     },
     {
@@ -30008,7 +29925,7 @@
       "license": "LGPL-3.0",
       "repositoryDirectory": null,
       "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/ysr666/dsh-vision-router/c4b10ead7b9c4dc83ddd2cb9f3f57d60a433015e/package.json",
+      "manifestUrl": "https://raw.githubusercontent.com/ysr666/dsh-vision-router/b84006d0d6495488bcae57487de7de9e55207181/package.json",
       "verification": "rejected",
       "issueCode": "package-unpublished",
       "issue": "dsh-vision-router is not published on npm",
@@ -30074,7 +29991,7 @@
       "license": "MIT",
       "repositoryDirectory": null,
       "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/YTxue/dsh-skill-manager/66a7b8ed69a70f31add55a6674be7cf937c6313d/package.json",
+      "manifestUrl": "https://raw.githubusercontent.com/YTxue/dsh-skill-manager/f84828cc169c41e03a96c8b54b13d8fa61cbedeb/package.json",
       "verification": "rejected",
       "issueCode": "package-invalid",
       "issue": "dsh-skill-manager has invalid npm metadata: versions.0.1.0.repository: Invalid input",
@@ -30890,6 +30807,39 @@
       "installable": false
     },
     {
+      "id": "yzgwowcn/dsh-plugin-token-billing:.",
+      "repositoryFullName": "yzgwowcn/dsh-plugin-token-billing",
+      "repositoryUrl": "https://github.com/yzgwowcn/dsh-plugin-token-billing",
+      "packageName": "@local/dsh-plugin-token-billing",
+      "version": "0.1.0",
+      "displayName": {
+        "zh-CN": "@local/dsh-plugin-token-billing",
+        "en": "@local/dsh-plugin-token-billing"
+      },
+      "summary": {
+        "zh-CN": "DeepSeek Harness 的 Token 计费插件：当前会话与全账户的 token 用量、估算费用（官方峰谷价+缓存折扣）、账户余额，右侧用量仪表盘（最近对话、余额曲线、热力图、时段消费、模型花费）。目前自用，欢迎建议与意见。",
+        "en": "DeepSeek Harness 的 Token 计费插件：当前会话与全账户的 token 用量、估算费用（官方峰谷价+缓存折扣）、账户余额，右侧用量仪表盘（最近对话、余额曲线、热力图、时段消费、模型花费）。目前自用，欢迎建议与意见。"
+      },
+      "category": null,
+      "keywords": [
+        "dsh",
+        "deepseek-harness",
+        "dsh-plugin",
+        "token",
+        "billing",
+        "usage",
+        "dashboard"
+      ],
+      "license": "MIT",
+      "repositoryDirectory": null,
+      "homepage": null,
+      "manifestUrl": "https://raw.githubusercontent.com/yzgwowcn/dsh-plugin-token-billing/330167c12febeb9175484a34064c4ba5469cf41c/package.json",
+      "verification": "rejected",
+      "issueCode": "package-unpublished",
+      "issue": "@local/dsh-plugin-token-billing is not published on npm",
+      "installable": false
+    },
+    {
       "id": "z21for99/silk-background:.",
       "repositoryFullName": "z21for99/silk-background",
       "repositoryUrl": "https://github.com/z21for99/silk-background",
@@ -30917,6 +30867,40 @@
       "verification": "rejected",
       "issueCode": "package-unpublished",
       "issue": "silk-background is not published on npm",
+      "installable": false
+    },
+    {
+      "id": "z953218350/dsh-np-ppt:.",
+      "repositoryFullName": "z953218350/dsh-np-ppt",
+      "repositoryUrl": "https://github.com/z953218350/dsh-np-ppt",
+      "packageName": "dsh-np-ppt",
+      "version": "1.0.0",
+      "displayName": {
+        "zh-CN": "dsh-np-ppt",
+        "en": "dsh-np-ppt"
+      },
+      "summary": {
+        "zh-CN": "DSH 原生 PPT 演示文稿专家插件：内置 PPTD DSL 解析、55173 所见即所得可视化编辑器服务、Python-PPTX 高保真离线编译内核与一键导出 PPTX 功能。",
+        "en": "DSH 原生 PPT 演示文稿专家插件：内置 PPTD DSL 解析、55173 所见即所得可视化编辑器服务、Python-PPTX 高保真离线编译内核与一键导出 PPTX 功能。"
+      },
+      "category": null,
+      "keywords": [
+        "dsh",
+        "cordis",
+        "plugin",
+        "ppt",
+        "pptx",
+        "presentation",
+        "pptd",
+        "kimi-ppt"
+      ],
+      "license": "MIT",
+      "repositoryDirectory": null,
+      "homepage": null,
+      "manifestUrl": "https://raw.githubusercontent.com/z953218350/dsh-np-ppt/548356b0242263211ece735bc6ba49ac74637d40/package.json",
+      "verification": "rejected",
+      "issueCode": "package-unpublished",
+      "issue": "dsh-np-ppt is not published on npm",
       "installable": false
     },
     {
@@ -30980,6 +30964,35 @@
       "verification": "rejected",
       "issueCode": "package-unpublished",
       "issue": "dsh-ui-beautify is not published on npm",
+      "installable": false
+    },
+    {
+      "id": "ZASENJC/dsh-plugins-store:.",
+      "repositoryFullName": "ZASENJC/dsh-plugins-store",
+      "repositoryUrl": "https://github.com/ZASENJC/dsh-plugins-store",
+      "packageName": "dsh-plugin-store",
+      "version": "0.1.0",
+      "displayName": {
+        "zh-CN": "dsh-plugin-store",
+        "en": "dsh-plugin-store"
+      },
+      "summary": {
+        "zh-CN": "自动收录和分类 GitHub dsh-plugin Topic 项目的静态目录网站",
+        "en": "自动收录和分类 GitHub dsh-plugin Topic 项目的静态目录网站"
+      },
+      "category": null,
+      "keywords": [
+        "deepseek-harness",
+        "dsh",
+        "dsh-plugin"
+      ],
+      "license": "MIT",
+      "repositoryDirectory": null,
+      "homepage": null,
+      "manifestUrl": "https://raw.githubusercontent.com/ZASENJC/dsh-plugins-store/d93825ec3ad6e89fb7cfb2b319eb876d79a567ca/package.json",
+      "verification": "rejected",
+      "issueCode": "package-unpublished",
+      "issue": "dsh-plugin-store is not published on npm",
       "installable": false
     },
     {
@@ -31845,6 +31858,37 @@
       "installable": false
     },
     {
+      "id": "ZSeven-W/dsh-noema:.",
+      "repositoryFullName": "ZSeven-W/dsh-noema",
+      "repositoryUrl": "https://github.com/ZSeven-W/dsh-noema",
+      "packageName": "@zseven-w/dsh-noema",
+      "version": "0.1.0-rc.1",
+      "displayName": {
+        "zh-CN": "@zseven-w/dsh-noema",
+        "en": "@zseven-w/dsh-noema"
+      },
+      "summary": {
+        "zh-CN": "Noema long-term memory plugin for DSH: durable, inspectable agent memory with recall tools and a settings page.",
+        "en": "Noema long-term memory plugin for DSH: durable, inspectable agent memory with recall tools and a settings page."
+      },
+      "category": null,
+      "keywords": [
+        "dsh",
+        "noema",
+        "memory",
+        "plugin",
+        "agent"
+      ],
+      "license": "MIT",
+      "repositoryDirectory": null,
+      "homepage": null,
+      "manifestUrl": "https://raw.githubusercontent.com/ZSeven-W/dsh-noema/2852b7b487e934c6b7b1616876e0e7d789f54115/package.json",
+      "verification": "rejected",
+      "issueCode": "package-unpublished",
+      "issue": "@zseven-w/dsh-noema is not published on npm",
+      "installable": false
+    },
+    {
       "id": "ZSeven-W/dsh-openpencil:.",
       "repositoryFullName": "ZSeven-W/dsh-openpencil",
       "repositoryUrl": "https://github.com/ZSeven-W/dsh-openpencil",
@@ -31868,7 +31912,7 @@
       "license": "MIT",
       "repositoryDirectory": null,
       "homepage": null,
-      "manifestUrl": "https://raw.githubusercontent.com/ZSeven-W/dsh-openpencil/5b60030aa0d62dc4ae24402b357f1ae89f7bd0c3/package.json",
+      "manifestUrl": "https://raw.githubusercontent.com/ZSeven-W/dsh-openpencil/bac17947da398122a891d50ff8bec877ff97ae52/package.json",
       "verification": "unverified",
       "issueCode": "manifest-invalid",
       "issue": "dsh.plugin: Invalid input: expected object, received undefined",
@@ -31995,7 +32039,7 @@
   "warnings": [
     {
       "code": "github-results-truncated",
-      "message": "GitHub reports 1831 topic repositories; this catalog scan inspected the newest 999."
+      "message": "GitHub reports 1846 topic repositories; this catalog scan inspected the newest 1000."
     }
   ]
 }
