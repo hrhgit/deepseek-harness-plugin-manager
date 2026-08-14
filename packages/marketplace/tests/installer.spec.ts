@@ -1,13 +1,7 @@
 import { describe, expect, it, vi } from 'vitest'
-import { MarketplaceInstaller, type CommandRunner } from '../src/host/installer.js'
-import type { MarketplacePlugin } from '../src/types.js'
+import { MarketplaceInstaller, type CommandRunner, type MarketplaceInstallTarget } from '../src/host/installer.js'
 
-const plugin: MarketplacePlugin = {
-  packageName: 'dsh-plugin-manager', version: '0.1.0', displayName: { 'zh-CN': '管理器', en: 'Manager' },
-  summary: { 'zh-CN': '摘要', en: 'Summary' }, category: 'plugin-management', keywords: [], license: 'MIT',
-  repositoryUrl: 'https://github.com/hrhgit/deepseek-harness-plugin-manager', repositoryDirectory: 'packages/manager',
-  homepage: null, manifestUrl: 'https://example.test/package.json', sources: ['catalog'], installedVersion: null,
-}
+const plugin: MarketplaceInstallTarget = { packageName: 'dsh-plugin-manager', version: '0.1.0' }
 const location = { directory: 'C:\\fixture\\profiles\\web', profileName: 'web' }
 
 describe('marketplace installer', () => {

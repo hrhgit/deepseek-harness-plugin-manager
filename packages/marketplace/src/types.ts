@@ -1,35 +1,20 @@
-export type MarketplaceSource = 'catalog' | 'github-topic'
-
 export interface LocalizedText {
   readonly 'zh-CN': string
   readonly en: string
 }
 
-export interface MarketplacePlugin {
-  readonly packageName: string
-  readonly version: string
-  readonly displayName: LocalizedText
-  readonly summary: LocalizedText
-  readonly category: string
-  readonly keywords: readonly string[]
-  readonly license: string
-  readonly repositoryUrl: string
-  readonly repositoryDirectory: string | null
-  readonly homepage: string | null
-  readonly manifestUrl: string
-  readonly sources: readonly MarketplaceSource[]
-  readonly installedVersion: string | null
-}
+export type CatalogVerification = 'verified' | 'unverified' | 'rejected'
 
-export type CandidateIssueCode =
+export type CatalogIssueCode =
   | 'repository-unavailable'
   | 'manifest-unavailable'
   | 'manifest-invalid'
   | 'package-unpublished'
   | 'package-invalid'
   | 'repository-mismatch'
+  | 'package-conflict'
 
-export interface MarketplaceCandidate {
+export interface MarketplaceEntry {
   readonly id: string
   readonly repositoryFullName: string
   readonly repositoryUrl: string
@@ -37,26 +22,30 @@ export interface MarketplaceCandidate {
   readonly version: string | null
   readonly displayName: LocalizedText
   readonly summary: LocalizedText
+  readonly category: string | null
+  readonly keywords: readonly string[]
+  readonly license: string | null
+  readonly repositoryDirectory: string | null
+  readonly homepage: string | null
   readonly manifestUrl: string | null
-  readonly issueCode: CandidateIssueCode
-  readonly issue: string
+  readonly verification: CatalogVerification
+  readonly issueCode: CatalogIssueCode | null
+  readonly issue: string | null
   readonly installable: boolean
   readonly installedVersion: string | null
-  readonly source: 'github-topic'
 }
 
 export interface DiscoveryWarning {
-  readonly source: MarketplaceSource
   readonly code: string
   readonly message: string
 }
 
 export interface MarketplaceSnapshot {
   readonly profileName: string
-  readonly plugins: readonly MarketplacePlugin[]
-  readonly candidates: readonly MarketplaceCandidate[]
+  readonly entries: readonly MarketplaceEntry[]
   readonly warnings: readonly DiscoveryWarning[]
   readonly stale: boolean
+  readonly generatedAt: string | null
   readonly fetchedAt: string
 }
 

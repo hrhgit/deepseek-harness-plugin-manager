@@ -40,4 +40,12 @@ Each listed package must provide normal npm metadata, `dsh.plugin`, and the offi
 }
 ```
 
-Repository paths use forward slashes and cannot be absolute, contain `..`, or repeat. Formal catalog entries require the exact npm version and `dsh.bundle` to point back to the same GitHub repository. GitHub topic candidates that do not provide a valid V1 manifest may still be installed when their package name and exact version are available and npm metadata points back to the same repository; the marketplace marks DSH compatibility as unverified for those candidates.
+Repository paths use forward slashes and cannot be absolute, contain `..`, or repeat.
+
+The generated catalog scans GitHub's `dsh-plugin` topic and records every inspected package in one document:
+
+- `verified`: the V1 manifest is valid, the exact npm version exists, npm declares `dsh.bundle`, and npm points back to the same GitHub repository;
+- `unverified`: the V1 manifest is missing or invalid, but the repository still declares an exact npm package/version and npm points back to the same repository;
+- `rejected`: installation admission failed, with an explicit issue code and message.
+
+Only `verified` and `unverified` entries are installable. The catalog currently has no manual curation or formal-admission layer.

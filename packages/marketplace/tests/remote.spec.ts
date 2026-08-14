@@ -2,9 +2,9 @@ import { describe, expect, it } from 'vitest'
 import { TYPERT, TYPERT_REMOTE } from '../src/remote.js'
 
 describe('marketplace Remote contribution', () => {
-  it('publishes strict list, candidate search, and install descriptors', () => {
+  it('publishes strict generated-catalog list and install descriptors', () => {
     expect(TYPERT_REMOTE.descriptors.map(item => `${item.namespace}/${item.method}`)).toEqual([
-      'marketplace/list', 'marketplace/searchGithub', 'marketplace/installPlugin',
+      'marketplace/list', 'marketplace/installPlugin',
     ])
     expect(TYPERT.invocations).toBe(TYPERT_REMOTE.descriptors)
     for (const descriptor of TYPERT_REMOTE.descriptors) {

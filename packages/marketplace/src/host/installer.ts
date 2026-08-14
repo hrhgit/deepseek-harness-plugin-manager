@@ -1,6 +1,6 @@
 import { spawn } from 'node:child_process'
 import { valid as validVersion } from 'semver'
-import type { InstallReceipt, MarketplacePlugin } from '../types.js'
+import type { InstallReceipt } from '../types.js'
 import type { ProfileLocation } from './profile.js'
 
 const OUTPUT_LIMIT = 16_384
@@ -12,6 +12,11 @@ export interface CommandResult {
 }
 
 export type CommandRunner = (arguments_: readonly string[], cwd: string) => Promise<CommandResult>
+
+export interface MarketplaceInstallTarget {
+  readonly packageName: string
+  readonly version: string
+}
 
 function boundedAppend(current: string, chunk: Buffer): string {
   const next = current + chunk.toString('utf8')
@@ -54,7 +59,7 @@ export class MarketplaceInstaller {
   constructor(private readonly runner: CommandRunner = currentDshRunner()) {}
 
   async install(
-    plugin: Pick<MarketplacePlugin, 'packageName' | 'version'>,
+    plugin: MarketplaceInstallTarget,
     location: ProfileLocation,
     dependencies: Readonly<Record<string, string>>,
   ): Promise<InstallReceipt> {

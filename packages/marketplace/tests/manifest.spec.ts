@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import {
-  canonicalGithubRepository, dshCatalogRootSchema, isSafePackagePath, packageManifestSchema,
+  canonicalGithubRepository, catalogDocumentSchema, dshCatalogRootSchema, isSafePackagePath, packageManifestSchema,
 } from '../src/manifest.js'
 
 describe('dsh.plugin V1 manifest', () => {
@@ -35,5 +35,24 @@ describe('dsh.plugin V1 manifest', () => {
     expect(canonicalGithubRepository('git+https://github.com/Owner/Repo.git')).toBe('https://github.com/owner/repo')
     expect(canonicalGithubRepository('git@github.com:Owner/Repo.git')).toBe('https://github.com/owner/repo')
     expect(canonicalGithubRepository('https://example.com/repo')).toBeNull()
+  })
+
+  it('keeps one catalog shape while enforcing verified, unverified, and rejected states', () => {
+    const base = {
+      id: 'example/plugin:.', repositoryFullName: 'example/plugin', repositoryUrl: 'https://github.com/example/plugin',
+      packageName: 'dsh-example', version: '1.0.0', displayName: { 'zh-CN': '示例', en: 'Example' },
+      summary: { 'zh-CN': '示例插件。', en: 'Example plugin.' }, category: 'example', keywords: [], license: 'MIT',
+      repositoryDirectory: null, homepage: null, manifestUrl: 'https://example.test/package.json',
+    }
+    expect(catalogDocumentSchema.parse({
+      schemaVersion: 1, generatedAt: '2026-08-14T00:00:00.000Z', warnings: [], entries: [
+        { ...base, verification: 'verified', issueCode: null, issue: null, installable: true },
+      ],
+    }).entries[0]?.verification).toBe('verified')
+    expect(() => catalogDocumentSchema.parse({
+      schemaVersion: 1, generatedAt: '2026-08-14T00:00:00.000Z', warnings: [], entries: [
+        { ...base, verification: 'rejected', issueCode: null, issue: null, installable: true },
+      ],
+    })).toThrow(/rejected entries/)
   })
 })

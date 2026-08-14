@@ -23,6 +23,6 @@
     "pack:check": "pnpm -r run pack:check",
     "spec:build": "pnpm --filter dsh-plugin-marketplace run spec:build",
     "catalog:build": "pnpm --filter dsh-plugin-marketplace run catalog:build",
-    "generated:check": "pnpm run spec:build && pnpm run catalog:build && git diff --exit-code -- spec/v1 catalog/v1"
+    "generated:check": "pnpm run spec:build && pnpm --filter dsh-plugin-marketplace run catalog:check && git diff --exit-code -- spec/v1"
   }
 }

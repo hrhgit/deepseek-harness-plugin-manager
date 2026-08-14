@@ -1,149 +1,51 @@
+import { randomUUID } from 'node:crypto'
 import { mkdir, readFile, rename, writeFile } from 'node:fs/promises'
 import { dirname, join } from 'node:path'
-import { randomUUID } from 'node:crypto'
-import { valid as validVersion } from 'semver'
 import { z } from 'zod'
-import {
-  canonicalGithubRepository,
-  catalogDocumentSchema,
-  catalogPluginFromManifest,
-  dshCatalogRootSchema,
-  npmPackageNameSchema,
-  packageManifestSchema,
-  type CatalogPlugin,
-} from '../manifest.js'
-import type {
-  CandidateIssueCode,
-  DiscoveryWarning,
-  LocalizedText,
-  MarketplaceCandidate,
-  MarketplacePlugin,
-  MarketplaceSnapshot,
-  MarketplaceSource,
-} from '../types.js'
+import { catalogDocumentSchema, type CatalogDocument, type CatalogEntry } from '../manifest.js'
+import type { DiscoveryWarning, MarketplaceSnapshot } from '../types.js'
 
-const DEFAULT_CATALOG_URL = 'https://raw.githubusercontent.com/hrhgit/deepseek-harness-plugin-manager/main/catalog/v1/catalog.json'
-const DEFAULT_GITHUB_API = 'https://api.github.com'
-const DEFAULT_RAW_BASE = 'https://raw.githubusercontent.com'
-const DEFAULT_NPM_REGISTRY = 'https://registry.npmjs.org'
+// The GitHub API raw media type is reachable in environments where the raw
+// content host does not have a configured Node proxy.
+const DEFAULT_CATALOG_URL = 'https://api.github.com/repos/hrhgit/deepseek-harness-plugin-manager/contents/catalog/v1/catalog.json?ref=main'
+const GITHUB_RAW_ACCEPT = 'application/vnd.github.raw+json'
 
-const searchSchema = z.object({
-  items: z.array(z.object({
-    full_name: z.string(),
-    default_branch: z.string(),
-    description: z.string().nullable().optional(),
-    archived: z.boolean(),
-    fork: z.boolean(),
-  })),
-})
-const commitSchema = z.object({ sha: z.string().regex(/^[0-9a-f]{40}$/i) })
-const npmRepositorySchema = z.union([
-  z.string().trim().min(1),
-  z.object({ url: z.string().trim().min(1) }).passthrough(),
-])
-const npmSchema = z.object({
-  'dist-tags': z.record(z.string(), z.string()).optional(),
-  versions: z.record(z.string(), z.object({
-    repository: npmRepositorySchema,
-    dsh: z.object({ bundle: z.object({ patch: z.string() }).passthrough() }).passthrough().optional(),
-  }).passthrough()),
-})
 const cacheSchema = z.object({
   schemaVersion: z.literal(1),
   etag: z.string().nullable(),
-  fetchedAt: z.string(),
-  plugins: z.array(z.object({
-    packageName: z.string(), version: z.string(), displayName: z.object({ 'zh-CN': z.string(), en: z.string() }),
-    summary: z.object({ 'zh-CN': z.string(), en: z.string() }), category: z.string(), keywords: z.array(z.string()),
-    license: z.string(), repositoryUrl: z.string(), repositoryDirectory: z.string().nullable(), homepage: z.string().nullable(),
-    manifestUrl: z.string(), sources: z.array(z.union([z.literal('catalog'), z.literal('github-topic')])), installedVersion: z.null(),
-  })),
-  candidates: z.array(z.object({
-    id: z.string(), repositoryFullName: z.string(), repositoryUrl: z.string(), packageName: z.string().nullable(),
-    version: z.string().nullable(), displayName: z.object({ 'zh-CN': z.string(), en: z.string() }),
-    summary: z.object({ 'zh-CN': z.string(), en: z.string() }), manifestUrl: z.string().nullable(),
-    issueCode: z.union([
-      z.literal('repository-unavailable'), z.literal('manifest-unavailable'), z.literal('manifest-invalid'),
-      z.literal('package-unpublished'), z.literal('package-invalid'), z.literal('repository-mismatch'),
-    ]),
-    issue: z.string(), installable: z.boolean().optional().default(false), installedVersion: z.string().nullable().optional().default(null),
-    source: z.literal('github-topic'),
-  })).optional().default([]),
-})
+  fetchedAt: z.string().datetime(),
+  document: catalogDocumentSchema,
+}).strict()
 
 export interface CatalogServiceConfig {
   readonly catalogUrl?: string
-  readonly githubTopic?: string
-  readonly githubApiUrl?: string
-  readonly rawGithubUrl?: string
-  readonly npmRegistryUrl?: string
   readonly cacheFile: string
   readonly requestTimeoutMs?: number
 }
 
 export interface CatalogState {
-  readonly plugins: readonly MarketplacePlugin[]
-  readonly candidates: readonly MarketplaceCandidate[]
+  readonly entries: readonly CatalogEntry[]
   readonly warnings: readonly DiscoveryWarning[]
   readonly stale: boolean
+  readonly generatedAt: string | null
   readonly fetchedAt: string
 }
 
 type Fetcher = typeof fetch
-type GithubRepository = z.infer<typeof searchSchema>['items'][number]
 
-class CandidateValidationError extends Error {
-  constructor(readonly code: CandidateIssueCode, message: string) {
-    super(message)
-  }
-}
-
-function objectValue(value: unknown): Record<string, unknown> | undefined {
-  return value !== null && typeof value === 'object' && !Array.isArray(value) ? value as Record<string, unknown> : undefined
-}
-
-function localizedValue(value: unknown, fallback: string): LocalizedText {
-  const record = objectValue(value)
-  return {
-    'zh-CN': typeof record?.['zh-CN'] === 'string' && record['zh-CN'].trim() !== '' ? record['zh-CN'] : fallback,
-    en: typeof record?.en === 'string' && record.en.trim() !== '' ? record.en : fallback,
-  }
-}
-
-function npmReference(value: unknown): { packageName: string, version: string } | undefined {
-  const record = objectValue(value)
-  const packageName = typeof record?.name === 'string' && npmPackageNameSchema.safeParse(record.name).success
-    ? record.name
-    : undefined
-  const version = typeof record?.version === 'string' && validVersion(record.version) === record.version
-    ? record.version
-    : undefined
-  return packageName !== undefined && version !== undefined ? { packageName, version } : undefined
-}
-
-/** Network and cache boundary for curated and topic-based plugin discovery. */
+/** Runtime boundary for one generated marketplace catalog plus a last-known-good cache. */
 export class CatalogService {
   private readonly catalogUrl: string
-  private readonly githubTopic: string
-  private readonly githubApiUrl: string
-  private readonly rawGithubUrl: string
-  private readonly npmRegistryUrl: string
   private readonly cacheFile: string
   private readonly timeoutMs: number
   private readonly fetcher: Fetcher
   private etag: string | null = null
-  private catalog = new Map<string, MarketplacePlugin>()
-  private githubPlugins = new Map<string, MarketplacePlugin>()
-  private candidates = new Map<string, MarketplaceCandidate>()
+  private document: CatalogDocument | undefined
   private state: CatalogState | undefined
   private cacheLoaded = false
 
   constructor(config: CatalogServiceConfig, fetcher: Fetcher = fetch) {
     this.catalogUrl = config.catalogUrl ?? DEFAULT_CATALOG_URL
-    this.githubTopic = config.githubTopic ?? 'dsh-plugin'
-    this.githubApiUrl = (config.githubApiUrl ?? DEFAULT_GITHUB_API).replace(/\/$/, '')
-    this.rawGithubUrl = (config.rawGithubUrl ?? DEFAULT_RAW_BASE).replace(/\/$/, '')
-    this.npmRegistryUrl = (config.npmRegistryUrl ?? DEFAULT_NPM_REGISTRY).replace(/\/$/, '')
     this.cacheFile = config.cacheFile
     this.timeoutMs = config.requestTimeoutMs ?? 10_000
     this.fetcher = fetcher
@@ -152,245 +54,43 @@ export class CatalogService {
   async list(refresh = false): Promise<CatalogState> {
     await this.loadCacheOnce()
     if (!refresh && this.state !== undefined) return this.state
-    const warnings: DiscoveryWarning[] = []
-    let stale = false
     try {
-      const response = await this.request(this.catalogUrl,
-        this.etag === null ? {} : { headers: { 'if-none-match': this.etag } })
-      if (response.status === 304 && this.catalog.size > 0) {
-        // Keep the normalized in-memory directory.
-      } else {
+      const headers: Record<string, string> = { accept: GITHUB_RAW_ACCEPT }
+      if (this.etag !== null) headers['if-none-match'] = this.etag
+      const response = await this.request(this.catalogUrl, { headers })
+      if (response.status !== 304) {
         if (!response.ok) throw new Error(`catalog returned HTTP ${response.status}`)
-        const document = catalogDocumentSchema.parse(await response.json())
-        const hydrated = await this.hydrateAll(document.plugins, 'catalog', warnings)
-        this.catalog = new Map(hydrated.map(plugin => [plugin.packageName, plugin]))
+        this.document = catalogDocumentSchema.parse(await response.json())
         this.etag = response.headers.get('etag')
       }
+      if (this.document === undefined) throw new Error('catalog returned 304 without a cached document')
+      const fetchedAt = new Date().toISOString()
+      this.state = this.fromDocument(this.document, false, fetchedAt)
+      await this.writeCache(this.document, fetchedAt)
+      return this.state
     } catch (error) {
-      const cached = await this.readCache()
-      if (cached === undefined && this.catalog.size === 0) throw error
-      if (this.catalog.size === 0 && cached !== undefined) {
-        this.etag = cached.etag
-        this.catalog = new Map(cached.plugins.filter(plugin => plugin.sources.includes('catalog')).map(plugin => [plugin.packageName, plugin]))
-        this.githubPlugins = new Map(cached.plugins.filter(plugin => plugin.sources.includes('github-topic')).map(plugin => [plugin.packageName, plugin]))
-        this.candidates = new Map(cached.candidates.map(candidate => [candidate.id, candidate]))
-      }
-      stale = true
-      warnings.push(this.warning('catalog', 'catalog-unavailable', error))
-    }
-    const state = this.combine(warnings, stale)
-    this.state = state
-    await this.writeCache(state)
-    return state
-  }
-
-  async searchGithub(query: string): Promise<CatalogState> {
-    await this.loadCacheOnce()
-    const normalized = query.trim()
-    if (normalized.length > 80) throw new Error('GitHub search query must not exceed 80 characters')
-    const warnings: DiscoveryWarning[] = []
-    try {
-      const q = [`topic:${this.githubTopic}`, 'archived:false', 'fork:false', normalized].filter(Boolean).join(' ')
-      const repositories = new Map<string, z.infer<typeof searchSchema>['items'][number]>()
-      for (let page = 1; page <= 10; page += 1) {
-        const url = new URL(`${this.githubApiUrl}/search/repositories`)
-        url.searchParams.set('q', q)
-        url.searchParams.set('sort', 'updated')
-        url.searchParams.set('order', 'desc')
-        url.searchParams.set('per_page', '100')
-        url.searchParams.set('page', String(page))
-        const response = await this.request(url, { headers: { accept: 'application/vnd.github+json' } })
-        if (!response.ok) throw new Error(`GitHub search page ${page} returned HTTP ${response.status}`)
-        const result = searchSchema.parse(await response.json())
-        for (const item of result.items) {
-          if (!item.archived && !item.fork) repositories.set(item.full_name, item)
+      const warning = this.warning('catalog-unavailable', error)
+      if (this.document === undefined) {
+        this.state = {
+          entries: [], warnings: [warning], stale: false, generatedAt: null, fetchedAt: new Date().toISOString(),
         }
-        const hasNext = /(?:^|,)\s*<[^>]+>;\s*rel="next"(?:\s*(?:,|$))/.test(response.headers.get('link') ?? '')
-        if (!hasNext) break
-        if (page === 10) {
-          warnings.push({ source: 'github-topic', code: 'github-results-truncated', message: 'GitHub search exceeded its 1,000 result limit.' })
+      } else {
+        this.state = {
+          ...this.fromDocument(this.document, true, new Date().toISOString()),
+          warnings: [...this.document.warnings, warning],
         }
       }
-      const repositoryList = [...repositories.values()]
-      for (const item of repositoryList) this.clearRepositorySnapshot(item.full_name)
-      const settled = await Promise.allSettled(repositoryList.map(item => this.readRepository(item)))
-      for (const [index, result] of settled.entries()) {
-        if (result.status === 'rejected') {
-          const item = repositoryList[index]
-          if (item !== undefined) {
-            const issue = this.candidateIssue(result.reason, 'repository-unavailable')
-            const candidate = this.repositoryCandidate(item, issue.code, issue.message)
-            this.candidates.set(candidate.id, candidate)
-          }
-          continue
-        }
-        warnings.push(...result.value.warnings)
-        for (const candidate of result.value.candidates) this.candidates.set(candidate.id, candidate)
-        for (const plugin of result.value.plugins) {
-          const existing = this.githubPlugins.get(plugin.packageName)
-          if (existing !== undefined && existing.repositoryUrl !== plugin.repositoryUrl) {
-            warnings.push({ source: 'github-topic', code: 'candidate-conflict', message: `Conflicting repositories claim ${plugin.packageName}.` })
-            continue
-          }
-          this.githubPlugins.set(plugin.packageName, plugin)
-        }
-      }
-    } catch (error) {
-      warnings.push(this.warning('github-topic', 'github-unavailable', error))
-    }
-    const base = await this.list(false).catch(() => this.combine([], true))
-    const state = this.combine([...base.warnings, ...warnings], base.stale)
-    this.state = state
-    await this.writeCache(state)
-    return state
-  }
-
-  private async readRepository(repository: GithubRepository): Promise<{
-    readonly plugins: readonly MarketplacePlugin[]
-    readonly candidates: readonly MarketplaceCandidate[]
-    readonly warnings: readonly DiscoveryWarning[]
-  }> {
-    const fullName = repository.full_name
-    const branch = repository.default_branch
-    if (!/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(fullName)) throw new Error(`invalid GitHub repository ${fullName}`)
-    const commitResponse = await this.request(`${this.githubApiUrl}/repos/${fullName}/commits/${encodeURIComponent(branch)}`, {
-      headers: { accept: 'application/vnd.github+json' },
-    })
-    if (!commitResponse.ok) throw new Error(`${fullName} commit lookup returned HTTP ${commitResponse.status}`)
-    const { sha } = commitSchema.parse(await commitResponse.json())
-    const rootUrl = `${this.rawGithubUrl}/${fullName}/${sha}/package.json`
-    let root: unknown
-    try {
-      root = await this.readJson(rootUrl)
-    } catch (error) {
-      const issue = this.candidateIssue(error, 'manifest-unavailable')
-      return { plugins: [], candidates: [this.packageCandidate(repository, '.', rootUrl, undefined, issue.code, issue.message)], warnings: [] }
-    }
-    const catalog = (root as { dsh?: { catalog?: unknown } }).dsh?.catalog
-    let paths: readonly string[] | undefined
-    try {
-      paths = catalog === undefined ? undefined : dshCatalogRootSchema.parse(catalog).packages
-    } catch (error) {
-      const issue = this.candidateIssue(error, 'manifest-invalid')
-      return { plugins: [], candidates: [await this.admitCandidate(repository, '.', rootUrl, root, issue.code, issue.message, fullName)], warnings: [] }
-    }
-    const manifests = paths === undefined
-      ? [{ label: '.', url: rootUrl, raw: root }]
-      : paths.map(path => ({
-          label: path,
-          url: `${this.rawGithubUrl}/${fullName}/${sha}/${path}/package.json`,
-          raw: undefined,
-        }))
-    const expected = canonicalGithubRepository(`https://github.com/${fullName}`)
-    const plugins: MarketplacePlugin[] = []
-    const candidates: MarketplaceCandidate[] = []
-    await Promise.all(manifests.map(async item => {
-      let raw = item.raw
-      if (raw === undefined) {
-        try {
-          raw = await this.readJson(item.url)
-        } catch (error) {
-          const issue = this.candidateIssue(error, 'manifest-unavailable')
-          candidates.push(this.packageCandidate(repository, item.label, item.url, undefined, issue.code, issue.message))
-          return
-        }
-      }
-      try {
-        const manifest = packageManifestSchema.parse(raw)
-        const source = catalogPluginFromManifest(manifest, item.url)
-        if (source.repositoryUrl !== expected) {
-          throw new CandidateValidationError('repository-mismatch', `${manifest.name} repository does not match ${fullName}`)
-        }
-        plugins.push(await this.hydrate(source, 'github-topic'))
-      } catch (error) {
-        const issue = this.candidateIssue(error, 'manifest-invalid')
-        candidates.push(await this.admitCandidate(repository, item.label, item.url, raw, issue.code, issue.message, fullName))
-      }
-    }))
-    return { plugins, candidates, warnings: [] }
-  }
-
-  private async hydrateAll(
-    plugins: readonly CatalogPlugin[], source: MarketplaceSource, warnings: DiscoveryWarning[],
-  ): Promise<readonly MarketplacePlugin[]> {
-    const settled = await Promise.allSettled(plugins.map(plugin => this.hydrate(plugin, source)))
-    const result: MarketplacePlugin[] = []
-    for (const item of settled) {
-      if (item.status === 'fulfilled') result.push(item.value)
-      else warnings.push(this.warning(source, 'package-rejected', item.reason))
-    }
-    return result
-  }
-
-  private async hydrate(plugin: CatalogPlugin, source: MarketplaceSource): Promise<MarketplacePlugin> {
-    await this.verifyNpmReference(plugin.packageName, plugin.version, plugin.repositoryUrl, true)
-    return { ...plugin, sources: [source], installedVersion: null }
-  }
-
-  private async verifyNpmReference(
-    packageName: string, version: string, expectedRepository: string, requireBundle = false,
-  ): Promise<void> {
-    const response = await this.request(`${this.npmRegistryUrl}/${encodeURIComponent(packageName)}`)
-    if (!response.ok) throw new CandidateValidationError('package-unpublished', `${packageName} is not published on npm`)
-    let metadata: z.infer<typeof npmSchema>
-    try {
-      metadata = npmSchema.parse(await response.json())
-    } catch (error) {
-      throw new CandidateValidationError('package-invalid', `${packageName} has invalid npm metadata: ${this.errorMessage(error)}`)
-    }
-    const published = metadata.versions[version]
-    if (published === undefined) {
-      throw new CandidateValidationError('package-unpublished', `${packageName}@${version} is not published on npm`)
-    }
-    if (requireBundle && published.dsh?.bundle.patch === undefined) {
-      throw new CandidateValidationError('package-invalid', `${packageName}@${version} npm metadata does not declare dsh.bundle.patch`)
-    }
-    const repository = typeof published.repository === 'string' ? published.repository : published.repository.url
-    if (canonicalGithubRepository(repository) !== expectedRepository) {
-      throw new CandidateValidationError('repository-mismatch', `${packageName}@${version} npm repository does not match its discovery repository`)
+      return this.state
     }
   }
 
-  private async admitCandidate(
-    repository: GithubRepository,
-    label: string,
-    manifestUrl: string,
-    raw: unknown,
-    issueCode: CandidateIssueCode,
-    issue: string,
-    fullName: string,
-  ): Promise<MarketplaceCandidate> {
-    const candidate = this.packageCandidate(repository, label, manifestUrl, raw, issueCode, issue)
-    // A V1 manifest remains the preferred source of metadata. For legacy or
-    // incomplete manifests, npm metadata is the separate installation gate.
-    if (issueCode !== 'manifest-invalid') return candidate
-    const reference = npmReference(raw)
-    const expectedRepository = canonicalGithubRepository(`https://github.com/${fullName}`)
-    if (reference === undefined || expectedRepository === null) return candidate
-    try {
-      await this.verifyNpmReference(reference.packageName, reference.version, expectedRepository)
-      return { ...candidate, packageName: reference.packageName, version: reference.version, installable: true }
-    } catch (error) {
-      const npmIssue = this.candidateIssue(error, 'package-invalid')
-      return { ...candidate, issueCode: npmIssue.code, issue: npmIssue.message }
-    }
-  }
-
-  private combine(warnings: readonly DiscoveryWarning[], stale: boolean): CatalogState {
-    const merged = new Map(this.githubPlugins)
-    for (const [name, catalog] of this.catalog) {
-      const candidate = merged.get(name)
-      merged.set(name, candidate === undefined ? catalog : { ...catalog, sources: ['catalog', 'github-topic'] })
-    }
-    const packageNames = new Set(merged.keys())
+  private fromDocument(document: CatalogDocument, stale: boolean, fetchedAt: string): CatalogState {
     return {
-      plugins: [...merged.values()].sort((left, right) => left.packageName.localeCompare(right.packageName)),
-      candidates: [...this.candidates.values()]
-        .filter(candidate => candidate.packageName === null || !packageNames.has(candidate.packageName))
-        .sort((left, right) => left.id.localeCompare(right.id)),
-      warnings,
+      entries: document.entries,
+      warnings: document.warnings,
       stale,
-      fetchedAt: new Date().toISOString(),
+      generatedAt: document.generatedAt,
+      fetchedAt,
     }
   }
 
@@ -402,86 +102,14 @@ export class CatalogService {
     })
   }
 
-  private clearRepositorySnapshot(fullName: string): void {
-    const repositoryUrl = canonicalGithubRepository(`https://github.com/${fullName}`)
-    for (const [name, plugin] of this.githubPlugins) {
-      if (plugin.repositoryUrl === repositoryUrl) this.githubPlugins.delete(name)
-    }
-    const prefix = `${fullName}:`
-    for (const id of this.candidates.keys()) {
-      if (id.startsWith(prefix)) this.candidates.delete(id)
-    }
-  }
-
-  private repositoryCandidate(
-    repository: GithubRepository, code: CandidateIssueCode, message: string,
-  ): MarketplaceCandidate {
-    return this.packageCandidate(repository, '.', null, undefined, code, message)
-  }
-
-  private packageCandidate(
-    repository: GithubRepository,
-    label: string,
-    manifestUrl: string | null,
-    raw: unknown,
-    issueCode: CandidateIssueCode,
-    issue: string,
-  ): MarketplaceCandidate {
-    const manifest = objectValue(raw)
-    const dsh = objectValue(manifest?.dsh)
-    const plugin = objectValue(dsh?.plugin)
-    const repositoryName = repository.full_name.split('/').at(-1) ?? repository.full_name
-    const packageName = typeof manifest?.name === 'string' ? manifest.name : null
-    const fallbackName = packageName ?? repositoryName
-    const description = typeof manifest?.description === 'string'
-      ? manifest.description
-      : repository.description ?? `GitHub repository ${repository.full_name}`
-    return {
-      id: `${repository.full_name}:${label}`,
-      repositoryFullName: repository.full_name,
-      repositoryUrl: `https://github.com/${repository.full_name}`,
-      packageName,
-      version: typeof manifest?.version === 'string' ? manifest.version : null,
-      displayName: localizedValue(plugin?.displayName, fallbackName),
-      summary: localizedValue(plugin?.summary, description),
-      manifestUrl,
-      issueCode,
-      issue,
-      installable: false,
-      installedVersion: null,
-      source: 'github-topic',
-    }
-  }
-
-  private candidateIssue(error: unknown, fallback: CandidateIssueCode): { code: CandidateIssueCode, message: string } {
-    return error instanceof CandidateValidationError
-      ? { code: error.code, message: error.message }
-      : { code: fallback, message: this.errorMessage(error) }
-  }
-
-  private errorMessage(error: unknown): string {
-    if (error instanceof z.ZodError) {
-      const issue = error.issues[0]
-      if (issue !== undefined) return `${issue.path.join('.') || 'package.json'}: ${issue.message}`
-    }
-    return error instanceof Error ? error.message : String(error)
-  }
-
-  private async readJson(url: string): Promise<unknown> {
-    const response = await this.request(url)
-    if (!response.ok) throw new Error(`${url} returned HTTP ${response.status}`)
-    return await response.json()
-  }
-
-  private warning(source: MarketplaceSource, code: string, error: unknown): DiscoveryWarning {
-    return { source, code, message: error instanceof Error ? error.message : String(error) }
+  private warning(code: string, error: unknown): DiscoveryWarning {
+    return { code, message: error instanceof Error ? error.message : String(error) }
   }
 
   private async readCache(): Promise<z.infer<typeof cacheSchema> | undefined> {
     try {
       return cacheSchema.parse(JSON.parse(await readFile(this.cacheFile, 'utf8')))
-    } catch (error) {
-      if ((error as NodeJS.ErrnoException).code === 'ENOENT') return undefined
+    } catch {
       return undefined
     }
   }
@@ -492,20 +120,17 @@ export class CatalogService {
     const cached = await this.readCache()
     if (cached === undefined) return
     this.etag = cached.etag
-    this.catalog = new Map(cached.plugins.filter(plugin => plugin.sources.includes('catalog')).map(plugin => [plugin.packageName, plugin]))
-    this.githubPlugins = new Map(cached.plugins.filter(plugin => plugin.sources.includes('github-topic')).map(plugin => [plugin.packageName, plugin]))
-    this.candidates = new Map(cached.candidates.map(candidate => [candidate.id, candidate]))
+    this.document = cached.document
   }
 
-  private async writeCache(state: CatalogState): Promise<void> {
-    const document = { schemaVersion: 1, etag: this.etag, fetchedAt: state.fetchedAt, plugins: state.plugins, candidates: state.candidates }
+  private async writeCache(document: CatalogDocument, fetchedAt: string): Promise<void> {
     const temporary = join(dirname(this.cacheFile), `.${randomUUID()}.tmp`)
     try {
       await mkdir(dirname(this.cacheFile), { recursive: true })
-      await writeFile(temporary, JSON.stringify(document, undefined, 2) + '\n', 'utf8')
+      await writeFile(temporary, JSON.stringify({ schemaVersion: 1, etag: this.etag, fetchedAt, document }, undefined, 2) + '\n', 'utf8')
       await rename(temporary, this.cacheFile)
     } catch {
-      // Discovery remains usable when the local cache is not writable.
+      // A read-only cache directory must not make the generated catalog unusable.
     }
   }
 }
@@ -515,13 +140,13 @@ export function snapshotWithProfile(
 ): MarketplaceSnapshot {
   return {
     profileName,
-    plugins: state.plugins.map(plugin => ({ ...plugin, installedVersion: dependencies[plugin.packageName] ?? null })),
-    candidates: state.candidates.map(candidate => ({
-      ...candidate,
-      installedVersion: candidate.packageName === null ? null : dependencies[candidate.packageName] ?? null,
+    entries: state.entries.map(entry => ({
+      ...entry,
+      installedVersion: entry.packageName === null ? null : dependencies[entry.packageName] ?? null,
     })),
     warnings: state.warnings,
     stale: state.stale,
+    generatedAt: state.generatedAt,
     fetchedAt: state.fetchedAt,
   }
 }

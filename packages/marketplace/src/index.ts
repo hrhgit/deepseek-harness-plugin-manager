@@ -5,19 +5,15 @@ import { dshHomePath } from '@deepseek-ai/dsh-home-paths'
 import { Remote, TypertRemoteService } from '@deepseek-ai/dsh-typert-protocol'
 import type {} from 'zod'
 import { CatalogService, snapshotWithProfile } from './host/catalog.js'
-import { currentDshRunner, MarketplaceInstaller } from './host/installer.js'
+import { currentDshRunner, MarketplaceInstaller, type MarketplaceInstallTarget } from './host/installer.js'
 import { installedDependencies, profileLocation, type ProfileLocation } from './host/profile.js'
-import type { InstallReceipt, MarketplacePlugin, MarketplaceSnapshot } from './types.js'
+import type { InstallReceipt, MarketplaceSnapshot } from './types.js'
 
 export type * from './types.js'
 export * from './manifest.js'
 
 export interface Config {
   readonly catalogUrl?: string
-  readonly githubTopic?: string
-  readonly githubApiUrl?: string
-  readonly rawGithubUrl?: string
-  readonly npmRegistryUrl?: string
   readonly requestTimeoutMs?: number
   readonly installTimeoutMs?: number
 }
@@ -29,7 +25,7 @@ export class PluginMarketplace extends TypertRemoteService {
   private readonly location: ProfileLocation
   private readonly catalog: CatalogService
   private readonly installer: MarketplaceInstaller
-  private latest = new Map<string, Pick<MarketplacePlugin, 'packageName' | 'version'>>()
+  private latest = new Map<string, MarketplaceInstallTarget>()
 
   constructor(ctx: Context, config: Config = {}) {
     super(ctx, 'marketplace')
@@ -39,10 +35,6 @@ export class PluginMarketplace extends TypertRemoteService {
     this.catalog = new CatalogService({
       cacheFile: join(dshHomePath('cache', 'dsh-plugin-marketplace'), 'catalog-v1.json'),
       ...(config.catalogUrl === undefined ? {} : { catalogUrl: config.catalogUrl }),
-      ...(config.githubTopic === undefined ? {} : { githubTopic: config.githubTopic }),
-      ...(config.githubApiUrl === undefined ? {} : { githubApiUrl: config.githubApiUrl }),
-      ...(config.rawGithubUrl === undefined ? {} : { rawGithubUrl: config.rawGithubUrl }),
-      ...(config.npmRegistryUrl === undefined ? {} : { npmRegistryUrl: config.npmRegistryUrl }),
       ...(config.requestTimeoutMs === undefined ? {} : { requestTimeoutMs: config.requestTimeoutMs }),
     })
     this.installer = new MarketplaceInstaller(currentDshRunner(config.installTimeoutMs))
@@ -53,16 +45,11 @@ export class PluginMarketplace extends TypertRemoteService {
     return await this.project(await this.catalog.list(refresh))
   }
 
-  @Remote('searchGithub')
-  async searchGithub(query: string): Promise<MarketplaceSnapshot> {
-    return await this.project(await this.catalog.searchGithub(query))
-  }
-
   @Remote('installPlugin')
   async install(packageName: string, version: string): Promise<InstallReceipt> {
     const target = this.latest.get(packageName)
     if (target === undefined || target.version !== version) {
-      throw new Error('Install target is not present in the latest verified marketplace snapshot.')
+      throw new Error('Install target is not present in the latest installable marketplace snapshot.')
     }
     const dependencies = await installedDependencies(this.location.directory)
     return await this.installer.install(target, this.location, dependencies)
@@ -70,16 +57,13 @@ export class PluginMarketplace extends TypertRemoteService {
 
   private async project(state: Awaited<ReturnType<CatalogService['list']>>): Promise<MarketplaceSnapshot> {
     const dependencies = await installedDependencies(this.location.directory)
-    const candidateTargets: Array<readonly [string, Pick<MarketplacePlugin, 'packageName' | 'version'>]> = []
-    for (const candidate of state.candidates) {
-      if (candidate.installable && candidate.packageName !== null && candidate.version !== null) {
-        candidateTargets.push([candidate.packageName, { packageName: candidate.packageName, version: candidate.version }])
+    const installTargets: Array<readonly [string, MarketplaceInstallTarget]> = []
+    for (const entry of state.entries) {
+      if (entry.installable && entry.packageName !== null && entry.version !== null) {
+        installTargets.push([entry.packageName, { packageName: entry.packageName, version: entry.version }])
       }
     }
-    this.latest = new Map([
-      ...state.plugins.map(plugin => [plugin.packageName, plugin] as const),
-      ...candidateTargets,
-    ])
+    this.latest = new Map(installTargets)
     return snapshotWithProfile(state, this.location.profileName, dependencies)
   }
 }

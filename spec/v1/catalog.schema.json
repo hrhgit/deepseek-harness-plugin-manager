@@ -7,17 +7,48 @@
       "type": "number",
       "const": 1
     },
-    "plugins": {
+    "generatedAt": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+    },
+    "entries": {
       "type": "array",
       "items": {
         "type": "object",
         "properties": {
-          "packageName": {
+          "id": {
             "type": "string",
-            "pattern": "^(?:@[a-z0-9][a-z0-9._-]*\\/)?[a-z0-9][a-z0-9._-]*$"
+            "minLength": 1
+          },
+          "repositoryFullName": {
+            "type": "string",
+            "minLength": 3
+          },
+          "repositoryUrl": {
+            "type": "string",
+            "format": "uri"
+          },
+          "packageName": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^(?:@[a-z0-9][a-z0-9._-]*\\/)?[a-z0-9][a-z0-9._-]*$"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "version": {
-            "type": "string"
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "displayName": {
             "type": "object",
@@ -60,9 +91,16 @@
             "additionalProperties": false
           },
           "category": {
-            "type": "string",
-            "maxLength": 64,
-            "pattern": "^[a-z0-9](?:[a-z0-9._-]*[a-z0-9])?$"
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 64,
+                "pattern": "^[a-z0-9](?:[a-z0-9._-]*[a-z0-9])?$"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "keywords": {
             "type": "array",
@@ -71,12 +109,15 @@
             }
           },
           "license": {
-            "type": "string",
-            "minLength": 1
-          },
-          "repositoryUrl": {
-            "type": "string",
-            "format": "uri"
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "repositoryDirectory": {
             "anyOf": [
@@ -100,11 +141,62 @@
             ]
           },
           "manifestUrl": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uri"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "verification": {
             "type": "string",
-            "format": "uri"
+            "enum": [
+              "verified",
+              "unverified",
+              "rejected"
+            ]
+          },
+          "issueCode": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "repository-unavailable",
+                  "manifest-unavailable",
+                  "manifest-invalid",
+                  "package-unpublished",
+                  "package-invalid",
+                  "repository-mismatch",
+                  "package-conflict"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "issue": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "installable": {
+            "type": "boolean"
           }
         },
         "required": [
+          "id",
+          "repositoryFullName",
+          "repositoryUrl",
           "packageName",
           "version",
           "displayName",
@@ -112,10 +204,34 @@
           "category",
           "keywords",
           "license",
-          "repositoryUrl",
           "repositoryDirectory",
           "homepage",
-          "manifestUrl"
+          "manifestUrl",
+          "verification",
+          "issueCode",
+          "issue",
+          "installable"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "minLength": 1
+          },
+          "message": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "code",
+          "message"
         ],
         "additionalProperties": false
       }
@@ -123,7 +239,9 @@
   },
   "required": [
     "schemaVersion",
-    "plugins"
+    "generatedAt",
+    "entries",
+    "warnings"
   ],
   "additionalProperties": false
 }

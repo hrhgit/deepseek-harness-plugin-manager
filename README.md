@@ -7,7 +7,7 @@ This repository contains two independent community plugins for [DeepSeek Harness
 - [`dsh-plugin-manager`](packages/manager) manages enablement and Cordis runtime state for plugins already installed in a profile.
 - [`dsh-plugin-marketplace`](packages/marketplace) discovers, inspects, and installs validated npm plugin bundles.
 
-The repository also publishes the versioned [`dsh.plugin` V1 specification](spec/v1) and a curated catalog under [`catalog/v1`](catalog/v1). GitHub's official `dsh-plugin` topic is treated as a community candidate source, not as automatic catalog admission.
+The repository also publishes the versioned [`dsh.plugin` V1 specification](spec/v1) and an automatically generated plugin catalog under [`catalog/v1`](catalog/v1). GitHub Actions scans the `dsh-plugin` topic every six hours and performs the GitHub, exact npm version, repository ownership, and V1 manifest checks centrally; the runtime marketplace only reads the generated result.
 
 ## Development
 

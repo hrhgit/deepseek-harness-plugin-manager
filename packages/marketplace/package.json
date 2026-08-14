@@ -1,7 +1,7 @@
 {
   "name": "dsh-plugin-marketplace",
   "version": "0.1.0",
-  "description": "Plugin discovery and npm installation marketplace for DeepSeek Harness",
+  "description": "Generated-catalog plugin discovery and npm installation marketplace for DeepSeek Harness",
   "keywords": [
     "deepseek-harness",
     "dsh",
@@ -75,8 +75,8 @@
         "en": "Plugin Marketplace"
       },
       "summary": {
-        "zh-CN": "从正式目录和 GitHub 社区候选中发现并安装经过验证的 DSH 插件。",
-        "en": "Discover and install validated DSH plugins from the curated catalog and GitHub community candidates."
+        "zh-CN": "从自动更新的插件目录中发现并安装经过校验的 DSH 插件。",
+        "en": "Discover and install validated DSH plugins from an automatically updated catalog."
       },
       "category": "plugin-marketplace"
     },
@@ -102,6 +102,7 @@
     "test:watch": "vitest",
     "spec:build": "pnpm run contracts && node scripts/generate-spec.mjs",
     "catalog:build": "pnpm run contracts && node scripts/build-catalog.mjs",
+    "catalog:check": "pnpm run contracts && node scripts/validate-catalog.mjs",
     "pack:check": "pnpm pack --pack-destination dist && node ../../scripts/verify-package.mjs dist/dsh-plugin-marketplace-0.1.0.tgz marketplace",
     "prepare": "pnpm run build"
   },

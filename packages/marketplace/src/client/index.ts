@@ -17,7 +17,6 @@ export async function apply(ctx: ClientContext): Promise<() => Promise<void>> {
     const t = scope.locale.bind('settings.pluginMarketplace')
     const api: PluginMarketplaceTabApi = {
       list: async refresh => unwrap(await scope.remote.marketplace.list(refresh)),
-      searchGithub: async query => unwrap(await scope.remote.marketplace.searchGithub(query)),
       install: async (packageName, version) => unwrap(await scope.remote.marketplace.installPlugin(packageName, version)),
     }
     scope.slots.inject('settings.plugins.tab', () => scope.slots.register({
