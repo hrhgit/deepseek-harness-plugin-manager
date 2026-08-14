@@ -21,7 +21,7 @@ const snapshot: MarketplaceSnapshot = {
     id: 'example/legacy-manager:.', repositoryFullName: 'example/legacy-manager', repositoryUrl: 'https://github.com/example/legacy-manager',
     packageName: 'dsh-legacy-manager', version: '1.0.0', displayName: { 'zh-CN': '旧版管理器', en: 'Legacy Manager' },
     summary: { 'zh-CN': '尚未适配 V1。', en: 'Not yet adapted to V1.' }, manifestUrl: 'https://example.test/package.json',
-    issueCode: 'manifest-invalid', issue: 'dsh.plugin: expected object', source: 'github-topic',
+    issueCode: 'manifest-invalid', issue: 'dsh.plugin: expected object', installable: false, installedVersion: null, source: 'github-topic',
   }],
 }
 
@@ -70,6 +70,24 @@ describe('PluginMarketplaceTab', () => {
     expect(screen.getByText(/Manifest does not conform to V1/)).toBeTruthy()
     expect(screen.getByText('dsh.plugin: expected object')).toBeTruthy()
     expect(install).not.toHaveBeenCalled()
+  })
+
+  it('allows an npm-verified community candidate without a V1 manifest', async () => {
+    const legacy = {
+      ...snapshot.candidates[0], installable: true,
+    }
+    const install = vi.fn(async () => ({
+      status: 'installed' as const, profileName: 'web', packageName: 'dsh-legacy-manager', version: '1.0.0',
+      restartRequired: true, message: 'installed',
+    }))
+    render(<PluginMarketplaceTab {...props({ list: async () => ({ ...snapshot, plugins: [], candidates: [legacy] }), install })} />)
+    const candidateName = await screen.findByText('Legacy Manager')
+    fireEvent.click(candidateName.closest('button') as HTMLButtonElement)
+    expect(screen.getByRole('button', { name: en.install })).toHaveProperty('disabled', false)
+    expect(screen.getByText(en.candidateInstallWarning)).toBeTruthy()
+    fireEvent.click(screen.getByRole('button', { name: en.install }))
+    fireEvent.click(screen.getByRole('button', { name: en.confirmInstall }))
+    await waitFor(() => expect(install).toHaveBeenCalledWith('dsh-legacy-manager', '1.0.0'))
   })
 
   it('requires confirmation before installing and shows restart feedback', async () => {

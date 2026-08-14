@@ -54,7 +54,7 @@ export class MarketplaceInstaller {
   constructor(private readonly runner: CommandRunner = currentDshRunner()) {}
 
   async install(
-    plugin: MarketplacePlugin,
+    plugin: Pick<MarketplacePlugin, 'packageName' | 'version'>,
     location: ProfileLocation,
     dependencies: Readonly<Record<string, string>>,
   ): Promise<InstallReceipt> {

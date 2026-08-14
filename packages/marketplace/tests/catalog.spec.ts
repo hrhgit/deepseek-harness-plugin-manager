@@ -93,6 +93,12 @@ describe('marketplace catalog sources', () => {
           versions: { '0.1.0': { repository: { url: `${repositoryUrl}.git` }, dsh: { bundle: { patch: './cordis.patch.yml' } } } },
         })); return
       }
+      if (url.pathname === '/npm/dsh-legacy-manager') {
+        response.end(JSON.stringify({
+          'dist-tags': { latest: '1.0.0' },
+          versions: { '1.0.0': { repository: { url: 'https://github.com/example/legacy-manager.git' } } },
+        })); return
+      }
       response.statusCode = 404
       response.end(JSON.stringify({ error: 'not found' }))
     })
@@ -136,7 +142,7 @@ describe('marketplace catalog sources', () => {
     expect(snapshot.warnings).toEqual([])
     expect(snapshot.candidates).toEqual(expect.arrayContaining([
       expect.objectContaining({ packageName: 'dsh-plugin-marketplace', issueCode: 'package-unpublished' }),
-      expect.objectContaining({ packageName: 'dsh-legacy-manager', issueCode: 'manifest-invalid' }),
+      expect.objectContaining({ packageName: 'dsh-legacy-manager', issueCode: 'manifest-invalid', installable: true }),
     ]))
     expect(snapshot.candidates.find(item => item.packageName === 'dsh-legacy-manager')?.issue).toContain('dsh.plugin')
   })

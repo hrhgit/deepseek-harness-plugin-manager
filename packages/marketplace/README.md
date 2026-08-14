@@ -4,7 +4,7 @@
 
 An independent DeepSeek Harness marketplace plugin that reads the curated V1 catalog, discovers candidates from GitHub's `dsh-plugin` topic, and installs exact npm versions through the official `dsh plugin` command boundary.
 
-Discovery and installation admission are separate. Topic matches remain visible under **Needs adaptation** with a specific reason when they lack a V1 manifest, an exact npm release, or matching repository provenance. The install action is enabled only after all manifest, exact-version npm, and repository ownership checks pass.
+Discovery and installation admission are separate. Topic matches remain visible as **Community candidates** even without a V1 manifest. A candidate can be installed when its npm package and exact version are known from the repository's `package.json` and npm metadata points back to the discovered GitHub repository. The UI warns that DSH compatibility has not been verified by a V1 manifest; unpublished versions and repository mismatches remain unavailable.
 
 The marketplace does not depend on `dsh-plugin-manager`. Installation changes the profile bundle stack and reports that a restart is required.
 

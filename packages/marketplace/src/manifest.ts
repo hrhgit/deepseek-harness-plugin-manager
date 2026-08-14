@@ -5,6 +5,8 @@ import { z } from 'zod'
 const npmName = /^(?:@[a-z0-9][a-z0-9._-]*\/)?[a-z0-9][a-z0-9._-]*$/
 const category = /^[a-z0-9](?:[a-z0-9._-]*[a-z0-9])?$/
 
+export const npmPackageNameSchema = z.string().regex(npmName)
+
 /** A catalog child path is always repository-relative and cannot escape its root. */
 export function isSafePackagePath(value: string): boolean {
   if (value === '' || value.includes('\\') || value.startsWith('/') || /^[A-Za-z]:/.test(value)) return false
@@ -50,7 +52,7 @@ const repositorySchema = z.union([
 ])
 
 export const packageManifestSchema = z.object({
-  name: z.string().regex(npmName),
+  name: npmPackageNameSchema,
   version: z.string().refine(value => validVersion(value) === value, 'version must be exact semver'),
   description: z.string().optional(),
   keywords: z.array(z.string()).optional(),

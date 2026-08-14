@@ -59,7 +59,7 @@ export function PluginMarketplaceTab({ list, searchGithub, install, t, locale }:
   const [statusFilter, setStatusFilter] = usePersistedState(statusFilterPolicy)
   const [state, setState] = useState<LoadState>({ status: 'loading' })
   const [selected, setSelected] = useState<string | null>(null)
-  const [confirming, setConfirming] = useState<MarketplacePlugin | null>(null)
+  const [confirming, setConfirming] = useState<MarketplacePlugin | MarketplaceCandidate | null>(null)
   const [installing, setInstalling] = useState(false)
   const [feedback, setFeedback] = useState<{ kind: 'success' | 'error'; message: string } | null>(null)
 
@@ -114,6 +114,10 @@ export function PluginMarketplaceTab({ list, searchGithub, install, t, locale }:
 
   const confirmInstall = async (): Promise<void> => {
     if (confirming === null) return
+    if (confirming.packageName === null || confirming.version === null) {
+      setFeedback({ kind: 'error', message: t('notInstallable') })
+      return
+    }
     setInstalling(true)
     setFeedback(null)
     try {
@@ -161,7 +165,8 @@ export function PluginMarketplaceTab({ list, searchGithub, install, t, locale }:
             <span className={css.rowMain}><strong>{item.displayName[locale === 'zh-CN' ? 'zh-CN' : 'en']}</strong><code>{entry.kind === 'plugin' ? entry.value.packageName : entry.value.packageName ?? entry.value.repositoryFullName}</code></span>
             <span className={css.rowMeta}><small>{entry.value.version ?? t('unknown')}</small>{entry.kind === 'plugin'
               ? entry.value.installedVersion !== null ? <small data-installed="true">{t('installed')}</small> : null
-              : <small data-candidate="true">{t('candidateStatus')}</small>}</span>
+              : entry.value.installedVersion !== null ? <small data-installed="true">{t('installed')}</small>
+                : <small data-candidate="true">{entry.value.installable ? t('candidateInstallable') : t('candidateStatus')}</small>}</span>
           </button>
         })}
       </div>
@@ -179,13 +184,17 @@ export function PluginMarketplaceTab({ list, searchGithub, install, t, locale }:
           <div className={css.links}><a href={active.value.repositoryUrl} target="_blank" rel="noreferrer"><ExternalLink size={14} />{t('repository')}</a><a href={active.value.manifestUrl} target="_blank" rel="noreferrer"><ExternalLink size={14} />{t('manifest')}</a></div>
         </> : <>
           <div className={css.detailTitle}><div><h4>{active.value.displayName[locale === 'zh-CN' ? 'zh-CN' : 'en']}</h4><code>{active.value.packageName ?? active.value.repositoryFullName}</code></div>
-            <button className={css.installButton} data-unavailable="true" type="button" disabled><Ban size={16} />{t('notInstallable')}</button>
+            <button className={css.installButton} data-unavailable={!active.value.installable || undefined} type="button"
+              disabled={!active.value.installable || active.value.packageName === null || active.value.version === null || active.value.installedVersion !== null || installing}
+              onClick={() => { if (active.value.installable && active.value.packageName !== null && active.value.version !== null) setConfirming(active.value) }}>
+              {active.value.installable ? <Download size={16} /> : <Ban size={16} />}{active.value.installedVersion !== null ? t('installed') : active.value.installable ? t('install') : t('notInstallable')}
+            </button>
           </div>
           <p className={css.summary}>{active.value.summary[locale === 'zh-CN' ? 'zh-CN' : 'en']}</p>
           <dl className={css.facts}>
-            <div><dt>{t('version')}</dt><dd>{active.value.version ?? t('unknown')}</dd></div><div><dt>{t('status')}</dt><dd>{t('candidateStatus')}</dd></div><div><dt>{t('repository')}</dt><dd>{active.value.repositoryFullName}</dd></div>
+            <div><dt>{t('version')}</dt><dd>{active.value.version ?? t('unknown')}</dd></div><div><dt>{t('status')}</dt><dd>{active.value.installedVersion !== null ? t('installed') : active.value.installable ? t('candidateInstallable') : t('candidateStatus')}</dd></div><div><dt>{t('repository')}</dt><dd>{active.value.repositoryFullName}</dd></div>
           </dl>
-          <div className={css.admission}><AlertTriangle size={16} /><div><strong>{t('admissionReason')}: {t(issueLocaleKey[active.value.issueCode])}</strong><span>{active.value.issue}</span></div></div>
+          <div className={css.admission}><AlertTriangle size={16} /><div><strong>{active.value.installable ? t('candidateInstallWarning') : `${t('admissionReason')}: ${t(issueLocaleKey[active.value.issueCode])}`}</strong><span>{active.value.issue}</span></div></div>
           <div className={css.sources}><span data-source="github-topic">{t('githubSource')}</span></div>
           <div className={css.links}><a href={active.value.repositoryUrl} target="_blank" rel="noreferrer"><ExternalLink size={14} />{t('repository')}</a>{active.value.manifestUrl === null ? null : <a href={active.value.manifestUrl} target="_blank" rel="noreferrer"><ExternalLink size={14} />{t('manifest')}</a>}</div>
         </>}

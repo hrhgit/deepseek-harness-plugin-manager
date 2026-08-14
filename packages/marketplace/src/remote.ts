@@ -16,7 +16,7 @@ const issueCode = z.union([
 const candidate = z.object({
   id: z.string(), repositoryFullName: z.string(), repositoryUrl: z.string(), packageName: z.string().nullable(),
   version: z.string().nullable(), displayName: localized, summary: localized, manifestUrl: z.string().nullable(),
-  issueCode, issue: z.string(), source: z.literal('github-topic'),
+  issueCode, issue: z.string(), installable: z.boolean(), installedVersion: z.string().nullable(), source: z.literal('github-topic'),
 }).readonly()
 const warning = z.object({ source, code: z.string(), message: z.string() }).readonly()
 const snapshot = z.object({

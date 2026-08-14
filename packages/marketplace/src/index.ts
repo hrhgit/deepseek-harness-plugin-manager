@@ -29,7 +29,7 @@ export class PluginMarketplace extends TypertRemoteService {
   private readonly location: ProfileLocation
   private readonly catalog: CatalogService
   private readonly installer: MarketplaceInstaller
-  private latest = new Map<string, MarketplacePlugin>()
+  private latest = new Map<string, Pick<MarketplacePlugin, 'packageName' | 'version'>>()
 
   constructor(ctx: Context, config: Config = {}) {
     super(ctx, 'marketplace')
@@ -60,17 +60,27 @@ export class PluginMarketplace extends TypertRemoteService {
 
   @Remote('installPlugin')
   async install(packageName: string, version: string): Promise<InstallReceipt> {
-    const plugin = this.latest.get(packageName)
-    if (plugin === undefined || plugin.version !== version) {
-      throw new Error('Install target is not present in the latest validated marketplace snapshot.')
+    const target = this.latest.get(packageName)
+    if (target === undefined || target.version !== version) {
+      throw new Error('Install target is not present in the latest verified marketplace snapshot.')
     }
     const dependencies = await installedDependencies(this.location.directory)
-    return await this.installer.install(plugin, this.location, dependencies)
+    return await this.installer.install(target, this.location, dependencies)
   }
 
   private async project(state: Awaited<ReturnType<CatalogService['list']>>): Promise<MarketplaceSnapshot> {
-    this.latest = new Map(state.plugins.map(plugin => [plugin.packageName, plugin]))
-    return snapshotWithProfile(state, this.location.profileName, await installedDependencies(this.location.directory))
+    const dependencies = await installedDependencies(this.location.directory)
+    const candidateTargets: Array<readonly [string, Pick<MarketplacePlugin, 'packageName' | 'version'>]> = []
+    for (const candidate of state.candidates) {
+      if (candidate.installable && candidate.packageName !== null && candidate.version !== null) {
+        candidateTargets.push([candidate.packageName, { packageName: candidate.packageName, version: candidate.version }])
+      }
+    }
+    this.latest = new Map([
+      ...state.plugins.map(plugin => [plugin.packageName, plugin] as const),
+      ...candidateTargets,
+    ])
+    return snapshotWithProfile(state, this.location.profileName, dependencies)
   }
 }
 

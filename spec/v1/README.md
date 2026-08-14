@@ -40,4 +40,4 @@ Each listed package must provide normal npm metadata, `dsh.plugin`, and the offi
 }
 ```
 
-Repository paths use forward slashes and cannot be absolute, contain `..`, or repeat. Marketplace admission additionally verifies that the exact npm version exists, declares `dsh.bundle`, and points back to the same GitHub repository.
+Repository paths use forward slashes and cannot be absolute, contain `..`, or repeat. Formal catalog entries require the exact npm version and `dsh.bundle` to point back to the same GitHub repository. GitHub topic candidates that do not provide a valid V1 manifest may still be installed when their package name and exact version are available and npm metadata points back to the same repository; the marketplace marks DSH compatibility as unverified for those candidates.

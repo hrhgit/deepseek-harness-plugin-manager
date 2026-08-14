@@ -40,6 +40,8 @@ export interface MarketplaceCandidate {
   readonly manifestUrl: string | null
   readonly issueCode: CandidateIssueCode
   readonly issue: string
+  readonly installable: boolean
+  readonly installedVersion: string | null
   readonly source: 'github-topic'
 }
 

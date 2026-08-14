@@ -1,12 +1,14 @@
 import { mkdir, readFile, rename, writeFile } from 'node:fs/promises'
 import { dirname, join } from 'node:path'
 import { randomUUID } from 'node:crypto'
+import { valid as validVersion } from 'semver'
 import { z } from 'zod'
 import {
   canonicalGithubRepository,
   catalogDocumentSchema,
   catalogPluginFromManifest,
   dshCatalogRootSchema,
+  npmPackageNameSchema,
   packageManifestSchema,
   type CatalogPlugin,
 } from '../manifest.js'
@@ -35,11 +37,15 @@ const searchSchema = z.object({
   })),
 })
 const commitSchema = z.object({ sha: z.string().regex(/^[0-9a-f]{40}$/i) })
+const npmRepositorySchema = z.union([
+  z.string().trim().min(1),
+  z.object({ url: z.string().trim().min(1) }).passthrough(),
+])
 const npmSchema = z.object({
-  'dist-tags': z.record(z.string(), z.string()),
+  'dist-tags': z.record(z.string(), z.string()).optional(),
   versions: z.record(z.string(), z.object({
-    repository: z.union([z.string(), z.object({ url: z.string() }).passthrough()]),
-    dsh: z.object({ bundle: z.object({ patch: z.string() }).passthrough() }).passthrough(),
+    repository: npmRepositorySchema,
+    dsh: z.object({ bundle: z.object({ patch: z.string() }).passthrough() }).passthrough().optional(),
   }).passthrough()),
 })
 const cacheSchema = z.object({
@@ -60,7 +66,8 @@ const cacheSchema = z.object({
       z.literal('repository-unavailable'), z.literal('manifest-unavailable'), z.literal('manifest-invalid'),
       z.literal('package-unpublished'), z.literal('package-invalid'), z.literal('repository-mismatch'),
     ]),
-    issue: z.string(), source: z.literal('github-topic'),
+    issue: z.string(), installable: z.boolean().optional().default(false), installedVersion: z.string().nullable().optional().default(null),
+    source: z.literal('github-topic'),
   })).optional().default([]),
 })
 
@@ -101,6 +108,17 @@ function localizedValue(value: unknown, fallback: string): LocalizedText {
     'zh-CN': typeof record?.['zh-CN'] === 'string' && record['zh-CN'].trim() !== '' ? record['zh-CN'] : fallback,
     en: typeof record?.en === 'string' && record.en.trim() !== '' ? record.en : fallback,
   }
+}
+
+function npmReference(value: unknown): { packageName: string, version: string } | undefined {
+  const record = objectValue(value)
+  const packageName = typeof record?.name === 'string' && npmPackageNameSchema.safeParse(record.name).success
+    ? record.name
+    : undefined
+  const version = typeof record?.version === 'string' && validVersion(record.version) === record.version
+    ? record.version
+    : undefined
+  return packageName !== undefined && version !== undefined ? { packageName, version } : undefined
 }
 
 /** Network and cache boundary for curated and topic-based plugin discovery. */
@@ -254,7 +272,7 @@ export class CatalogService {
       paths = catalog === undefined ? undefined : dshCatalogRootSchema.parse(catalog).packages
     } catch (error) {
       const issue = this.candidateIssue(error, 'manifest-invalid')
-      return { plugins: [], candidates: [this.packageCandidate(repository, '.', rootUrl, root, issue.code, issue.message)], warnings: [] }
+      return { plugins: [], candidates: [await this.admitCandidate(repository, '.', rootUrl, root, issue.code, issue.message, fullName)], warnings: [] }
     }
     const manifests = paths === undefined
       ? [{ label: '.', url: rootUrl, raw: root }]
@@ -286,7 +304,7 @@ export class CatalogService {
         plugins.push(await this.hydrate(source, 'github-topic'))
       } catch (error) {
         const issue = this.candidateIssue(error, 'manifest-invalid')
-        candidates.push(this.packageCandidate(repository, item.label, item.url, raw, issue.code, issue.message))
+        candidates.push(await this.admitCandidate(repository, item.label, item.url, raw, issue.code, issue.message, fullName))
       }
     }))
     return { plugins, candidates, warnings: [] }
@@ -305,23 +323,57 @@ export class CatalogService {
   }
 
   private async hydrate(plugin: CatalogPlugin, source: MarketplaceSource): Promise<MarketplacePlugin> {
-    const response = await this.request(`${this.npmRegistryUrl}/${encodeURIComponent(plugin.packageName)}`)
-    if (!response.ok) throw new CandidateValidationError('package-unpublished', `${plugin.packageName} is not published on npm`)
+    await this.verifyNpmReference(plugin.packageName, plugin.version, plugin.repositoryUrl, true)
+    return { ...plugin, sources: [source], installedVersion: null }
+  }
+
+  private async verifyNpmReference(
+    packageName: string, version: string, expectedRepository: string, requireBundle = false,
+  ): Promise<void> {
+    const response = await this.request(`${this.npmRegistryUrl}/${encodeURIComponent(packageName)}`)
+    if (!response.ok) throw new CandidateValidationError('package-unpublished', `${packageName} is not published on npm`)
     let metadata: z.infer<typeof npmSchema>
     try {
       metadata = npmSchema.parse(await response.json())
     } catch (error) {
-      throw new CandidateValidationError('package-invalid', `${plugin.packageName} has invalid npm metadata: ${this.errorMessage(error)}`)
+      throw new CandidateValidationError('package-invalid', `${packageName} has invalid npm metadata: ${this.errorMessage(error)}`)
     }
-    const published = metadata.versions[plugin.version]
+    const published = metadata.versions[version]
     if (published === undefined) {
-      throw new CandidateValidationError('package-unpublished', `${plugin.packageName}@${plugin.version} is not published on npm`)
+      throw new CandidateValidationError('package-unpublished', `${packageName}@${version} is not published on npm`)
+    }
+    if (requireBundle && published.dsh?.bundle.patch === undefined) {
+      throw new CandidateValidationError('package-invalid', `${packageName}@${version} npm metadata does not declare dsh.bundle.patch`)
     }
     const repository = typeof published.repository === 'string' ? published.repository : published.repository.url
-    if (canonicalGithubRepository(repository) !== plugin.repositoryUrl) {
-      throw new CandidateValidationError('repository-mismatch', `${plugin.packageName}@${plugin.version} npm repository does not match its discovery repository`)
+    if (canonicalGithubRepository(repository) !== expectedRepository) {
+      throw new CandidateValidationError('repository-mismatch', `${packageName}@${version} npm repository does not match its discovery repository`)
     }
-    return { ...plugin, sources: [source], installedVersion: null }
+  }
+
+  private async admitCandidate(
+    repository: GithubRepository,
+    label: string,
+    manifestUrl: string,
+    raw: unknown,
+    issueCode: CandidateIssueCode,
+    issue: string,
+    fullName: string,
+  ): Promise<MarketplaceCandidate> {
+    const candidate = this.packageCandidate(repository, label, manifestUrl, raw, issueCode, issue)
+    // A V1 manifest remains the preferred source of metadata. For legacy or
+    // incomplete manifests, npm metadata is the separate installation gate.
+    if (issueCode !== 'manifest-invalid') return candidate
+    const reference = npmReference(raw)
+    const expectedRepository = canonicalGithubRepository(`https://github.com/${fullName}`)
+    if (reference === undefined || expectedRepository === null) return candidate
+    try {
+      await this.verifyNpmReference(reference.packageName, reference.version, expectedRepository)
+      return { ...candidate, packageName: reference.packageName, version: reference.version, installable: true }
+    } catch (error) {
+      const npmIssue = this.candidateIssue(error, 'package-invalid')
+      return { ...candidate, issueCode: npmIssue.code, issue: npmIssue.message }
+    }
   }
 
   private combine(warnings: readonly DiscoveryWarning[], stale: boolean): CatalogState {
@@ -330,9 +382,12 @@ export class CatalogService {
       const candidate = merged.get(name)
       merged.set(name, candidate === undefined ? catalog : { ...catalog, sources: ['catalog', 'github-topic'] })
     }
+    const packageNames = new Set(merged.keys())
     return {
       plugins: [...merged.values()].sort((left, right) => left.packageName.localeCompare(right.packageName)),
-      candidates: [...this.candidates.values()].sort((left, right) => left.id.localeCompare(right.id)),
+      candidates: [...this.candidates.values()]
+        .filter(candidate => candidate.packageName === null || !packageNames.has(candidate.packageName))
+        .sort((left, right) => left.id.localeCompare(right.id)),
       warnings,
       stale,
       fetchedAt: new Date().toISOString(),
@@ -392,6 +447,8 @@ export class CatalogService {
       manifestUrl,
       issueCode,
       issue,
+      installable: false,
+      installedVersion: null,
       source: 'github-topic',
     }
   }
@@ -459,7 +516,10 @@ export function snapshotWithProfile(
   return {
     profileName,
     plugins: state.plugins.map(plugin => ({ ...plugin, installedVersion: dependencies[plugin.packageName] ?? null })),
-    candidates: state.candidates,
+    candidates: state.candidates.map(candidate => ({
+      ...candidate,
+      installedVersion: candidate.packageName === null ? null : dependencies[candidate.packageName] ?? null,
+    })),
     warnings: state.warnings,
     stale: state.stale,
     fetchedAt: state.fetchedAt,
