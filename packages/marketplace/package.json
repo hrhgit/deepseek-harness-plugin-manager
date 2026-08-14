@@ -1,0 +1,148 @@
+{
+  "name": "dsh-plugin-marketplace",
+  "version": "0.1.0",
+  "description": "Plugin discovery and npm installation marketplace for DeepSeek Harness",
+  "keywords": [
+    "deepseek-harness",
+    "dsh",
+    "dsh-plugin",
+    "plugin-marketplace",
+    "plugin-discovery",
+    "cordis",
+    "web-ui"
+  ],
+  "license": "MIT",
+  "type": "module",
+  "main": "lib/index.js",
+  "types": "lib/types/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hrhgit/deepseek-harness-plugin-manager.git",
+    "directory": "packages/marketplace"
+  },
+  "homepage": "https://github.com/hrhgit/deepseek-harness-plugin-manager#readme",
+  "bugs": "https://github.com/hrhgit/deepseek-harness-plugin-manager/issues",
+  "engines": {
+    "node": "^22.19.0 || >=24.0.0"
+  },
+  "packageManager": "pnpm@11.7.0",
+  "exports": {
+    ".": {
+      "types": "./lib/types/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./types": {
+      "types": "./lib/types/types.d.ts",
+      "default": "./lib/types/types.js"
+    },
+    "./manifest": {
+      "types": "./lib/types/manifest.d.ts",
+      "default": "./lib/manifest.js"
+    },
+    "./typert": {
+      "types": "./lib/types/remote.d.ts",
+      "default": "./lib/remote.js"
+    },
+    "./remote": {
+      "types": "./lib/types/remote.d.ts",
+      "default": "./lib/remote.js"
+    },
+    "./client": {
+      "types": "./lib/types/client/index.d.ts",
+      "default": "./lib/client.js"
+    },
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib/index.js",
+    "lib/client.js",
+    "lib/client.js.map",
+    "lib/manifest.js",
+    "lib/types/**/*.js",
+    "lib/types/**/*.d.ts",
+    "lib/remote.js",
+    "cordis.patch.yml",
+    "README.md",
+    "README.zh-CN.md",
+    "LICENSE"
+  ],
+  "dsh": {
+    "plugin": {
+      "schemaVersion": 1,
+      "displayName": {
+        "zh-CN": "插件市场",
+        "en": "Plugin Marketplace"
+      },
+      "summary": {
+        "zh-CN": "从正式目录和 GitHub 社区候选中发现并安装经过验证的 DSH 插件。",
+        "en": "Discover and install validated DSH plugins from the curated catalog and GitHub community candidates."
+      },
+      "category": "plugin-marketplace"
+    },
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "inject": [
+        "@deepseek-ai/dsh-client-runtime",
+        "@deepseek-ai/dsh-client-ui-settings",
+        "@deepseek-ai/dsh-client-locale",
+        "@deepseek-ai/dsh-api-gateway"
+      ]
+    }
+  },
+  "scripts": {
+    "clean": "node ../../scripts/clean-package.mjs",
+    "contracts": "tsc -p tsconfig.host.json && tsdown --config tsdown.host.config.ts",
+    "typecheck": "pnpm run contracts && tsc -p tsconfig.client.json --noEmit",
+    "build": "pnpm run clean && tsc -p tsconfig.host.json && tsdown --config tsdown.host.config.ts && tsc -p tsconfig.client.json && tsdown --config tsdown.client.config.ts",
+    "test": "pnpm run contracts && vitest run",
+    "test:watch": "vitest",
+    "spec:build": "pnpm run contracts && node scripts/generate-spec.mjs",
+    "catalog:build": "pnpm run contracts && node scripts/build-catalog.mjs",
+    "pack:check": "pnpm pack --pack-destination dist && node ../../scripts/verify-package.mjs dist/dsh-plugin-marketplace-0.1.0.tgz marketplace",
+    "prepare": "pnpm run build"
+  },
+  "dependencies": {
+    "lucide-react": "^0.468.0",
+    "semver": "^7.7.2",
+    "zod": "^4.4.3"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "^4.0.1",
+    "@deepseek-ai/cordis-plugin-loader": ">=1.0.2 <2.0.0",
+    "@deepseek-ai/dsh-api-gateway": "^0.1.0-rc.6",
+    "@deepseek-ai/dsh-client-locale": "^0.1.0-rc.6",
+    "@deepseek-ai/dsh-client-runtime": "^0.1.0-rc.6",
+    "@deepseek-ai/dsh-client-ui-settings": "^0.1.0-rc.6",
+    "@deepseek-ai/dsh-client-ui-slots": "^0.1.0-rc.6",
+    "@deepseek-ai/dsh-home-paths": "^0.1.0-rc.6",
+    "@deepseek-ai/dsh-typert-protocol": "^0.1.0-rc.6",
+    "react": ">=18.2.0 <20.0.0"
+  },
+  "devDependencies": {
+    "@deepseek-ai/cordis": "4.0.1",
+    "@deepseek-ai/cordis-plugin-loader": "1.0.2",
+    "@deepseek-ai/dsh-api-gateway": "0.1.0-rc.6",
+    "@deepseek-ai/dsh-client-locale": "0.1.0-rc.6",
+    "@deepseek-ai/dsh-client-runtime": "0.1.0-rc.6",
+    "@deepseek-ai/dsh-client-ui-settings": "0.1.0-rc.6",
+    "@deepseek-ai/dsh-client-ui-slots": "0.1.0-rc.6",
+    "@deepseek-ai/dsh-home-paths": "0.1.0-rc.6",
+    "@deepseek-ai/dsh-typert-protocol": "0.1.0-rc.6",
+    "@testing-library/react": "^16.3.0",
+    "@types/node": "^22.19.0",
+    "@types/react": "^18.3.28",
+    "@types/react-dom": "^18.3.7",
+    "@types/semver": "^7.7.1",
+    "jsdom": "^29.0.0",
+    "lightningcss": "^1.30.2",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "tsdown": "^0.22.14",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.0"
+  }
+}

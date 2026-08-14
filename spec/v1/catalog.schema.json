@@ -1,0 +1,129 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/hrhgit/deepseek-harness-plugin-manager/spec/v1/catalog.schema.json",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "type": "number",
+      "const": 1
+    },
+    "plugins": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "packageName": {
+            "type": "string",
+            "pattern": "^(?:@[a-z0-9][a-z0-9._-]*\\/)?[a-z0-9][a-z0-9._-]*$"
+          },
+          "version": {
+            "type": "string"
+          },
+          "displayName": {
+            "type": "object",
+            "properties": {
+              "zh-CN": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              },
+              "en": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              }
+            },
+            "required": [
+              "zh-CN",
+              "en"
+            ],
+            "additionalProperties": false
+          },
+          "summary": {
+            "type": "object",
+            "properties": {
+              "zh-CN": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 360
+              },
+              "en": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 360
+              }
+            },
+            "required": [
+              "zh-CN",
+              "en"
+            ],
+            "additionalProperties": false
+          },
+          "category": {
+            "type": "string",
+            "maxLength": 64,
+            "pattern": "^[a-z0-9](?:[a-z0-9._-]*[a-z0-9])?$"
+          },
+          "keywords": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "license": {
+            "type": "string",
+            "minLength": 1
+          },
+          "repositoryUrl": {
+            "type": "string",
+            "format": "uri"
+          },
+          "repositoryDirectory": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "homepage": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uri"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "manifestUrl": {
+            "type": "string",
+            "format": "uri"
+          }
+        },
+        "required": [
+          "packageName",
+          "version",
+          "displayName",
+          "summary",
+          "category",
+          "keywords",
+          "license",
+          "repositoryUrl",
+          "repositoryDirectory",
+          "homepage",
+          "manifestUrl"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "plugins"
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/hrhgit/deepseek-harness-plugin-manager/spec/v1/dsh-plugin.schema.json",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "type": "number",
+      "const": 1
+    },
+    "displayName": {
+      "type": "object",
+      "properties": {
+        "zh-CN": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "en": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        }
+      },
+      "required": [
+        "zh-CN",
+        "en"
+      ],
+      "additionalProperties": false
+    },
+    "summary": {
+      "type": "object",
+      "properties": {
+        "zh-CN": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 360
+        },
+        "en": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 360
+        }
+      },
+      "required": [
+        "zh-CN",
+        "en"
+      ],
+      "additionalProperties": false
+    },
+    "category": {
+      "type": "string",
+      "maxLength": 64,
+      "pattern": "^[a-z0-9](?:[a-z0-9._-]*[a-z0-9])?$"
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "displayName",
+    "summary",
+    "category"
+  ],
+  "additionalProperties": false
+}

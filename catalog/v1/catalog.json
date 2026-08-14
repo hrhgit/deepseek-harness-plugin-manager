@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "plugins": [
+    {
+      "packageName": "dsh-plugin-manager",
+      "version": "0.1.0",
+      "displayName": {
+        "zh-CN": "插件管理器",
+        "en": "Plugin Manager"
+      },
+      "summary": {
+        "zh-CN": "查看并控制当前 profile 中已安装插件的启停和 Cordis 运行状态。",
+        "en": "Inspect and control installed plugin enablement and Cordis runtime state for the current profile."
+      },
+      "category": "plugin-management",
+      "keywords": [
+        "deepseek-harness",
+        "dsh-plugin",
+        "deepseek",
+        "dsh",
+        "cordis",
+        "plugin-manager",
+        "plugin-management",
+        "web-ui",
+        "enable-plugins",
+        "disable-plugins",
+        "plugin-bundle"
+      ],
+      "license": "MIT",
+      "repositoryUrl": "https://github.com/hrhgit/deepseek-harness-plugin-manager",
+      "repositoryDirectory": "packages/manager",
+      "homepage": "https://github.com/hrhgit/deepseek-harness-plugin-manager#readme",
+      "manifestUrl": "https://raw.githubusercontent.com/hrhgit/deepseek-harness-plugin-manager/main/packages/manager/package.json"
+    }
+  ]
+}

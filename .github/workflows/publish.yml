@@ -3,7 +3,8 @@ name: Publish to npm
 on:
   push:
     tags:
-      - "v*.*.*"
+      - "dsh-plugin-manager@*"
+      - "dsh-plugin-marketplace@*"
 
 permissions:
   contents: read
@@ -34,15 +35,22 @@ jobs:
       - name: Update npm
         run: npm install --global npm@latest
 
-      - name: Verify release version
+      - name: Resolve package release
+        id: package
         shell: bash
         run: |
-          tag_version="${GITHUB_REF_NAME#v}"
-          package_version="$(node --print "require('./package.json').version")"
+          case "$GITHUB_REF_NAME" in
+            dsh-plugin-manager@*) directory="packages/manager" ;;
+            dsh-plugin-marketplace@*) directory="packages/marketplace" ;;
+            *) echo "Unsupported release tag $GITHUB_REF_NAME" >&2; exit 1 ;;
+          esac
+          tag_version="${GITHUB_REF_NAME#*@}"
+          package_version="$(node --print "require('./$directory/package.json').version")"
           if [[ "$tag_version" != "$package_version" ]]; then
             echo "Tag version $tag_version does not match package version $package_version." >&2
             exit 1
           fi
+          echo "directory=$directory" >> "$GITHUB_OUTPUT"
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -56,5 +64,9 @@ jobs:
       - name: Build
         run: pnpm run build
 
+      - name: Verify generated specifications and catalog
+        run: pnpm run generated:check
+
       - name: Publish
+        working-directory: ${{ steps.package.outputs.directory }}
         run: npm publish --access public
