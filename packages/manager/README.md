@@ -2,12 +2,13 @@
 
 [简体中文](README.zh-CN.md)
 
-**DeepSeek Harness Plugin Manager** is a Web-based plugin manager for [DeepSeek Harness (DSH)](https://github.com/deepseek-ai/deepseek-harness) and its Cordis plugin runtime. It lets operators inspect, search, enable, disable, group, and batch-manage runtime plugins from the Harness Plugins settings page.
+**DeepSeek Harness Plugin Manager** is a Web-based plugin manager for [DeepSeek Harness (DSH)](https://github.com/deepseek-ai/deepseek-harness) and its Cordis plugin runtime. Its defining feature is Cordis HMR-backed hot loading inside a running profile, alongside inspection, search, enable, disable, grouping, and batch management from the Harness Plugins settings page.
 
 This is a community project, not an official DeepSeek Harness package.
 
 ## Features
 
+- **Runtime hot loading**: applies enablement changes through the host's existing Cordis HMR, waits for Loader lifecycle settlement, and reports the authoritative result.
 - Inspect the current Cordis Loader entries and lifecycle state.
 - Enable or disable one plugin without deleting its npm package.
 - Expand official Harness workspace groups, toggle all mutable entries in a group, or manage individual Loader entries by their configured names.
@@ -44,7 +45,7 @@ Git installs run the `prepare` build and require explicit build-script authoriza
 
 ## Behavior and safety
 
-"Disable" means persisting `disabled: true` and asking Cordis to stop the configured plugin; it does not uninstall the dependency. Ordinary leaf plugins are switched in the running process when their lifecycle permits it. If the desired state is saved but does not settle before the timeout, the UI reports that a profile restart is required instead of treating the saved change as a failure. The manager writes only its own marked patch rows and leaves user-authored rows untouched. If a local entry id is ambiguous, the operation fails instead of changing the wrong plugin.
+"Disable" means persisting `disabled: true` and asking Cordis to stop the configured plugin; it does not uninstall the dependency. Runtime hot loading is the manager's defining behavior: ordinary leaf plugins are switched in the running process when their lifecycle permits it. If the desired state is saved but does not settle before the timeout, the UI reports that a profile restart is required instead of treating the saved change as a failure. Installing a new plugin or changing dependencies still requires a profile restart. The manager writes only its own marked patch rows and leaves user-authored rows untouched. If a local entry id is ambiguous, the operation fails instead of changing the wrong plugin.
 
 By default, the manager protects its own entry and Loader ancestors, the root Include and profile HMR services, plus the API gateway, Web server, client runtime, settings shell, client module loader, connection, locale, and Host runner. These entries keep profile changes and the management page alive and cannot safely be disabled from that page. Add deployment-specific ids through the Cordis row config:
 
@@ -100,7 +101,7 @@ git push origin main --tags
 
 The package has one Host entry, one browser entry, generated Typert Remote artifacts, and one `dsh.bundle` patch. It targets the pre-release `0.1.x` Harness APIs; review release notes before upgrading peer dependencies.
 
-Plugin discovery and npm installation belong to the independent `dsh-plugin-marketplace` package in this repository. The manager remains focused on enablement and runtime state for installed plugins.
+Plugin discovery and npm installation belong to the independent `@ruihuahe/dsh-plugin-marketplace` package in this repository. The manager remains focused on enablement and runtime state for installed plugins.
 
 ## Discoverability
 

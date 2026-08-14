@@ -2,12 +2,13 @@
 
 [English](README.md)
 
-**DeepSeek Harness Plugin Manager** 是面向 [DeepSeek Harness（DSH）](https://github.com/deepseek-ai/deepseek-harness)及其 Cordis 插件运行时的 Web 插件管理工具。它在 Harness 的“插件”设置页中提供查看、搜索、启用、停用、折叠分组和批量管理能力。
+**DeepSeek Harness Plugin Manager** 是面向 [DeepSeek Harness（DSH）](https://github.com/deepseek-ai/deepseek-harness) 及其 Cordis 插件运行时的 Web 插件管理工具。它的核心特色是依托 Cordis HMR，在运行中的 profile 内即时热加载插件；同时在 Harness 的“插件”设置页中提供查看、搜索、启用、停用、折叠分组和批量管理能力。
 
 这是社区项目，不是 DeepSeek Harness 官方软件包。
 
 ## 功能
 
+- **运行时热加载**：修改启停状态后，通过宿主已有的 Cordis HMR 在当前进程内停用或重新加载普通插件，并等待 Loader 生命周期稳定后反馈结果。
 - 查看当前 Cordis Loader 条目与生命周期状态。
 - 启用或停用单个插件，不删除其 npm 软件包。
 - 展开 Harness 官方工作区分组，批量启停组内可修改条目，或按配置名称操作单个 Loader 条目。
@@ -42,7 +43,7 @@ Git 安装会运行 `prepare`，pnpm 10 及更高版本要求用户明确授权�
 
 ## 行为与安全
 
-界面中的“停用”表示持久化 `disabled: true` 并请求 Cordis 停止已配置的插件，不是卸载 npm 依赖。普通叶子插件会在其生命周期允许时于当前进程即时切换；如果状态已经保存、但在期限内没有完成切换，界面会提示需要重启当前 profile，而不会把已保存的变更当作失败。管理器只维护带自身标记的 patch 行，不改写用户已有行；本地条目 id 存在歧义时会拒绝操作。
+界面中的“停用”表示持久化 `disabled: true` 并请求 Cordis 停止已配置的插件，不是卸载 npm 依赖。即时热加载是本工具区别于普通配置列表的核心行为：普通叶子插件会在其生命周期允许时于当前进程内切换；如果状态已经保存、但在期限内没有完成切换，界面会提示需要重启当前 profile，而不会把已保存的变更当作失败。安装新插件或变更依赖仍需要重启 profile。管理器只维护带自身标记的 patch 行，不改写用户已有行；本地条目 id 存在歧义时会拒绝操作。
 
 默认保护管理器自身、API 网关、Web 服务器、客户端运行时、设置外壳、客户端模块加载器、HMR 桥和 Host runner。可在管理器配置中补充部署自己的基础条目：
 
@@ -98,7 +99,7 @@ git tag "dsh-plugin-manager@<版本>"
 git push origin main --tags
 ```
 
-插件发现和 npm 安装由同仓库中的 `dsh-plugin-marketplace` 独立负责；管理器继续专注于已安装插件的启停和运行状态。
+插件发现和 npm 安装由同仓库中的 `@ruihuahe/dsh-plugin-marketplace` 独立负责；管理器继续专注于已安装插件的启停和运行状态。
 
 建议 GitHub Topics：`dsh-plugin`、`deepseek-harness`、`dsh`、`cordis`、`plugin-manager`、`plugin-management`、`web-ui`、`deepseek`、`typescript`。
 

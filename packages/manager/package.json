@@ -1,7 +1,7 @@
 {
   "name": "dsh-plugin-manager",
   "version": "0.1.0",
-  "description": "Web plugin manager for DeepSeek Harness (DSH) and Cordis: inspect, enable, disable, group, and manage runtime plugins",
+  "description": "Cordis HMR plugin manager for DeepSeek Harness (DSH): hot-load, inspect, enable, disable, group, and manage runtime plugins",
   "keywords": [
     "deepseek-harness",
     "dsh-plugin",
@@ -10,6 +10,8 @@
     "cordis",
     "plugin-manager",
     "plugin-management",
+    "hot-reload",
+    "runtime-plugin-reload",
     "web-ui",
     "enable-plugins",
     "disable-plugins",
@@ -74,8 +76,8 @@
         "en": "Plugin Manager"
       },
       "summary": {
-        "zh-CN": "查看并控制当前 profile 中已安装插件的启停和 Cordis 运行状态。",
-        "en": "Inspect and control installed plugin enablement and Cordis runtime state for the current profile."
+        "zh-CN": "通过 Cordis HMR 在运行中的 profile 内即时热加载并控制已安装插件的启停和运行状态。",
+        "en": "Hot-load and control installed plugin enablement and runtime state through Cordis HMR in the current running profile."
       },
       "category": "plugin-management"
     },
