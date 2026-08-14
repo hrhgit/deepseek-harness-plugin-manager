@@ -1,6 +1,6 @@
-import { AlertTriangle, Check, Download, ExternalLink, Github, RefreshCw, Search, X } from 'lucide-react'
+import { AlertTriangle, Ban, Check, Download, ExternalLink, Github, RefreshCw, Search, X } from 'lucide-react'
 import { useEffect, useMemo, useState, type FormEvent, type ReactNode } from 'react'
-import type { InstallReceipt, MarketplacePlugin, MarketplaceSnapshot } from '../types.js'
+import type { CandidateIssueCode, InstallReceipt, MarketplaceCandidate, MarketplacePlugin, MarketplaceSnapshot } from '../types.js'
 import type { LocaleKey } from './locales.js'
 import { usePersistedState, type PersistPolicy } from './persistence.js'
 import css from './PluginMarketplaceTab.module.css'
@@ -13,6 +13,31 @@ const queryPolicy: PersistPolicy<string> = {
     const value = JSON.parse(raw) as unknown
     return typeof value === 'string' && value.length <= 80 ? value : ''
   },
+}
+
+type StatusFilter = 'all' | 'installable' | 'candidate'
+
+const statusFilterPolicy: PersistPolicy<StatusFilter> = {
+  key: 'dsh-plugin-marketplace.marketplace.global.status_filter.v1',
+  kind: 'normal',
+  defaultValue: 'all',
+  deserializer: raw => {
+    const value = JSON.parse(raw) as unknown
+    return value === 'installable' || value === 'candidate' ? value : 'all'
+  },
+}
+
+type MarketplaceEntry =
+  | { readonly id: string, readonly kind: 'plugin', readonly value: MarketplacePlugin }
+  | { readonly id: string, readonly kind: 'candidate', readonly value: MarketplaceCandidate }
+
+const issueLocaleKey: Record<CandidateIssueCode, LocaleKey> = {
+  'repository-unavailable': 'issueRepositoryUnavailable',
+  'manifest-unavailable': 'issueManifestUnavailable',
+  'manifest-invalid': 'issueManifestInvalid',
+  'package-unpublished': 'issuePackageUnpublished',
+  'package-invalid': 'issuePackageInvalid',
+  'repository-mismatch': 'issueRepositoryMismatch',
 }
 
 export interface PluginMarketplaceTabApi {
@@ -31,6 +56,7 @@ type LoadState = { status: 'loading' } | { status: 'error'; message: string } | 
 /** Compact discovery, detail, and exact-version install surface. */
 export function PluginMarketplaceTab({ list, searchGithub, install, t, locale }: PluginMarketplaceTabProps): ReactNode {
   const [query, setQuery] = usePersistedState(queryPolicy)
+  const [statusFilter, setStatusFilter] = usePersistedState(statusFilterPolicy)
   const [state, setState] = useState<LoadState>({ status: 'loading' })
   const [selected, setSelected] = useState<string | null>(null)
   const [confirming, setConfirming] = useState<MarketplacePlugin | null>(null)
@@ -39,8 +65,6 @@ export function PluginMarketplaceTab({ list, searchGithub, install, t, locale }:
 
   const adopt = (snapshot: MarketplaceSnapshot): void => {
     setState({ status: 'ready', snapshot })
-    setSelected(current => current !== null && snapshot.plugins.some(plugin => plugin.packageName === current)
-      ? current : snapshot.plugins[0]?.packageName ?? null)
   }
 
   useEffect(() => {
@@ -51,16 +75,30 @@ export function PluginMarketplaceTab({ list, searchGithub, install, t, locale }:
     return () => { current = false }
   }, [list])
 
-  const plugins = useMemo(() => {
+  const entries = useMemo<readonly MarketplaceEntry[]>(() => {
     if (state.status !== 'ready') return []
+    return [
+      ...state.snapshot.plugins.map(plugin => ({ id: `plugin:${plugin.packageName}`, kind: 'plugin' as const, value: plugin })),
+      ...state.snapshot.candidates.map(candidate => ({ id: `candidate:${candidate.id}`, kind: 'candidate' as const, value: candidate })),
+    ]
+  }, [state])
+  const visibleEntries = useMemo(() => {
     const value = query.trim().toLocaleLowerCase()
-    if (value === '') return state.snapshot.plugins
-    return state.snapshot.plugins.filter(plugin => [
-      plugin.packageName, plugin.displayName['zh-CN'], plugin.displayName.en, plugin.summary['zh-CN'], plugin.summary.en,
-      plugin.category, ...plugin.keywords,
-    ].some(item => item.toLocaleLowerCase().includes(value)))
-  }, [query, state])
-  const active = state.status === 'ready' ? state.snapshot.plugins.find(plugin => plugin.packageName === selected) ?? null : null
+    return entries.filter(entry => {
+      if (statusFilter === 'installable' && entry.kind !== 'plugin') return false
+      if (statusFilter === 'candidate' && entry.kind !== 'candidate') return false
+      if (value === '') return true
+      const searchable = entry.kind === 'plugin'
+        ? [entry.value.packageName, entry.value.displayName['zh-CN'], entry.value.displayName.en, entry.value.summary['zh-CN'], entry.value.summary.en, entry.value.category, ...entry.value.keywords]
+        : [entry.value.repositoryFullName, entry.value.packageName ?? '', entry.value.displayName['zh-CN'], entry.value.displayName.en, entry.value.summary['zh-CN'], entry.value.summary.en, entry.value.issue]
+      return searchable.some(item => item.toLocaleLowerCase().includes(value))
+    })
+  }, [entries, query, statusFilter])
+  useEffect(() => {
+    setSelected(current => current !== null && visibleEntries.some(entry => entry.id === current)
+      ? current : visibleEntries[0]?.id ?? null)
+  }, [visibleEntries])
+  const active = visibleEntries.find(entry => entry.id === selected) ?? null
 
   const runLoad = async (operation: () => Promise<MarketplaceSnapshot>): Promise<void> => {
     setFeedback(null)
@@ -101,6 +139,14 @@ export function PluginMarketplaceTab({ list, searchGithub, install, t, locale }:
       <button type="submit"><Github size={16} />{t('searchGithub')}</button>
     </form>
 
+    {state.status === 'ready' ? <div className={css.filters} role="group" aria-label={t('status')}>
+      {([
+        ['all', t('filterAll'), entries.length],
+        ['installable', t('filterInstallable'), state.snapshot.plugins.length],
+        ['candidate', t('filterCandidates'), state.snapshot.candidates.length],
+      ] as const).map(([value, label, count]) => <button type="button" key={value} aria-pressed={statusFilter === value} onClick={() => setStatusFilter(value)}><span>{label}</span><small>{count}</small></button>)}
+    </div> : null}
+
     {state.status === 'loading' ? <p className={css.message}>{t('loading')}</p> : null}
     {state.status === 'error' ? <div className={css.error} role="alert"><span>{t('loadFailed')} {state.message}</span><button type="button" onClick={() => { setState({ status: 'loading' }); void list(true).then(adopt, error => setState({ status: 'error', message: String(error) })) }}>{t('retry')}</button></div> : null}
     {state.status === 'ready' && (state.snapshot.stale || state.snapshot.warnings.length > 0) ? <div className={css.warning} role="status"><AlertTriangle size={16} /><div><strong>{state.snapshot.stale ? t('stale') : t('warningTitle')}</strong>{state.snapshot.warnings.map(item => <span key={`${item.source}:${item.code}:${item.message}`}>{item.message}</span>)}</div></div> : null}
@@ -108,25 +154,40 @@ export function PluginMarketplaceTab({ list, searchGithub, install, t, locale }:
 
     {state.status === 'ready' ? <div className={css.workspace}>
       <div className={css.listPane} role="list" aria-label={t('title')}>
-        {plugins.length === 0 ? <p className={css.empty}>{query.trim() === '' ? t('empty') : t('emptySearch')}</p> : plugins.map(plugin => <button
-          type="button" role="listitem" key={plugin.packageName} className={css.pluginRow} data-selected={plugin.packageName === selected || undefined}
-          onClick={() => { setSelected(plugin.packageName); setFeedback(null) }}>
-          <span className={css.rowMain}><strong>{plugin.displayName[locale === 'zh-CN' ? 'zh-CN' : 'en']}</strong><code>{plugin.packageName}</code></span>
-          <span className={css.rowMeta}><small>{plugin.version}</small>{plugin.installedVersion !== null ? <small data-installed="true">{t('installed')}</small> : null}</span>
-        </button>)}
+        {visibleEntries.length === 0 ? <p className={css.empty}>{query.trim() === '' ? t('empty') : t('emptySearch')}</p> : visibleEntries.map(entry => {
+          const item = entry.value
+          return <button type="button" role="listitem" key={entry.id} className={css.pluginRow} data-selected={entry.id === selected || undefined}
+            data-kind={entry.kind} onClick={() => { setSelected(entry.id); setFeedback(null) }}>
+            <span className={css.rowMain}><strong>{item.displayName[locale === 'zh-CN' ? 'zh-CN' : 'en']}</strong><code>{entry.kind === 'plugin' ? entry.value.packageName : entry.value.packageName ?? entry.value.repositoryFullName}</code></span>
+            <span className={css.rowMeta}><small>{entry.value.version ?? t('unknown')}</small>{entry.kind === 'plugin'
+              ? entry.value.installedVersion !== null ? <small data-installed="true">{t('installed')}</small> : null
+              : <small data-candidate="true">{t('candidateStatus')}</small>}</span>
+          </button>
+        })}
       </div>
 
       <div className={css.detailPane}>
-        {active === null ? <p className={css.empty}>{t('selectPlugin')}</p> : <>
-          <div className={css.detailTitle}><div><h4>{active.displayName[locale === 'zh-CN' ? 'zh-CN' : 'en']}</h4><code>{active.packageName}</code></div>
-            <button className={css.installButton} type="button" disabled={active.installedVersion !== null || installing} onClick={() => setConfirming(active)}><Download size={16} />{active.installedVersion !== null ? t('installed') : t('install')}</button>
+        {active === null ? <p className={css.empty}>{t('selectPlugin')}</p> : active.kind === 'plugin' ? <>
+          <div className={css.detailTitle}><div><h4>{active.value.displayName[locale === 'zh-CN' ? 'zh-CN' : 'en']}</h4><code>{active.value.packageName}</code></div>
+            <button className={css.installButton} type="button" disabled={active.value.installedVersion !== null || installing} onClick={() => setConfirming(active.value)}><Download size={16} />{active.value.installedVersion !== null ? t('installed') : t('install')}</button>
           </div>
-          <p className={css.summary}>{active.summary[locale === 'zh-CN' ? 'zh-CN' : 'en']}</p>
+          <p className={css.summary}>{active.value.summary[locale === 'zh-CN' ? 'zh-CN' : 'en']}</p>
           <dl className={css.facts}>
-            <div><dt>{t('version')}</dt><dd>{active.version}</dd></div><div><dt>{t('license')}</dt><dd>{active.license}</dd></div><div><dt>{t('category')}</dt><dd>{active.category}</dd></div>
+            <div><dt>{t('version')}</dt><dd>{active.value.version}</dd></div><div><dt>{t('license')}</dt><dd>{active.value.license}</dd></div><div><dt>{t('category')}</dt><dd>{active.value.category}</dd></div>
           </dl>
-          <div className={css.sources}>{active.sources.map(source => <span key={source} data-source={source}>{source === 'catalog' ? t('catalogSource') : t('githubSource')}</span>)}</div>
-          <div className={css.links}><a href={active.repositoryUrl} target="_blank" rel="noreferrer"><ExternalLink size={14} />{t('repository')}</a><a href={active.manifestUrl} target="_blank" rel="noreferrer"><ExternalLink size={14} />{t('manifest')}</a></div>
+          <div className={css.sources}>{active.value.sources.map(source => <span key={source} data-source={source}>{source === 'catalog' ? t('catalogSource') : t('githubSource')}</span>)}</div>
+          <div className={css.links}><a href={active.value.repositoryUrl} target="_blank" rel="noreferrer"><ExternalLink size={14} />{t('repository')}</a><a href={active.value.manifestUrl} target="_blank" rel="noreferrer"><ExternalLink size={14} />{t('manifest')}</a></div>
+        </> : <>
+          <div className={css.detailTitle}><div><h4>{active.value.displayName[locale === 'zh-CN' ? 'zh-CN' : 'en']}</h4><code>{active.value.packageName ?? active.value.repositoryFullName}</code></div>
+            <button className={css.installButton} data-unavailable="true" type="button" disabled><Ban size={16} />{t('notInstallable')}</button>
+          </div>
+          <p className={css.summary}>{active.value.summary[locale === 'zh-CN' ? 'zh-CN' : 'en']}</p>
+          <dl className={css.facts}>
+            <div><dt>{t('version')}</dt><dd>{active.value.version ?? t('unknown')}</dd></div><div><dt>{t('status')}</dt><dd>{t('candidateStatus')}</dd></div><div><dt>{t('repository')}</dt><dd>{active.value.repositoryFullName}</dd></div>
+          </dl>
+          <div className={css.admission}><AlertTriangle size={16} /><div><strong>{t('admissionReason')}: {t(issueLocaleKey[active.value.issueCode])}</strong><span>{active.value.issue}</span></div></div>
+          <div className={css.sources}><span data-source="github-topic">{t('githubSource')}</span></div>
+          <div className={css.links}><a href={active.value.repositoryUrl} target="_blank" rel="noreferrer"><ExternalLink size={14} />{t('repository')}</a>{active.value.manifestUrl === null ? null : <a href={active.value.manifestUrl} target="_blank" rel="noreferrer"><ExternalLink size={14} />{t('manifest')}</a>}</div>
         </>}
       </div>
     </div> : null}

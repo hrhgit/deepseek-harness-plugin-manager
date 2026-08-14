@@ -9,9 +9,18 @@ const plugin = z.object({
   keywords: z.array(z.string()).readonly(), license: z.string(), repositoryUrl: z.string(), repositoryDirectory: z.string().nullable(),
   homepage: z.string().nullable(), manifestUrl: z.string(), sources: z.array(source).readonly(), installedVersion: z.string().nullable(),
 }).readonly()
+const issueCode = z.union([
+  z.literal('repository-unavailable'), z.literal('manifest-unavailable'), z.literal('manifest-invalid'),
+  z.literal('package-unpublished'), z.literal('package-invalid'), z.literal('repository-mismatch'),
+])
+const candidate = z.object({
+  id: z.string(), repositoryFullName: z.string(), repositoryUrl: z.string(), packageName: z.string().nullable(),
+  version: z.string().nullable(), displayName: localized, summary: localized, manifestUrl: z.string().nullable(),
+  issueCode, issue: z.string(), source: z.literal('github-topic'),
+}).readonly()
 const warning = z.object({ source, code: z.string(), message: z.string() }).readonly()
 const snapshot = z.object({
-  profileName: z.string(), plugins: z.array(plugin).readonly(), warnings: z.array(warning).readonly(),
+  profileName: z.string(), plugins: z.array(plugin).readonly(), candidates: z.array(candidate).readonly(), warnings: z.array(warning).readonly(),
   stale: z.boolean(), fetchedAt: z.string(),
 }).readonly()
 const receipt = z.object({

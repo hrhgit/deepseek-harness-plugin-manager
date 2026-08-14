@@ -21,6 +21,28 @@ export interface MarketplacePlugin {
   readonly installedVersion: string | null
 }
 
+export type CandidateIssueCode =
+  | 'repository-unavailable'
+  | 'manifest-unavailable'
+  | 'manifest-invalid'
+  | 'package-unpublished'
+  | 'package-invalid'
+  | 'repository-mismatch'
+
+export interface MarketplaceCandidate {
+  readonly id: string
+  readonly repositoryFullName: string
+  readonly repositoryUrl: string
+  readonly packageName: string | null
+  readonly version: string | null
+  readonly displayName: LocalizedText
+  readonly summary: LocalizedText
+  readonly manifestUrl: string | null
+  readonly issueCode: CandidateIssueCode
+  readonly issue: string
+  readonly source: 'github-topic'
+}
+
 export interface DiscoveryWarning {
   readonly source: MarketplaceSource
   readonly code: string
@@ -30,6 +52,7 @@ export interface DiscoveryWarning {
 export interface MarketplaceSnapshot {
   readonly profileName: string
   readonly plugins: readonly MarketplacePlugin[]
+  readonly candidates: readonly MarketplaceCandidate[]
   readonly warnings: readonly DiscoveryWarning[]
   readonly stale: boolean
   readonly fetchedAt: string

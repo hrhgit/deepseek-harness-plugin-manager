@@ -6,6 +6,7 @@ import { en, type LocaleKey } from '../src/client/locales.js'
 import type { MarketplaceSnapshot } from '../src/types.js'
 
 const key = 'dsh-plugin-marketplace.marketplace.global.query.v1'
+const statusKey = 'dsh-plugin-marketplace.marketplace.global.status_filter.v1'
 const t = (value: LocaleKey): string => en[value]
 const snapshot: MarketplaceSnapshot = {
   profileName: 'web', stale: false, warnings: [], fetchedAt: '2026-08-14T00:00:00.000Z',
@@ -15,6 +16,12 @@ const snapshot: MarketplaceSnapshot = {
     repositoryUrl: 'https://github.com/hrhgit/deepseek-harness-plugin-manager', repositoryDirectory: 'packages/manager', homepage: null,
     manifestUrl: 'https://raw.githubusercontent.com/hrhgit/deepseek-harness-plugin-manager/main/packages/manager/package.json',
     sources: ['catalog', 'github-topic'], installedVersion: null,
+  }],
+  candidates: [{
+    id: 'example/legacy-manager:.', repositoryFullName: 'example/legacy-manager', repositoryUrl: 'https://github.com/example/legacy-manager',
+    packageName: 'dsh-legacy-manager', version: '1.0.0', displayName: { 'zh-CN': '旧版管理器', en: 'Legacy Manager' },
+    summary: { 'zh-CN': '尚未适配 V1。', en: 'Not yet adapted to V1.' }, manifestUrl: 'https://example.test/package.json',
+    issueCode: 'manifest-invalid', issue: 'dsh.plugin: expected object', source: 'github-topic',
   }],
 }
 
@@ -35,7 +42,7 @@ afterEach(cleanup)
 describe('PluginMarketplaceTab', () => {
   it('loads a compact list and exposes source provenance in details', async () => {
     render(<PluginMarketplaceTab {...props()} />)
-    expect(await screen.findAllByText('Plugin Manager')).toHaveLength(2)
+    await waitFor(() => expect(screen.getAllByText('Plugin Manager')).toHaveLength(2))
     expect(screen.getByText(en.catalogSource)).toBeTruthy()
     expect(screen.getByText(en.githubSource)).toBeTruthy()
     expect(screen.getByRole('link', { name: en.repository })).toHaveProperty('href', snapshot.plugins[0]?.repositoryUrl)
@@ -50,6 +57,19 @@ describe('PluginMarketplaceTab', () => {
     expect(searchGithub).not.toHaveBeenCalled()
     fireEvent.click(screen.getByRole('button', { name: en.searchGithub }))
     await waitFor(() => expect(searchGithub).toHaveBeenCalledWith('manager'))
+  })
+
+  it('keeps rejected topic hits visible with admission details and a persisted status filter', async () => {
+    const install = vi.fn(props().install)
+    render(<PluginMarketplaceTab {...props({ install })} />)
+    const candidateName = await screen.findByText('Legacy Manager')
+    fireEvent.click(screen.getByRole('button', { name: new RegExp(en.filterCandidates) }))
+    await waitFor(() => expect(JSON.parse(window.localStorage.getItem(statusKey) ?? 'null')).toBe('candidate'))
+    fireEvent.click(candidateName.closest('button') as HTMLButtonElement)
+    expect(screen.getByRole('button', { name: en.notInstallable })).toHaveProperty('disabled', true)
+    expect(screen.getByText(/Manifest does not conform to V1/)).toBeTruthy()
+    expect(screen.getByText('dsh.plugin: expected object')).toBeTruthy()
+    expect(install).not.toHaveBeenCalled()
   })
 
   it('requires confirmation before installing and shows restart feedback', async () => {

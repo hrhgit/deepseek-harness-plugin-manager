@@ -61,9 +61,15 @@ describe('marketplace catalog sources', () => {
             { full_name: 'example/forked-plugin', default_branch: 'main', archived: false, fork: true },
           ] })); return
         }
-        response.end(JSON.stringify({ items: [{ full_name: 'hrhgit/deepseek-harness-plugin-manager', default_branch: 'main', archived: false, fork: false }] })); return
+        response.end(JSON.stringify({ items: [
+          { full_name: 'hrhgit/deepseek-harness-plugin-manager', default_branch: 'main', description: 'Plugin manager workspace', archived: false, fork: false },
+          { full_name: 'example/legacy-manager', default_branch: 'main', description: 'Legacy DSH manager', archived: false, fork: false },
+        ] })); return
       }
       if (url.pathname === '/github/repos/hrhgit/deepseek-harness-plugin-manager/commits/main') {
+        response.end(JSON.stringify({ sha })); return
+      }
+      if (url.pathname === '/github/repos/example/legacy-manager/commits/main') {
         response.end(JSON.stringify({ sha })); return
       }
       if (url.pathname === `/raw/hrhgit/deepseek-harness-plugin-manager/${sha}/package.json`) {
@@ -74,6 +80,12 @@ describe('marketplace catalog sources', () => {
       }
       if (url.pathname === `/raw/hrhgit/deepseek-harness-plugin-manager/${sha}/packages/marketplace/package.json`) {
         response.end(JSON.stringify(marketplaceManifest)); return
+      }
+      if (url.pathname === `/raw/example/legacy-manager/${sha}/package.json`) {
+        response.end(JSON.stringify({
+          name: 'dsh-legacy-manager', version: '1.0.0', description: 'Legacy DSH manager', license: 'MIT',
+          repository: 'https://github.com/example/legacy-manager', dsh: { bundle: { patch: './cordis.patch.yml' } },
+        })); return
       }
       if (url.pathname === '/npm/dsh-plugin-manager') {
         response.end(JSON.stringify({
@@ -121,11 +133,12 @@ describe('marketplace catalog sources', () => {
     expect(snapshot.plugins[0]?.sources).toEqual(['github-topic'])
     expect(snapshot.plugins[0]?.manifestUrl).toContain(`/${sha}/packages/manager/package.json`)
     expect(snapshot.warnings.every(item => !item.message.includes('example/'))).toBe(true)
-    expect(snapshot.warnings).toContainEqual(expect.objectContaining({
-      source: 'github-topic',
-      code: 'candidate-rejected',
-      message: expect.stringContaining('packages/marketplace'),
-    }))
+    expect(snapshot.warnings).toEqual([])
+    expect(snapshot.candidates).toEqual(expect.arrayContaining([
+      expect.objectContaining({ packageName: 'dsh-plugin-marketplace', issueCode: 'package-unpublished' }),
+      expect.objectContaining({ packageName: 'dsh-legacy-manager', issueCode: 'manifest-invalid' }),
+    ]))
+    expect(snapshot.candidates.find(item => item.packageName === 'dsh-legacy-manager')?.issue).toContain('dsh.plugin')
   })
 
   it('falls back to the persistent cache when the catalog source fails', async () => {
@@ -138,5 +151,16 @@ describe('marketplace catalog sources', () => {
     expect(snapshot.stale).toBe(true)
     expect(snapshot.plugins[0]?.packageName).toBe('dsh-plugin-manager')
     expect(snapshot.warnings[0]?.code).toBe('catalog-unavailable')
+  })
+
+  it('restores cached community candidates even when the curated catalog is available', async () => {
+    await service(`${origin}/missing-catalog`).searchGithub('manager')
+    const restarted = service()
+    const snapshot = await restarted.list(false)
+    expect(snapshot.stale).toBe(false)
+    expect(snapshot.plugins[0]?.packageName).toBe('dsh-plugin-manager')
+    expect(snapshot.candidates.map(item => item.packageName)).toEqual(expect.arrayContaining([
+      'dsh-plugin-marketplace', 'dsh-legacy-manager',
+    ]))
   })
 })
