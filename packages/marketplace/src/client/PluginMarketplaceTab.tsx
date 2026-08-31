@@ -1,6 +1,6 @@
-import { AlertTriangle, Ban, Check, Download, ExternalLink, RefreshCw, Search, X } from 'lucide-react'
+import { AlertTriangle, Ban, Check, Download, ExternalLink, Info, RefreshCw, Search, X } from 'lucide-react'
 import { useEffect, useMemo, useState, type ReactNode } from 'react'
-import type { CatalogIssueCode, CatalogVerification, InstallReceipt, MarketplaceEntry, MarketplaceSnapshot } from '../types.js'
+import { compareCatalogEntries, type CatalogAvailability, type CatalogCompatibility, type CatalogIssueCode, type InstallReceipt, type MarketplaceEntry, type MarketplaceSnapshot } from '../types.js'
 import type { LocaleKey } from './locales.js'
 import { usePersistedState, type PersistPolicy } from './persistence.js'
 import css from './PluginMarketplaceTab.module.css'
@@ -15,15 +15,15 @@ const queryPolicy: PersistPolicy<string> = {
   },
 }
 
-type StatusFilter = 'all' | CatalogVerification
+type StatusFilter = 'all' | CatalogAvailability
 
 const statusFilterPolicy: PersistPolicy<StatusFilter> = {
-  key: 'dsh-plugin-marketplace.marketplace.global.status_filter.v2',
+  key: 'dsh-plugin-marketplace.marketplace.global.status_filter.v3',
   kind: 'normal',
   defaultValue: 'all',
   deserializer: raw => {
     const value = JSON.parse(raw) as unknown
-    return value === 'verified' || value === 'unverified' || value === 'rejected' ? value : 'all'
+    return value === 'installable' || value === 'unavailable' ? value : 'all'
   },
 }
 
@@ -37,10 +37,14 @@ const issueLocaleKey: Record<CatalogIssueCode, LocaleKey> = {
   'package-conflict': 'issuePackageConflict',
 }
 
-const verificationLocaleKey: Record<CatalogVerification, LocaleKey> = {
-  verified: 'verifiedStatus',
-  unverified: 'unverifiedStatus',
-  rejected: 'rejectedStatus',
+const availabilityLocaleKey: Record<CatalogAvailability, LocaleKey> = {
+  installable: 'installableStatus',
+  unavailable: 'unavailableStatus',
+}
+
+const compatibilityLocaleKey: Record<CatalogCompatibility, LocaleKey> = {
+  declared: 'compatibilityDeclared',
+  unverified: 'compatibilityUnverified',
 }
 
 export interface PluginMarketplaceTabApi {
@@ -54,6 +58,16 @@ export interface PluginMarketplaceTabProps extends PluginMarketplaceTabApi {
 }
 
 type LoadState = { status: 'loading' } | { status: 'error'; message: string } | { status: 'ready'; snapshot: MarketplaceSnapshot }
+
+function isScanCoverageWarning(code: string): boolean {
+  return code === 'github-results-truncated'
+}
+
+function localizeWarning(code: string, message: string, t: (key: LocaleKey) => string): string {
+  const match = /^GitHub reports (\d+) topic repositories; this catalog scan inspected the newest (\d+)\.$/.exec(message)
+  if (!isScanCoverageWarning(code) || match?.[1] === undefined || match[2] === undefined) return message
+  return t('scanCoverageDescription').replace('{total}', match[1]).replace('{inspected}', match[2])
+}
 
 /** Compact generated-catalog browser and exact-version install surface. */
 export function PluginMarketplaceTab({ list, install, t, locale }: PluginMarketplaceTabProps): ReactNode {
@@ -81,7 +95,7 @@ export function PluginMarketplaceTab({ list, install, t, locale }: PluginMarketp
   const visibleEntries = useMemo(() => {
     const value = query.trim().toLocaleLowerCase()
     return entries.filter(entry => {
-      if (statusFilter !== 'all' && entry.verification !== statusFilter) return false
+      if (statusFilter !== 'all' && entry.availability !== statusFilter) return false
       if (value === '') return true
       const searchable = [
         entry.repositoryFullName,
@@ -90,12 +104,11 @@ export function PluginMarketplaceTab({ list, install, t, locale }: PluginMarketp
         entry.displayName.en,
         entry.summary['zh-CN'],
         entry.summary.en,
-        entry.category ?? '',
         entry.issue ?? '',
         ...entry.keywords,
       ]
       return searchable.some(item => item.toLocaleLowerCase().includes(value))
-    })
+    }).sort(compareCatalogEntries)
   }, [entries, query, statusFilter])
 
   useEffect(() => {
@@ -128,7 +141,7 @@ export function PluginMarketplaceTab({ list, install, t, locale }: PluginMarketp
     }
   }
 
-  const count = (verification: CatalogVerification): number => entries.filter(entry => entry.verification === verification).length
+  const count = (availability: CatalogAvailability): number => entries.filter(entry => entry.availability === availability).length
 
   return <section className={css.marketplace}>
     <header className={css.header}>
@@ -143,15 +156,21 @@ export function PluginMarketplaceTab({ list, install, t, locale }: PluginMarketp
     {state.status === 'ready' ? <div className={css.filters} role="group" aria-label={t('status')}>
       {([
         ['all', t('filterAll'), entries.length],
-        ['verified', t('filterVerified'), count('verified')],
-        ['unverified', t('filterUnverified'), count('unverified')],
-        ['rejected', t('filterRejected'), count('rejected')],
+        ['installable', t('filterInstallable'), count('installable')],
+        ['unavailable', t('filterUnavailable'), count('unavailable')],
       ] as const).map(([value, label, total]) => <button type="button" key={value} aria-pressed={statusFilter === value} onClick={() => setStatusFilter(value)}><span>{label}</span><small>{total}</small></button>)}
     </div> : null}
 
     {state.status === 'loading' ? <p className={css.message}>{t('loading')}</p> : null}
     {state.status === 'error' ? <div className={css.error} role="alert"><span>{t('loadFailed')} {state.message}</span><button type="button" onClick={() => { setState({ status: 'loading' }); void list(true).then(adopt, error => setState({ status: 'error', message: String(error) })) }}>{t('retry')}</button></div> : null}
-    {state.status === 'ready' && (state.snapshot.stale || state.snapshot.warnings.length > 0) ? <div className={css.warning} role="status"><AlertTriangle size={16} /><div><strong>{state.snapshot.stale ? t('stale') : t('warningTitle')}</strong>{state.snapshot.warnings.map(item => <span key={`${item.code}:${item.message}`}>{item.message}</span>)}</div></div> : null}
+    {state.status === 'ready' && (state.snapshot.stale || state.snapshot.warnings.length > 0) ? (() => {
+      const coverageOnly = !state.snapshot.stale && state.snapshot.warnings.every(item => isScanCoverageWarning(item.code))
+      const NoticeIcon = coverageOnly ? Info : AlertTriangle
+      return <div className={coverageOnly ? css.coverage : css.warning} role="status"><NoticeIcon size={16} /><div>
+        <strong>{state.snapshot.stale ? t('stale') : coverageOnly ? t('scanCoverageTitle') : t('warningTitle')}</strong>
+        {state.snapshot.warnings.map(item => <span key={`${item.code}:${item.message}`}>{localizeWarning(item.code, item.message, t)}</span>)}
+      </div></div>
+    })() : null}
     {feedback !== null ? <div className={css.feedback} data-kind={feedback.kind} role={feedback.kind === 'error' ? 'alert' : 'status'}>{feedback.kind === 'success' ? <Check size={16} /> : <AlertTriangle size={16} />}<span>{feedback.message}</span></div> : null}
 
     {state.status === 'ready' ? <div className={css.workspace}>
@@ -162,35 +181,36 @@ export function PluginMarketplaceTab({ list, install, t, locale }: PluginMarketp
           key={entry.id}
           className={css.pluginRow}
           data-selected={entry.id === selected || undefined}
-          data-verification={entry.verification}
+          data-availability={entry.availability}
           onClick={() => { setSelected(entry.id); setFeedback(null) }}
         >
           <span className={css.rowMain}><strong>{entry.displayName[locale === 'zh-CN' ? 'zh-CN' : 'en']}</strong><code>{entry.packageName ?? entry.repositoryFullName}</code></span>
           <span className={css.rowMeta}><small>{entry.version ?? t('unknown')}</small>{entry.installedVersion !== null
             ? <small data-installed="true">{t('installed')}</small>
-            : <small data-verification={entry.verification}>{t(verificationLocaleKey[entry.verification])}</small>}</span>
+            : <small data-availability={entry.availability}>{t(availabilityLocaleKey[entry.availability])}</small>}</span>
         </button>)}
       </div>
 
       <div className={css.detailPane}>
         {active === null ? <p className={css.empty}>{t('selectPlugin')}</p> : <>
           <div className={css.detailTitle}><div><h4>{active.displayName[locale === 'zh-CN' ? 'zh-CN' : 'en']}</h4><code>{active.packageName ?? active.repositoryFullName}</code></div>
-            <button className={css.installButton} data-unavailable={!active.installable || undefined} type="button"
-              disabled={!active.installable || active.packageName === null || active.version === null || active.installedVersion !== null || installing}
-              onClick={() => { if (active.installable && active.packageName !== null && active.version !== null) setConfirming(active) }}>
-              {active.installable ? <Download size={16} /> : <Ban size={16} />}{active.installedVersion !== null ? t('installed') : active.installable ? t('install') : t('notInstallable')}
+            <button className={css.installButton} data-unavailable={active.availability !== 'installable' || undefined} type="button"
+              disabled={active.availability !== 'installable' || active.packageName === null || active.version === null || active.installedVersion !== null || installing}
+              onClick={() => { if (active.availability === 'installable' && active.packageName !== null && active.version !== null) setConfirming(active) }}>
+              {active.availability === 'installable' ? <Download size={16} /> : <Ban size={16} />}{active.installedVersion !== null ? t('installed') : active.availability === 'installable' ? t('install') : t('notInstallable')}
             </button>
           </div>
           <p className={css.summary}>{active.summary[locale === 'zh-CN' ? 'zh-CN' : 'en']}</p>
           <dl className={css.facts}>
             <div><dt>{t('version')}</dt><dd>{active.version ?? t('unknown')}</dd></div>
-            <div><dt>{t('status')}</dt><dd>{active.installedVersion !== null ? t('installed') : t(verificationLocaleKey[active.verification])}</dd></div>
+            <div><dt>{t('status')}</dt><dd>{active.installedVersion !== null ? t('installed') : t(availabilityLocaleKey[active.availability])}</dd></div>
+            <div><dt>{t('compatibility')}</dt><dd>{t(compatibilityLocaleKey[active.compatibility])}</dd></div>
             <div><dt>{t('license')}</dt><dd>{active.license ?? t('unknown')}</dd></div>
           </dl>
-          {active.verification === 'verified' ? null : <div className={css.admission}><AlertTriangle size={16} /><div>
-            <strong>{active.verification === 'unverified'
-              ? t('unverifiedWarning')
-              : `${t('rejectionReason')}: ${active.issueCode === null ? t('unknown') : t(issueLocaleKey[active.issueCode])}`}</strong>
+          {active.availability === 'installable' ? active.compatibility === 'declared' ? null : <div className={css.admission}><AlertTriangle size={16} /><div>
+            <strong>{t('unverifiedCompatibilityWarning')}</strong>
+          </div></div> : <div className={css.admission}><AlertTriangle size={16} /><div>
+            <strong>{`${t('rejectionReason')}: ${active.issueCode === null ? t('unknown') : t(issueLocaleKey[active.issueCode])}`}</strong>
             {active.issue === null ? null : <span>{active.issue}</span>}
           </div></div>}
           <div className={css.links}><a href={active.repositoryUrl} target="_blank" rel="noreferrer"><ExternalLink size={14} />{t('repository')}</a>{active.manifestUrl === null ? null : <a href={active.manifestUrl} target="_blank" rel="noreferrer"><ExternalLink size={14} />{t('manifest')}</a>}</div>

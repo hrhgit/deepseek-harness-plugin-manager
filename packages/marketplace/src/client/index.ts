@@ -2,7 +2,7 @@ import type {} from '@deepseek-ai/dsh-api-gateway/client'
 import type {} from '@deepseek-ai/dsh-client-locale/client'
 import type { ClientContext } from '@deepseek-ai/dsh-client-runtime/client'
 import type {} from '@deepseek-ai/dsh-client-ui-settings/client'
-import remoteContribution from 'dsh-plugin-marketplace/remote'
+import remoteContribution from '@ruihuahe/dsh-plugin-marketplace/remote'
 import { PluginMarketplaceTab, type PluginMarketplaceTabApi } from './PluginMarketplaceTab.js'
 import { en, zh, type LocaleKey } from './locales.js'
 

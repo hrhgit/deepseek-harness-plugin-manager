@@ -69,21 +69,6 @@
     "LICENSE"
   ],
   "dsh": {
-    "plugin": {
-      "schemaVersion": 1,
-      "displayName": {
-        "zh-CN": "插件管理器",
-        "en": "Plugin Manager"
-      },
-      "summary": {
-        "zh-CN": "通过 Cordis HMR 在运行中的 profile 内即时热加载并控制已安装插件的启停和运行状态。",
-        "en": "Hot-load and control installed plugin enablement and runtime state through Cordis HMR in the current running profile."
-      },
-      "category": "plugin-management"
-    },
-    "pluginManager": {
-      "group": "plugin-management"
-    },
     "bundle": {
       "patch": "./cordis.patch.yml"
     },

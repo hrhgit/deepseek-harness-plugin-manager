@@ -6,23 +6,13 @@
   "engines": {
     "node": "^22.19.0 || >=24.0.0"
   },
-  "dsh": {
-    "catalog": {
-      "schemaVersion": 1,
-      "packages": [
-        "packages/manager",
-        "packages/marketplace"
-      ]
-    }
-  },
   "scripts": {
     "clean": "pnpm -r --if-present run clean",
     "typecheck": "pnpm -r run typecheck",
     "test": "pnpm -r run test",
     "build": "pnpm -r run build",
     "pack:check": "pnpm -r run pack:check",
-    "spec:build": "pnpm --filter dsh-plugin-marketplace run spec:build",
-    "catalog:build": "pnpm --filter dsh-plugin-marketplace run catalog:build",
-    "generated:check": "pnpm run spec:build && pnpm --filter dsh-plugin-marketplace run catalog:check && git diff --exit-code -- spec/v1"
+    "catalog:build": "pnpm --filter @ruihuahe/dsh-plugin-marketplace run catalog:build",
+    "generated:check": "pnpm --filter @ruihuahe/dsh-plugin-marketplace run catalog:check"
   }
 }

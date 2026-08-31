@@ -7,12 +7,13 @@ const issueCode = z.union([
   z.literal('repository-unavailable'), z.literal('manifest-unavailable'), z.literal('manifest-invalid'),
   z.literal('package-unpublished'), z.literal('package-invalid'), z.literal('repository-mismatch'), z.literal('package-conflict'),
 ])
-const verification = z.union([z.literal('verified'), z.literal('unverified'), z.literal('rejected')])
+const availability = z.union([z.literal('installable'), z.literal('unavailable')])
+const compatibility = z.union([z.literal('declared'), z.literal('unverified')])
 const entry = z.object({
   id: z.string(), repositoryFullName: z.string(), repositoryUrl: z.string(), packageName: z.string().nullable(), version: z.string().nullable(),
-  displayName: localized, summary: localized, category: z.string().nullable(), keywords: z.array(z.string()).readonly(), license: z.string().nullable(),
-  repositoryDirectory: z.string().nullable(), homepage: z.string().nullable(), manifestUrl: z.string().nullable(), verification,
-  issueCode: issueCode.nullable(), issue: z.string().nullable(), installable: z.boolean(), installedVersion: z.string().nullable(),
+  displayName: localized, summary: localized, keywords: z.array(z.string()).readonly(), license: z.string().nullable(),
+  repositoryDirectory: z.string().nullable(), homepage: z.string().nullable(), manifestUrl: z.string().nullable(), availability, compatibility,
+  issueCode: issueCode.nullable(), issue: z.string().nullable(), installedVersion: z.string().nullable(),
 }).readonly()
 const warning = z.object({ code: z.string(), message: z.string() }).readonly()
 const snapshot = z.object({
@@ -25,21 +26,21 @@ const receipt = z.object({
 }).readonly()
 const strict = (typeSymbol: string, schema: z.ZodType) => ({ mode: 'strict' as const, typeSymbol, schema })
 const parameter = (name: string, schema: z.ZodType) => ({
-  name, wire: name, source: 'json' as const, codec: strict(`dsh-plugin-marketplace/types#${name}`, schema),
+  name, wire: name, source: 'json' as const, codec: strict(`@ruihuahe/dsh-plugin-marketplace/types#${name}`, schema),
 })
 const descriptor = (method: string, parameters: readonly ReturnType<typeof parameter>[], result: z.ZodType, type: string) => ({
-  id: `dsh-plugin-marketplace#marketplace/${method}`,
+  id: `@ruihuahe/dsh-plugin-marketplace#marketplace/${method}`,
   service: 'marketplace', namespace: 'marketplace', method, invocation: { kind: 'direct' as const }, parameters,
-  result: strict(`dsh-plugin-marketplace/types#${type}`, result),
+  result: strict(`@ruihuahe/dsh-plugin-marketplace/types#${type}`, result),
 })
 const descriptors = [
   descriptor('list', [parameter('refresh', z.boolean())], snapshot, 'MarketplaceSnapshot'),
   descriptor('installPlugin', [parameter('packageName', z.string()), parameter('version', z.string())], receipt, 'InstallReceipt'),
 ] as const
 
-export const TYPERT_REMOTE: TypertRemoteContribution = { package: 'dsh-plugin-marketplace', descriptors }
+export const TYPERT_REMOTE: TypertRemoteContribution = { package: '@ruihuahe/dsh-plugin-marketplace', descriptors }
 export const TYPERT = {
-  package: 'dsh-plugin-marketplace', face: 'host', schemas: [], invocations: descriptors,
+  package: '@ruihuahe/dsh-plugin-marketplace', face: 'host', schemas: [], invocations: descriptors,
   model: { services: [], events: [], objects: [] },
 }
 

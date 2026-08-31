@@ -4,6 +4,12 @@ on:
   schedule:
     - cron: "17 */6 * * *"
   workflow_dispatch:
+    inputs:
+      full_reconcile:
+        description: "Recheck every discovered repository instead of only repositories updated since the last catalog"
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: write
@@ -31,9 +37,10 @@ jobs:
         run: pnpm run catalog:build
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CATALOG_FULL_RECONCILE: ${{ inputs.full_reconcile || 'false' }}
       - name: Commit catalog changes
         run: |
-          git add catalog/v1/catalog.json
+          git add catalog/v2/catalog.json catalog/v2/scan-state.json
           if git diff --cached --quiet; then
             echo "Catalog is already current."
             exit 0

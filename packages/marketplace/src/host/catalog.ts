@@ -3,15 +3,15 @@ import { mkdir, readFile, rename, writeFile } from 'node:fs/promises'
 import { dirname, join } from 'node:path'
 import { z } from 'zod'
 import { catalogDocumentSchema, type CatalogDocument, type CatalogEntry } from '../manifest.js'
-import type { DiscoveryWarning, MarketplaceSnapshot } from '../types.js'
+import { compareCatalogEntries, type DiscoveryWarning, type MarketplaceSnapshot } from '../types.js'
 
 // The GitHub API raw media type is reachable in environments where the raw
 // content host does not have a configured Node proxy.
-const DEFAULT_CATALOG_URL = 'https://api.github.com/repos/hrhgit/deepseek-harness-plugin-manager/contents/catalog/v1/catalog.json?ref=main'
+const DEFAULT_CATALOG_URL = 'https://api.github.com/repos/hrhgit/deepseek-harness-plugin-manager/contents/catalog/v2/catalog.json?ref=main'
 const GITHUB_RAW_ACCEPT = 'application/vnd.github.raw+json'
 
 const cacheSchema = z.object({
-  schemaVersion: z.literal(1),
+  schemaVersion: z.literal(2),
   etag: z.string().nullable(),
   fetchedAt: z.string().datetime(),
   document: catalogDocumentSchema,
@@ -127,7 +127,7 @@ export class CatalogService {
     const temporary = join(dirname(this.cacheFile), `.${randomUUID()}.tmp`)
     try {
       await mkdir(dirname(this.cacheFile), { recursive: true })
-      await writeFile(temporary, JSON.stringify({ schemaVersion: 1, etag: this.etag, fetchedAt, document }, undefined, 2) + '\n', 'utf8')
+      await writeFile(temporary, JSON.stringify({ schemaVersion: 2, etag: this.etag, fetchedAt, document }, undefined, 2) + '\n', 'utf8')
       await rename(temporary, this.cacheFile)
     } catch {
       // A read-only cache directory must not make the generated catalog unusable.
@@ -140,7 +140,7 @@ export function snapshotWithProfile(
 ): MarketplaceSnapshot {
   return {
     profileName,
-    entries: state.entries.map(entry => ({
+    entries: [...state.entries].sort(compareCatalogEntries).map(entry => ({
       ...entry,
       installedVersion: entry.packageName === null ? null : dependencies[entry.packageName] ?? null,
     })),

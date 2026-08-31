@@ -3,11 +3,11 @@ import { valid as validVersion } from 'semver'
 import { z } from 'zod'
 
 const npmName = /^(?:@[a-z0-9][a-z0-9._-]*\/)?[a-z0-9][a-z0-9._-]*$/
-const category = /^[a-z0-9](?:[a-z0-9._-]*[a-z0-9])?$/
 
 export const npmPackageNameSchema = z.string().regex(npmName)
+export const exactVersionSchema = z.string().refine(value => validVersion(value) === value, 'version must be exact semver')
 
-/** A catalog child path is always repository-relative and cannot escape its root. */
+/** A repository child path is always relative and cannot escape its checkout. */
 export function isSafePackagePath(value: string): boolean {
   if (value === '' || value.includes('\\') || value.startsWith('/') || /^[A-Za-z]:/.test(value)) return false
   const candidate = value.startsWith('./') ? value.slice(2) : value
@@ -21,64 +21,22 @@ export const localizedTextSchema = z.object({
   en: z.string().trim().min(1).max(120),
 }).strict()
 
-export const dshPluginManifestSchema = z.object({
-  schemaVersion: z.literal(1),
-  displayName: localizedTextSchema,
-  summary: z.object({
-    'zh-CN': z.string().trim().min(1).max(360),
-    en: z.string().trim().min(1).max(360),
-  }).strict(),
-  category: z.string().regex(category).max(64),
-}).strict()
-
-export const dshCatalogRootSchema = z.object({
-  schemaVersion: z.literal(1),
-  packages: z.array(z.string().refine(isSafePackagePath, 'unsafe package path')).min(1).max(32),
-}).strict().superRefine((value, context) => {
-  const seen = new Set<string>()
-  for (const path of value.packages) {
-    if (seen.has(path)) context.addIssue({ code: 'custom', path: ['packages'], message: `duplicate package path ${path}` })
-    seen.add(path)
-  }
-})
-
-const repositorySchema = z.union([
-  z.string().trim().min(1),
-  z.object({
-    type: z.string().optional(),
-    url: z.string().trim().min(1),
-    directory: z.string().refine(isSafePackagePath, 'unsafe repository directory').optional(),
-  }).passthrough(),
-])
-
+/**
+ * Generic package metadata used to discover a candidate. This intentionally
+ * does not define a marketplace-owned plugin manifest: installability is
+ * established from the published npm artifact and repository ownership.
+ */
 export const packageManifestSchema = z.object({
   name: npmPackageNameSchema,
-  version: z.string().refine(value => validVersion(value) === value, 'version must be exact semver'),
+  version: exactVersionSchema,
   description: z.string().optional(),
   keywords: z.array(z.string()).optional(),
-  license: z.string().trim().min(1),
+  license: z.string().trim().min(1).optional(),
   homepage: z.string().url().optional(),
-  repository: repositorySchema,
   dsh: z.object({
-    plugin: dshPluginManifestSchema,
-    bundle: z.object({ patch: z.string().refine(isSafePackagePath, 'unsafe bundle patch') }).passthrough(),
-    catalog: dshCatalogRootSchema.optional(),
-  }).passthrough(),
+    bundle: z.object({ patch: z.string().refine(isSafePackagePath, 'unsafe bundle patch') }).passthrough().optional(),
+  }).passthrough().optional(),
 }).passthrough()
-
-export const catalogPluginSchema = z.object({
-  packageName: npmPackageNameSchema,
-  version: z.string().refine(value => validVersion(value) === value, 'version must be exact semver'),
-  displayName: localizedTextSchema,
-  summary: z.object({ 'zh-CN': z.string().min(1).max(360), en: z.string().min(1).max(360) }).strict(),
-  category: z.string().regex(category).max(64),
-  keywords: z.array(z.string()),
-  license: z.string().min(1),
-  repositoryUrl: z.string().url(),
-  repositoryDirectory: z.string().refine(isSafePackagePath, 'unsafe repository directory').nullable(),
-  homepage: z.string().url().nullable(),
-  manifestUrl: z.string().url(),
-}).strict()
 
 export const catalogIssueCodeSchema = z.enum([
   'repository-unavailable',
@@ -90,49 +48,43 @@ export const catalogIssueCodeSchema = z.enum([
   'package-conflict',
 ])
 
-export const catalogVerificationSchema = z.enum(['verified', 'unverified', 'rejected'])
+export const catalogAvailabilitySchema = z.enum(['installable', 'unavailable'])
+export const catalogCompatibilitySchema = z.enum(['declared', 'unverified'])
 
 export const catalogEntrySchema = z.object({
   id: z.string().min(1),
   repositoryFullName: z.string().min(3),
   repositoryUrl: z.string().url(),
   packageName: npmPackageNameSchema.nullable(),
-  version: z.string().refine(value => validVersion(value) === value, 'version must be exact semver').nullable(),
+  version: exactVersionSchema.nullable(),
   displayName: localizedTextSchema,
   summary: z.object({ 'zh-CN': z.string().min(1).max(360), en: z.string().min(1).max(360) }).strict(),
-  category: z.string().regex(category).max(64).nullable(),
   keywords: z.array(z.string()),
   license: z.string().min(1).nullable(),
   repositoryDirectory: z.string().refine(isSafePackagePath, 'unsafe repository directory').nullable(),
   homepage: z.string().url().nullable(),
   manifestUrl: z.string().url().nullable(),
-  verification: catalogVerificationSchema,
+  availability: catalogAvailabilitySchema,
+  compatibility: catalogCompatibilitySchema,
   issueCode: catalogIssueCodeSchema.nullable(),
   issue: z.string().min(1).nullable(),
-  installable: z.boolean(),
 }).strict().superRefine((value, context) => {
-  if (value.verification === 'verified') {
-    if (!value.installable || value.packageName === null || value.version === null || value.category === null
-      || value.license === null || value.manifestUrl === null || value.issueCode !== null || value.issue !== null) {
-      context.addIssue({ code: 'custom', message: 'verified entries require complete install metadata and no issue' })
+  if (value.availability === 'installable') {
+    if (value.packageName === null || value.version === null || value.manifestUrl === null
+      || value.issueCode !== null || value.issue !== null) {
+      context.addIssue({ code: 'custom', message: 'installable entries require an exact package target and no issue' })
     }
     return
   }
-  if (value.verification === 'unverified') {
-    if (!value.installable || value.packageName === null || value.version === null || value.issueCode === null || value.issue === null) {
-      context.addIssue({ code: 'custom', message: 'unverified entries require an install target and compatibility issue' })
-    }
-    return
-  }
-  if (value.installable || value.issueCode === null || value.issue === null) {
-    context.addIssue({ code: 'custom', message: 'rejected entries require an issue and cannot be installable' })
+  if (value.issueCode === null || value.issue === null) {
+    context.addIssue({ code: 'custom', message: 'unavailable entries require a reason' })
   }
 })
 
 export const catalogWarningSchema = z.object({ code: z.string().min(1), message: z.string().min(1) }).strict()
 
 export const catalogDocumentSchema = z.object({
-  schemaVersion: z.literal(1),
+  schemaVersion: z.literal(2),
   generatedAt: z.string().datetime(),
   entries: z.array(catalogEntrySchema),
   warnings: z.array(catalogWarningSchema),
@@ -142,23 +94,18 @@ export const catalogDocumentSchema = z.object({
   for (const entry of value.entries) {
     if (ids.has(entry.id)) context.addIssue({ code: 'custom', path: ['entries'], message: `duplicate entry ${entry.id}` })
     ids.add(entry.id)
-    if (!entry.installable || entry.packageName === null) continue
-    if (installTargets.has(entry.packageName)) {
-      context.addIssue({ code: 'custom', path: ['entries'], message: `duplicate install target ${entry.packageName}` })
+    if (entry.availability !== 'installable' || entry.packageName === null || entry.version === null) continue
+    const target = `${entry.packageName}@${entry.version}`
+    if (installTargets.has(target)) {
+      context.addIssue({ code: 'custom', path: ['entries'], message: `duplicate install target ${target}` })
     }
-    installTargets.add(entry.packageName)
+    installTargets.add(target)
   }
 })
 
 export type PackageManifest = z.infer<typeof packageManifestSchema>
-export type CatalogPlugin = z.infer<typeof catalogPluginSchema>
 export type CatalogEntry = z.infer<typeof catalogEntrySchema>
 export type CatalogDocument = z.infer<typeof catalogDocumentSchema>
-
-export function repositoryValue(manifest: PackageManifest): { url: string, directory: string | null } {
-  if (typeof manifest.repository === 'string') return { url: manifest.repository, directory: null }
-  return { url: manifest.repository.url, directory: manifest.repository.directory ?? null }
-}
 
 /** Normalize common npm/GitHub repository spellings to a stable HTTPS URL. */
 export function canonicalGithubRepository(value: string): string | null {
@@ -167,23 +114,4 @@ export function canonicalGithubRepository(value: string): string | null {
   const match = /^https:\/\/github\.com\/([^/]+)\/([^/#]+?)(?:\.git)?\/?$/i.exec(source)
   if (match?.[1] === undefined || match[2] === undefined) return null
   return `https://github.com/${match[1].toLowerCase()}/${match[2].toLowerCase()}`
-}
-
-export function catalogPluginFromManifest(manifest: PackageManifest, manifestUrl: string): CatalogPlugin {
-  const repository = repositoryValue(manifest)
-  const repositoryUrl = canonicalGithubRepository(repository.url)
-  if (repositoryUrl === null) throw new Error(`${manifest.name} must use a GitHub repository URL`)
-  return catalogPluginSchema.parse({
-    packageName: manifest.name,
-    version: manifest.version,
-    displayName: manifest.dsh.plugin.displayName,
-    summary: manifest.dsh.plugin.summary,
-    category: manifest.dsh.plugin.category,
-    keywords: manifest.keywords ?? [],
-    license: manifest.license,
-    repositoryUrl,
-    repositoryDirectory: repository.directory,
-    homepage: manifest.homepage ?? null,
-    manifestUrl,
-  })
 }

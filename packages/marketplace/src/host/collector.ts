@@ -1,16 +1,17 @@
+import { posix } from 'node:path'
 import { valid as validVersion } from 'semver'
 import { z } from 'zod'
 import {
   canonicalGithubRepository,
   catalogDocumentSchema,
-  catalogPluginFromManifest,
-  dshCatalogRootSchema,
+  isSafePackagePath,
   npmPackageNameSchema,
   packageManifestSchema,
   type CatalogDocument,
   type CatalogEntry,
+  type PackageManifest,
 } from '../manifest.js'
-import type { CatalogIssueCode, LocalizedText } from '../types.js'
+import { compareCatalogEntries, type CatalogIssueCode, type LocalizedText } from '../types.js'
 
 const DEFAULT_GITHUB_API = 'https://api.github.com'
 const DEFAULT_RAW_BASE = 'https://raw.githubusercontent.com'
@@ -18,6 +19,7 @@ const DEFAULT_NPM_REGISTRY = 'https://registry.npmjs.org'
 const GITHUB_RAW_ACCEPT = 'application/vnd.github.raw+json'
 const DEFAULT_REPOSITORY_BATCH_SIZE = 8
 const DEFAULT_REPOSITORY_LIMIT = 1_000
+const DEFAULT_PACKAGE_MANIFEST_LIMIT = 64
 
 const searchSchema = z.object({
   total_count: z.number().int().nonnegative(),
@@ -34,6 +36,10 @@ const searchSchema = z.object({
   })),
 })
 const commitSchema = z.object({ sha: z.string().regex(/^[0-9a-f]{40}$/i) })
+const treeSchema = z.object({
+  truncated: z.boolean().optional().default(false),
+  tree: z.array(z.object({ path: z.string(), type: z.string() })),
+})
 const npmRepositorySchema = z.union([
   z.string().trim().min(1),
   z.object({ url: z.string().trim().min(1) }).passthrough(),
@@ -41,7 +47,7 @@ const npmRepositorySchema = z.union([
 const npmSchema = z.object({
   versions: z.record(z.string(), z.object({
     repository: npmRepositorySchema,
-    dsh: z.object({ bundle: z.object({ patch: z.string() }).passthrough() }).passthrough().optional(),
+    dsh: z.unknown().optional(),
   }).passthrough()),
 })
 
@@ -54,10 +60,19 @@ export interface CatalogCollectorConfig {
   readonly githubRepositoryBatchSize?: number
   readonly githubRepositoryLimit?: number
   readonly githubToken?: string
+  readonly previousCatalog?: CatalogDocument
+  readonly incrementalSince?: string
 }
 
 type Fetcher = typeof fetch
 type GithubRepository = z.infer<typeof searchSchema>['items'][number]
+
+interface ManifestSource {
+  readonly label: string
+  readonly path: string
+  readonly url: string
+  readonly raw: unknown
+}
 
 class CandidateValidationError extends Error {
   constructor(readonly code: CatalogIssueCode, message: string) {
@@ -74,19 +89,15 @@ function boundedText(value: string, maximum: number): string {
   return normalized.length <= maximum ? normalized : normalized.slice(0, maximum)
 }
 
-function localizedValue(value: unknown, fallback: string, maximum: number): LocalizedText {
-  const record = objectValue(value)
-  return {
-    'zh-CN': boundedText(typeof record?.['zh-CN'] === 'string' && record['zh-CN'].trim() !== '' ? record['zh-CN'] : fallback, maximum),
-    en: boundedText(typeof record?.en === 'string' && record.en.trim() !== '' ? record.en : fallback, maximum),
-  }
+function localizedValue(fallback: string, maximum: number): LocalizedText {
+  const normalized = boundedText(fallback, maximum)
+  return { 'zh-CN': normalized, en: normalized }
 }
 
-function npmReference(value: unknown): { packageName: string, version: string } | undefined {
-  const record = objectValue(value)
-  const packageName = typeof record?.name === 'string' ? record.name : undefined
-  const version = typeof record?.version === 'string' && validVersion(record.version) === record.version ? record.version : undefined
-  return packageName !== undefined && version !== undefined ? { packageName, version } : undefined
+function hasBundleDeclaration(raw: unknown): boolean {
+  const dsh = objectValue(objectValue(raw)?.dsh)
+  const bundle = objectValue(dsh?.bundle)
+  return typeof bundle?.patch === 'string' && isSafePackagePath(bundle.patch)
 }
 
 function boundedInteger(value: number | undefined, fallback: number, minimum: number, maximum: number): number {
@@ -105,6 +116,15 @@ function optionalUrl(value: unknown): string | null {
   try { return new URL(value).toString() } catch { return null }
 }
 
+function packageManifestPaths(tree: z.infer<typeof treeSchema>): readonly string[] {
+  return tree.tree
+    .filter(item => item.type === 'blob' && (item.path === 'package.json' || item.path.endsWith('/package.json')))
+    .map(item => item.path)
+    .filter(isSafePackagePath)
+    .sort((left, right) => left.localeCompare(right))
+    .slice(0, DEFAULT_PACKAGE_MANIFEST_LIMIT)
+}
+
 /** Build-time GitHub and npm scanner. Runtime marketplace code never calls this collector. */
 export class CatalogCollector {
   private readonly githubTopic: string
@@ -115,6 +135,8 @@ export class CatalogCollector {
   private readonly repositoryBatchSize: number
   private readonly repositoryLimit: number
   private readonly githubToken: string | undefined
+  private readonly previousCatalog: CatalogDocument | undefined
+  private readonly incrementalSince: string | undefined
   private readonly fetcher: Fetcher
 
   constructor(config: CatalogCollectorConfig = {}, fetcher: Fetcher = fetch) {
@@ -126,12 +148,15 @@ export class CatalogCollector {
     this.repositoryBatchSize = boundedInteger(config.githubRepositoryBatchSize, DEFAULT_REPOSITORY_BATCH_SIZE, 1, 32)
     this.repositoryLimit = boundedInteger(config.githubRepositoryLimit, DEFAULT_REPOSITORY_LIMIT, 1, 1_000)
     this.githubToken = config.githubToken?.trim() === '' ? undefined : config.githubToken
+    this.previousCatalog = config.previousCatalog
+    this.incrementalSince = config.incrementalSince
     this.fetcher = fetcher
   }
 
   async collect(): Promise<CatalogDocument> {
     const { repositories, warnings } = await this.discoverRepositories()
-    const entries: CatalogEntry[] = []
+    const refreshed = new Set(repositories.map(repository => repository.full_name))
+    const entries: CatalogEntry[] = this.previousCatalog?.entries.filter(entry => !refreshed.has(entry.repositoryFullName)) ?? []
     for (const batch of batches(repositories, this.repositoryBatchSize)) {
       const settled = await Promise.allSettled(batch.map(repository => this.readRepository(repository)))
       for (const [index, result] of settled.entries()) {
@@ -146,10 +171,10 @@ export class CatalogCollector {
       }
     }
     return catalogDocumentSchema.parse({
-      schemaVersion: 1,
+      schemaVersion: 2,
       generatedAt: new Date().toISOString(),
-      entries: [...this.rejectPackageConflicts(entries)].sort((left, right) => left.id.localeCompare(right.id)),
-      warnings,
+      entries: [...this.rejectPackageConflicts(entries)].sort(compareCatalogEntries),
+      warnings: this.withCarriedCoverageWarning(warnings),
     })
   }
 
@@ -161,7 +186,8 @@ export class CatalogCollector {
     let totalCount = 0
     for (let page = 1; page <= 10 && repositories.size < this.repositoryLimit; page += 1) {
       const url = new URL(`${this.githubApiUrl}/search/repositories`)
-      url.searchParams.set('q', `topic:${this.githubTopic} archived:false fork:false`)
+      const incremental = this.incrementalSince === undefined ? '' : ` updated:>=${this.incrementalSince}`
+      url.searchParams.set('q', `topic:${this.githubTopic} archived:false fork:false${incremental}`)
       url.searchParams.set('sort', 'updated')
       url.searchParams.set('order', 'desc')
       url.searchParams.set('per_page', '100')
@@ -203,103 +229,81 @@ export class CatalogCollector {
       const issue = this.candidateIssue(error, 'manifest-unavailable')
       return [this.packageEntry(repository, '.', rootUrl, undefined, issue.code, issue.message)]
     }
-    const catalog = objectValue(objectValue(root)?.dsh)?.catalog
-    let paths: readonly string[] | undefined
+
+    const sources: ManifestSource[] = []
+    if (hasBundleDeclaration(root)) sources.push({ label: '.', path: 'package.json', url: rootUrl, raw: root })
     try {
-      paths = catalog === undefined ? undefined : dshCatalogRootSchema.parse(catalog).packages
-    } catch (error) {
-      const issue = this.candidateIssue(error, 'manifest-invalid')
-      return [await this.admitUnverified(repository, '.', rootUrl, root, issue.code, issue.message, fullName)]
-    }
-    const manifests = paths === undefined
-      ? [{ label: '.', path: 'package.json', url: rootUrl, raw: root }]
-      : paths.map(path => ({
-          label: path,
-          path: `${path.replace(/\/$/, '')}/package.json`,
-          url: `${this.rawGithubUrl}/${fullName}/${sha}/${path}/package.json`,
-          raw: undefined,
-        }))
-    const entries: CatalogEntry[] = []
-    for (const batch of batches(manifests, this.repositoryBatchSize)) {
-      await Promise.all(batch.map(async item => {
-        let raw = item.raw
-        if (raw === undefined) {
+      const tree = await this.readGithubTree(fullName, sha)
+      const childPaths = packageManifestPaths(tree).filter(path => path !== 'package.json')
+      for (const batch of batches(childPaths, this.repositoryBatchSize)) {
+        await Promise.all(batch.map(async path => {
+          const label = posix.dirname(path)
+          const url = `${this.rawGithubUrl}/${fullName}/${sha}/${path}`
           try {
-            raw = await this.readGithubJson(fullName, sha, item.path, item.url)
-          } catch (error) {
-            const issue = this.candidateIssue(error, 'manifest-unavailable')
-            entries.push(this.packageEntry(repository, item.label, item.url, undefined, issue.code, issue.message))
-            return
+            const raw = await this.readGithubJson(fullName, sha, path, url)
+            if (hasBundleDeclaration(raw)) sources.push({ label, path, url, raw })
+          } catch {
+            // A package without a readable manifest cannot be identified as a plugin candidate.
           }
-        }
-        entries.push(await this.validateManifest(repository, item.label, item.url, raw, fullName))
+        }))
+      }
+    } catch {
+      // Root packages remain discoverable if a repository denies recursive-tree access.
+    }
+
+    if (sources.length === 0) {
+      sources.push({ label: '.', path: 'package.json', url: rootUrl, raw: root })
+    }
+    const entries: CatalogEntry[] = []
+    for (const batch of batches(sources, this.repositoryBatchSize)) {
+      await Promise.all(batch.map(async source => {
+        entries.push(await this.validateManifest(repository, source, fullName))
       }))
     }
     return entries
   }
 
   private async validateManifest(
-    repository: GithubRepository, label: string, manifestUrl: string, raw: unknown, fullName: string,
+    repository: GithubRepository, source: ManifestSource, fullName: string,
   ): Promise<CatalogEntry> {
     try {
-      const manifest = packageManifestSchema.parse(raw)
-      const plugin = catalogPluginFromManifest(manifest, manifestUrl)
-      const expected = canonicalGithubRepository(`https://github.com/${fullName}`)
-      if (plugin.repositoryUrl !== expected) {
-        throw new CandidateValidationError('repository-mismatch', `${manifest.name} repository does not match ${fullName}`)
-      }
-      await this.verifyNpmReference(plugin.packageName, plugin.version, plugin.repositoryUrl, true)
-      return {
-        id: `${fullName}:${label}`,
-        repositoryFullName: fullName,
-        repositoryUrl: repository.html_url,
-        packageName: plugin.packageName,
-        version: plugin.version,
-        displayName: plugin.displayName,
-        summary: plugin.summary,
-        category: plugin.category,
-        keywords: plugin.keywords,
-        license: plugin.license,
-        repositoryDirectory: plugin.repositoryDirectory,
-        homepage: plugin.homepage,
-        manifestUrl: plugin.manifestUrl,
-        verification: 'verified',
-        issueCode: null,
-        issue: null,
-        installable: true,
-      }
+      const manifest = packageManifestSchema.parse(source.raw)
+      const expectedRepository = canonicalGithubRepository(`https://github.com/${fullName}`)
+      if (expectedRepository === null) throw new Error(`invalid GitHub repository ${fullName}`)
+      const compatibility = await this.verifyNpmReference(manifest.name, manifest.version, expectedRepository)
+      return this.admittedEntry(repository, source, manifest, compatibility)
     } catch (error) {
       const issue = this.candidateIssue(error, 'manifest-invalid')
-      return await this.admitUnverified(repository, label, manifestUrl, raw, issue.code, issue.message, fullName)
+      return this.packageEntry(repository, source.label, source.url, source.raw, issue.code, issue.message)
     }
   }
 
-  private async admitUnverified(
-    repository: GithubRepository,
-    label: string,
-    manifestUrl: string,
-    raw: unknown,
-    issueCode: CatalogIssueCode,
-    issue: string,
-    fullName: string,
-  ): Promise<CatalogEntry> {
-    const entry = this.packageEntry(repository, label, manifestUrl, raw, issueCode, issue)
-    if (issueCode !== 'manifest-invalid') return entry
-    const reference = npmReference(raw)
-    const expectedRepository = canonicalGithubRepository(`https://github.com/${fullName}`)
-    if (reference === undefined || expectedRepository === null) return entry
-    try {
-      await this.verifyNpmReference(reference.packageName, reference.version, expectedRepository)
-      return {
-        ...entry,
-        packageName: reference.packageName,
-        version: reference.version,
-        verification: 'unverified',
-        installable: true,
-      }
-    } catch (error) {
-      const npmIssue = this.candidateIssue(error, 'package-invalid')
-      return { ...entry, issueCode: npmIssue.code, issue: npmIssue.message }
+  private admittedEntry(
+    repository: GithubRepository, source: ManifestSource, manifest: PackageManifest, compatibility: 'declared' | 'unverified',
+  ): CatalogEntry {
+    const description = typeof manifest.description === 'string' && manifest.description.trim() !== ''
+      ? manifest.description
+      : repository.description?.trim() || `GitHub repository ${repository.full_name}`
+    const keywords = Array.isArray(manifest.keywords)
+      ? manifest.keywords.filter((value): value is string => typeof value === 'string')
+      : repository.topics ?? []
+    return {
+      id: `${repository.full_name}:${source.label}`,
+      repositoryFullName: repository.full_name,
+      repositoryUrl: repository.html_url,
+      packageName: manifest.name,
+      version: manifest.version,
+      displayName: localizedValue(manifest.name, 120),
+      summary: localizedValue(description, 360),
+      keywords,
+      license: manifest.license ?? repository.license?.spdx_id ?? null,
+      repositoryDirectory: source.label === '.' ? null : source.label,
+      homepage: manifest.homepage ?? null,
+      manifestUrl: source.url,
+      availability: 'installable',
+      compatibility,
+      issueCode: null,
+      issue: null,
     }
   }
 
@@ -312,8 +316,6 @@ export class CatalogCollector {
     issue: string,
   ): CatalogEntry {
     const manifest = objectValue(raw)
-    const dsh = objectValue(manifest?.dsh)
-    const plugin = objectValue(dsh?.plugin)
     const packageName = typeof manifest?.name === 'string' && npmPackageNameSchema.safeParse(manifest.name).success ? manifest.name : null
     const fallbackName = packageName ?? repository.name
     const description = typeof manifest?.description === 'string' && manifest.description.trim() !== ''
@@ -328,26 +330,24 @@ export class CatalogCollector {
       repositoryUrl: repository.html_url,
       packageName,
       version: typeof manifest?.version === 'string' && validVersion(manifest.version) === manifest.version ? manifest.version : null,
-      displayName: localizedValue(plugin?.displayName, fallbackName, 120),
-      summary: localizedValue(plugin?.summary, description, 360),
-      category: typeof plugin?.category === 'string' && /^[a-z0-9](?:[a-z0-9._-]*[a-z0-9])?$/.test(plugin.category)
-        && plugin.category.length <= 64 ? plugin.category : null,
+      displayName: localizedValue(fallbackName, 120),
+      summary: localizedValue(description, 360),
       keywords,
       license: typeof manifest?.license === 'string' && manifest.license.trim() !== ''
         ? manifest.license : repository.license?.spdx_id ?? null,
-      repositoryDirectory: null,
+      repositoryDirectory: label === '.' ? null : label,
       homepage: optionalUrl(manifest?.homepage),
       manifestUrl,
-      verification: 'rejected',
+      availability: 'unavailable',
+      compatibility: 'unverified',
       issueCode,
       issue,
-      installable: false,
     }
   }
 
   private async verifyNpmReference(
-    packageName: string, version: string, expectedRepository: string, requireBundle = false,
-  ): Promise<void> {
+    packageName: string, version: string, expectedRepository: string,
+  ): Promise<'declared' | 'unverified'> {
     const response = await this.request(`${this.npmRegistryUrl}/${encodeURIComponent(packageName)}`)
     if (!response.ok) throw new CandidateValidationError('package-unpublished', `${packageName} is not published on npm`)
     let metadata: z.infer<typeof npmSchema>
@@ -360,34 +360,46 @@ export class CatalogCollector {
     if (published === undefined) {
       throw new CandidateValidationError('package-unpublished', `${packageName}@${version} is not published on npm`)
     }
-    if (requireBundle && published.dsh?.bundle.patch === undefined) {
-      throw new CandidateValidationError('package-invalid', `${packageName}@${version} npm metadata does not declare dsh.bundle.patch`)
-    }
     const repository = typeof published.repository === 'string' ? published.repository : published.repository.url
     if (canonicalGithubRepository(repository) !== expectedRepository) {
       throw new CandidateValidationError('repository-mismatch', `${packageName}@${version} npm repository does not match its discovery repository`)
     }
+    return hasBundleDeclaration(published) ? 'declared' : 'unverified'
   }
 
   private rejectPackageConflicts(entries: readonly CatalogEntry[]): readonly CatalogEntry[] {
     const targets = new Map<string, CatalogEntry[]>()
     for (const entry of entries) {
-      if (!entry.installable || entry.packageName === null) continue
-      const values = targets.get(entry.packageName) ?? []
+      if (entry.availability !== 'installable' || entry.packageName === null || entry.version === null) continue
+      const target = `${entry.packageName}@${entry.version}`
+      const values = targets.get(target) ?? []
       values.push(entry)
-      targets.set(entry.packageName, values)
+      targets.set(target, values)
     }
-    const conflicts = new Set([...targets].filter(([, values]) => values.length > 1).map(([name]) => name))
+    const conflicts = new Set([...targets].filter(([, values]) => values.length > 1).map(([target]) => target))
     return entries.map(entry => {
-      if (entry.packageName === null || !conflicts.has(entry.packageName)) return entry
+      const target = entry.packageName === null || entry.version === null ? null : `${entry.packageName}@${entry.version}`
+      if (target === null || !conflicts.has(target)) return entry
       return {
         ...entry,
-        verification: 'rejected',
+        availability: 'unavailable',
         issueCode: 'package-conflict',
-        issue: `Multiple catalog entries claim npm package ${entry.packageName}.`,
-        installable: false,
+        issue: `Multiple catalog entries claim npm package ${target}.`,
       }
     })
+  }
+
+  private withCarriedCoverageWarning(warnings: readonly { code: string, message: string }[]): readonly { code: string, message: string }[] {
+    const carried = this.previousCatalog?.warnings.filter(item => item.code === 'github-results-truncated') ?? []
+    return [...new Map([...carried, ...warnings].map(item => [`${item.code}:${item.message}`, item])).values()]
+  }
+
+  private async readGithubTree(fullName: string, sha: string): Promise<z.infer<typeof treeSchema>> {
+    const url = new URL(`${this.githubApiUrl}/repos/${fullName}/git/trees/${sha}`)
+    url.searchParams.set('recursive', '1')
+    const response = await this.request(url, { headers: { accept: 'application/vnd.github+json' } }, true)
+    if (!response.ok) throw new Error(`${url} returned HTTP ${response.status}`)
+    return treeSchema.parse(await response.json())
   }
 
   private async request(input: string | URL, init: RequestInit = {}, github = false): Promise<Response> {

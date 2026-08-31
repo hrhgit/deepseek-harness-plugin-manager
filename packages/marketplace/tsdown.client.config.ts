@@ -1,9 +1,14 @@
+import { readFileSync } from 'node:fs'
 import { readFile } from 'node:fs/promises'
 import { basename, dirname, resolve, sep } from 'node:path'
 import { transform } from 'lightningcss'
 import { defineConfig } from 'tsdown'
 
-const id = 'dsh-plugin-marketplace'
+const packageJson = JSON.parse(readFileSync(new URL('./package.json', import.meta.url), 'utf8')) as { name?: unknown }
+if (typeof packageJson.name !== 'string' || packageJson.name.length === 0) {
+  throw new Error('dsh-plugin-marketplace: package.json must declare a non-empty name')
+}
+const id = packageJson.name
 const externals = [
   '@deepseek-ai/cordis',
   '@deepseek-ai/dsh-api-gateway/client',

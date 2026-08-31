@@ -11,7 +11,7 @@ This is a community project, not an official DeepSeek Harness package.
 - **Runtime hot loading**: applies enablement changes through the host's existing Cordis HMR, waits for Loader lifecycle settlement, and reports the authoritative result.
 - Inspect the current Cordis Loader entries and lifecycle state.
 - Enable or disable one plugin without deleting its npm package.
-- Expand official Harness workspace groups, toggle all mutable entries in a group, or manage individual Loader entries by their configured names.
+- Expand entries by their automatic official/third-party category, toggle all mutable entries in a group, or manage individual Loader entries by their configured names.
 - Persist desired state in the active profile's `cordis.patch.yml` so it survives restart.
 - Protect the manager itself and the Web management surface from accidental shutdown.
 - Use Harness's existing trusted-host transport policy; the plugin does not open another server.
@@ -61,17 +61,7 @@ The Web API follows the same trusted-host decision as the Harness connection. An
 
 ## Categories and entry names
 
-Official and third-party packages share one open functional grouping rule. A package can declare `dsh.pluginManager.group` in `package.json`; packages that declare the same group id appear together regardless of publisher. Without a declaration, `repository.directory` in the form `packages/<group>/<package>` supplies a best-effort fallback for any repository. Missing or invalid metadata falls back to **Ungrouped**. Group ids use lowercase letters, digits, dots, underscores, and hyphens. Marketplace display names, summaries, and categories use this repository's V1 `dsh.plugin` field in `package.json`; there is no separate `dsh-plugin.json`.
-
-```json
-{
-  "dsh": {
-    "pluginManager": {
-      "group": "llm"
-    }
-  }
-}
-```
+Categories are automatic. The checked-in [`OFFICIAL_PACKAGE_REGISTRY`](src/host/official-package-registry.ts) records exact module roots from reviewed `deepseek-ai/deepseek-harness` source snapshots and its official bundle dependencies. Those entries appear in **Official**; every other installed package, including this community manager, appears in **Third-party**. Both groups remain visible when empty. The manager neither reads package metadata or repository layout at runtime nor offers profile-level category overrides; update the registry only when reviewing a new official Harness release. The independent marketplace remains responsible only for discovery and installation.
 
 Groups are collapsed by default and directly list Loader entries by their configured ids, such as `include`, `timer`, and `tool-web`; imported module specifiers are intentionally hidden. A group toggle changes every mutable entry and skips protected infrastructure. Green means fully enabled, while yellow means the group is partially enabled.
 

@@ -10,11 +10,12 @@ const t = (key: LocaleKey): string => en[key]
 
 const snapshot: PluginManagerSnapshot = {
   profileName: 'web',
+  categories: ['official', 'third-party'],
   entries: [
-    { entryId: 'tool-client', configId: 'tool-client', moduleName: '@fixture/tool/client', packageName: '@fixture/tool', category: 'community', enabled: true, phase: 'active', protected: false, protectionReason: null, error: null },
-    { entryId: 'tool-host', configId: 'tool-host', moduleName: '@fixture/tool/host', packageName: '@fixture/tool', category: 'community', enabled: false, phase: null, protected: false, protectionReason: null, error: null },
-    { entryId: 'manager', configId: 'manager', moduleName: 'dsh-plugin-manager', packageName: 'dsh-plugin-manager', category: 'community', enabled: true, phase: 'active', protected: true, protectionReason: 'self', error: null },
-    { entryId: 'session', configId: 'session', moduleName: '@deepseek-ai/dsh-session-persistence', packageName: '@deepseek-ai/dsh-session-persistence', category: 'session', enabled: true, phase: 'active', protected: false, protectionReason: null, error: null },
+    { entryId: 'tool-client', configId: 'tool-client', moduleName: '@fixture/tool/client', packageName: '@fixture/tool', category: 'third-party', enabled: true, phase: 'active', protected: false, protectionReason: null, error: null },
+    { entryId: 'tool-host', configId: 'tool-host', moduleName: '@fixture/tool/host', packageName: '@fixture/tool', category: 'third-party', enabled: false, phase: null, protected: false, protectionReason: null, error: null },
+    { entryId: 'manager', configId: 'manager', moduleName: 'dsh-plugin-manager', packageName: 'dsh-plugin-manager', category: 'third-party', enabled: true, phase: 'active', protected: true, protectionReason: 'self', error: null },
+    { entryId: 'session', configId: 'session', moduleName: '@deepseek-ai/dsh-session-persistence', packageName: '@deepseek-ai/dsh-session-persistence', category: 'official', enabled: true, phase: 'active', protected: false, protectionReason: null, error: null },
   ],
 }
 
@@ -36,14 +37,15 @@ function props(overrides: Partial<PluginManagerTabProps> = {}): PluginManagerTab
 describe('PluginManagerTab', () => {
   it('collapses categories and lists config entry names without module names', async () => {
     render(<PluginManagerTab {...props()} />)
-    expect(await screen.findByText(en.categorySession)).toBeTruthy()
-    expect(screen.getByText(en.categorySession)).toBeTruthy()
-    expect(screen.getByText(en.categoryCommunity)).toBeTruthy()
+    expect(await screen.findByText(en.categoryOfficial)).toBeTruthy()
+    expect(screen.getByText(en.categoryOfficial)).toBeTruthy()
+    expect(screen.getByText(en.categoryThirdParty)).toBeTruthy()
     expect(screen.queryByText('tool-client')).toBeNull()
-    fireEvent.click(screen.getByRole('button', { name: /Community and local/ }))
+    fireEvent.click(screen.getByRole('button', { name: /Third-party/ }))
     expect(screen.getByText('tool-client')).toBeTruthy()
     expect(screen.queryByText('@fixture/tool/client')).toBeNull()
     expect(screen.queryByText('@fixture/tool/host')).toBeNull()
+    expect(screen.queryByRole('combobox')).toBeNull()
 
     fireEvent.change(screen.getByRole('searchbox'), { target: { value: 'manager' } })
     expect(screen.queryByText('tool-client')).toBeNull()
@@ -55,8 +57,8 @@ describe('PluginManagerTab', () => {
   it('runs entry mutations and adopts their authoritative snapshots', async () => {
     const setEnabled = vi.fn(async () => receipt(snapshot, false, 'tool-client'))
     render(<PluginManagerTab {...props({ setEnabled })} />)
-    await screen.findByText(en.categoryCommunity)
-    fireEvent.click(screen.getByRole('button', { name: /Community and local/ }))
+    await screen.findByText(en.categoryThirdParty)
+    fireEvent.click(screen.getByRole('button', { name: /Third-party/ }))
 
     fireEvent.click(screen.getByRole('checkbox', { name: 'tool-client: Disable plugin' }))
     await waitFor(() => { expect(setEnabled).toHaveBeenCalledWith('tool-client', false) })
@@ -65,20 +67,20 @@ describe('PluginManagerTab', () => {
   it('shows mixed category states in yellow and batches only through the category API', async () => {
     const protectedOnly: PluginManagerSnapshot = {
       ...snapshot,
-      entries: snapshot.entries.map(entry => entry.category === 'community' && !entry.protected ? { ...entry, enabled: false, phase: null } : entry),
+      entries: snapshot.entries.map(entry => entry.category === 'third-party' && !entry.protected ? { ...entry, enabled: false, phase: null } : entry),
     }
     const setCategoryEnabled = vi.fn(async () => receipt(snapshot, true, 'tool-client'))
     const { rerender } = render(<PluginManagerTab {...props({ setCategoryEnabled })} />)
-    await screen.findByText(en.categoryCommunity)
-    const mixed = screen.getByRole('checkbox', { name: `${en.categoryCommunity}: ${en.disableCategory}` })
+    await screen.findByText(en.categoryThirdParty)
+    const mixed = screen.getByRole('checkbox', { name: `${en.categoryThirdParty}: ${en.disableCategory}` })
     expect(mixed).toHaveProperty('checked', true)
     expect(mixed.closest('label')?.dataset.warning).toBe('true')
     fireEvent.click(mixed)
-    await waitFor(() => { expect(setCategoryEnabled).toHaveBeenCalledWith('community', false) })
+    await waitFor(() => { expect(setCategoryEnabled).toHaveBeenCalledWith('third-party', false) })
 
     rerender(<PluginManagerTab {...props({ list: async () => protectedOnly, setCategoryEnabled })} />)
     fireEvent.click(screen.getByRole('button', { name: en.refresh }))
-    const protectedOn = await screen.findByRole('checkbox', { name: `${en.categoryCommunity}: ${en.enableCategory}` })
+    const protectedOn = await screen.findByRole('checkbox', { name: `${en.categoryThirdParty}: ${en.enableCategory}` })
     expect(protectedOn).toHaveProperty('checked', false)
     expect(protectedOn.closest('label')?.dataset.warning).toBe('true')
   })
@@ -93,8 +95,8 @@ describe('PluginManagerTab', () => {
     render(<PluginManagerTab {...props({ list, setEnabled })} />)
     expect((await screen.findByRole('alert')).textContent).toContain(`${en.error} private`)
     fireEvent.click(screen.getByRole('button', { name: en.retry }))
-    await screen.findByText(en.categoryCommunity)
-    fireEvent.click(screen.getByRole('button', { name: /Community and local/ }))
+    await screen.findByText(en.categoryThirdParty)
+    fireEvent.click(screen.getByRole('button', { name: /Third-party/ }))
     fireEvent.click(screen.getByRole('checkbox', { name: 'tool-host: Enable plugin' }))
     expect((await screen.findByRole('alert')).textContent).toContain('HMR rejected the patch.')
   })
@@ -106,8 +108,8 @@ describe('PluginManagerTab', () => {
       snapshot,
     }))
     render(<PluginManagerTab {...props({ setEnabled })} />)
-    await screen.findByText(en.categoryCommunity)
-    fireEvent.click(screen.getByRole('button', { name: /Community and local/ }))
+    await screen.findByText(en.categoryThirdParty)
+    fireEvent.click(screen.getByRole('button', { name: /Third-party/ }))
     fireEvent.click(screen.getByRole('checkbox', { name: 'tool-host: Enable plugin' }))
     const status = await screen.findByRole('status')
     expect(status.textContent).toContain(en.restartRequired)

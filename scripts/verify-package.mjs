@@ -7,6 +7,10 @@ const archive = resolve(process.argv[2] ?? '')
 const flavor = process.argv[3]
 if (process.argv[2] === undefined) throw new Error('usage: node scripts/verify-package.mjs <package.tgz>')
 if (flavor !== 'manager' && flavor !== 'marketplace') throw new Error('package flavor must be manager or marketplace')
+const packageNames = {
+  manager: 'dsh-plugin-manager',
+  marketplace: '@ruihuahe/dsh-plugin-marketplace',
+}
 
 const directory = await mkdtemp(join(tmpdir(), 'dsh-plugin-manager-pack-'))
 try {
@@ -14,8 +18,7 @@ try {
   if (unpack.status !== 0) throw new Error(unpack.stderr || `tar exited with ${unpack.status}`)
   const packageRoot = join(directory, 'package')
   const manifest = JSON.parse(await readFile(join(packageRoot, 'package.json'), 'utf8'))
-  if (manifest.name !== `dsh-plugin-${flavor}`) throw new Error(`unexpected package name ${manifest.name}`)
-  if (manifest.dsh?.plugin?.schemaVersion !== 1) throw new Error('package does not declare dsh.plugin V1')
+  if (manifest.name !== packageNames[flavor]) throw new Error(`unexpected package name ${manifest.name}`)
   if (typeof manifest.dsh?.bundle?.patch !== 'string') throw new Error('package does not declare dsh.bundle')
   await Promise.all(['client.js', 'index.js', 'remote.js'].map(file => readFile(join(packageRoot, 'lib', file))))
   await Promise.all(['cordis.patch.yml', 'README.md', 'README.zh-CN.md', 'LICENSE'].map(file => readFile(join(packageRoot, file))))

@@ -7,7 +7,7 @@ import css from './PluginManagerTab.module.css'
 export interface PluginManagerTabApi {
   readonly list: () => Promise<PluginManagerSnapshot>
   readonly setEnabled: (entryId: string, enabled: boolean) => Promise<MutationReceipt>
-  readonly setCategoryEnabled: (category: string, enabled: boolean) => Promise<MutationReceipt>
+  readonly setCategoryEnabled: (category: PluginCategory, enabled: boolean) => Promise<MutationReceipt>
   readonly setPackageEnabled: (packageName: string, enabled: boolean) => Promise<MutationReceipt>
 }
 
@@ -17,12 +17,8 @@ export interface PluginManagerTabProps extends PluginManagerTabApi {
 
 type LoadState = { readonly status: 'loading' } | { readonly status: 'error'; readonly message: string } | { readonly status: 'ready'; readonly snapshot: PluginManagerSnapshot }
 const phaseKeys: Record<Exclude<PluginPhase, null>, LocaleKey> = { pending: 'pending', loading: 'loadingPhase', active: 'active', failed: 'failed', unloading: 'unloading' }
-const categoryKeys: Readonly<Partial<Record<PluginCategory, LocaleKey>>> = {
-  cordis: 'categoryCordis', core: 'categoryCore', bundle: 'categoryBundle', boot: 'categoryBoot', session: 'categorySession',
-  interaction: 'categoryInteraction', extensions: 'categoryExtensions', llm: 'categoryLlm', api: 'categoryApi', client: 'categoryClient',
-  host: 'categoryHost', settings: 'categorySettings', tools: 'categoryTools', 'harness-other': 'categoryHarnessOther', community: 'categoryCommunity', ungrouped: 'categoryUngrouped',
-}
-const preferredCategoryOrder = ['cordis', 'core', 'bundle', 'boot', 'session', 'interaction', 'extensions', 'llm', 'api', 'client', 'host', 'settings', 'tools', 'harness-other', 'community', 'ungrouped']
+const categoryKeys: Readonly<Record<PluginCategory, LocaleKey>> = { official: 'categoryOfficial', 'third-party': 'categoryThirdParty' }
+const preferredCategoryOrder: readonly PluginCategory[] = ['official', 'third-party']
 type Feedback = { readonly severity: 'warning' | 'error'; readonly message: string }
 
 function phaseLabel(entry: ManagedPluginEntry, t: PluginManagerTabProps['t']): string {
@@ -30,7 +26,7 @@ function phaseLabel(entry: ManagedPluginEntry, t: PluginManagerTabProps['t']): s
   return t(phaseKeys[entry.phase])
 }
 
-/** Searchable plugin management view grouped by Harness category. */
+/** Searchable plugin management view grouped by automatic source category. */
 export function PluginManagerTab({ list, setEnabled, setCategoryEnabled, t }: PluginManagerTabProps): ReactNode {
   const [request, setRequest] = useState(0)
   const [query, setQuery] = useState('')
@@ -50,7 +46,7 @@ export function PluginManagerTab({ list, setEnabled, setCategoryEnabled, t }: Pl
   const sections = useMemo(() => {
     if (state.status !== 'ready') return []
     const normalized = query.trim().toLocaleLowerCase()
-    const map = new Map<PluginCategory, ManagedPluginEntry[]>()
+    const map = new Map<PluginCategory, ManagedPluginEntry[]>(state.snapshot.categories.map(category => [category, []]))
     for (const entry of state.snapshot.entries) {
       if (normalized && !entry.configId.toLocaleLowerCase().includes(normalized)) continue
       const entries = map.get(entry.category) ?? []
@@ -88,7 +84,6 @@ export function PluginManagerTab({ list, setEnabled, setCategoryEnabled, t }: Pl
       setBusy(current => { const next = new Set(current); next.delete(key); return next })
     }
   }
-
   if (state.status === 'loading') return <p className={css.message}>{t('loading')}</p>
   if (state.status === 'error') return <div className={css.error} role="alert"><span>{t('error')} <small>{state.message}</small></span><button type="button" onClick={refresh}>{t('retry')}</button></div>
 
@@ -101,7 +96,6 @@ export function PluginManagerTab({ list, setEnabled, setCategoryEnabled, t }: Pl
     {state.snapshot.entries.length === 0 ? <p className={css.message}>{t('empty')}</p> : null}
     {state.snapshot.entries.length > 0 && sections.length === 0 ? <p className={css.message}>{t('emptySearch')}</p> : null}
     <div className={css.sections}>{sections.map(section => {
-      const categoryKey = categoryKeys[section.category]
       const isOpen = query.trim() !== '' || open.has(section.category)
       const mutable = section.entries.filter(entry => !entry.protected)
       const mutableEnabled = mutable.filter(entry => entry.enabled).length
@@ -110,7 +104,7 @@ export function PluginManagerTab({ list, setEnabled, setCategoryEnabled, t }: Pl
       const partial = enabledCount > 0 && enabledCount < section.entries.length
       const targetEnabled = mutableEnabled === 0
       const categoryBusyKey = `category:${section.category}`
-      const categoryLabel = categoryKey === undefined ? section.category : t(categoryKey)
+      const categoryLabel = t(categoryKeys[section.category])
       return <section className={css.category} key={section.category} data-open={isOpen || undefined}>
       <header className={css.categoryHeader}>
         <button className={css.categoryExpand} type="button" aria-expanded={isOpen} onClick={() => { setOpen(current => { const next = new Set(current); next.has(section.category) ? next.delete(section.category) : next.add(section.category); return next }) }}>

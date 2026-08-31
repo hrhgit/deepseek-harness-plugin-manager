@@ -1,8 +1,8 @@
 /** Lifecycle phase of a Cordis Loader entry. */
 export type PluginPhase = 'pending' | 'loading' | 'active' | 'failed' | 'unloading' | null
 
-/** Product package group or external plugin origin shown by the Web UI. */
-export type PluginCategory = string
+/** Automatic source classification shown by the Web UI. */
+export type PluginCategory = 'official' | 'third-party'
 
 /** One managed non-group Loader entry. */
 export interface ManagedPluginEntry {
@@ -14,7 +14,7 @@ export interface ManagedPluginEntry {
   readonly moduleName: string
   /** Package-like root used for grouping in the Web UI. */
   readonly packageName: string
-  /** Harness workspace package group, or an external origin group. */
+  /** Category derived from the checked-in official package registry. */
   readonly category: PluginCategory
   /** Effective enablement, including disabled ancestors. */
   readonly enabled: boolean
@@ -32,6 +32,8 @@ export interface ManagedPluginEntry {
 export interface PluginManagerSnapshot {
   /** Absolute profile name inferred from the running config root. */
   readonly profileName: string
+  /** The two automatic categories, including empty groups. */
+  readonly categories: readonly PluginCategory[]
   /** Current non-group entries in Loader order. */
   readonly entries: readonly ManagedPluginEntry[]
 }

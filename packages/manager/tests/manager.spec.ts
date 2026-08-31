@@ -39,8 +39,8 @@ async function emulateHmr(ctx: Context, entryIds: readonly string[], enabled: bo
 }
 
 describe('PluginManager', () => {
-  it('projects package groups and protects itself', async () => {
-    const { ctx, manager, selfId } = await harness()
+  it('projects source categories and protects itself', async () => {
+    const { ctx, manager, featureId, selfId } = await harness()
     const includeId = await ctx.loader.create({ name: 'cordis:empty' })
     ctx.loader.resolve(includeId).options.id = 'include'
     ctx.loader.resolve(includeId).options.name = 'cordis:include'
@@ -50,9 +50,11 @@ describe('PluginManager', () => {
     const snapshot = manager.list()
     expect(snapshot.profileName).toMatch(/^dsh-plugin-manager-/)
     expect(snapshot.entries.filter(entry => entry.packageName === '@fixture/tool')).toHaveLength(2)
-    expect(snapshot.entries.find(entry => entry.entryId === selfId)).toMatchObject({ category: 'ungrouped', protected: true, enabled: true })
-    expect(snapshot.entries.find(entry => entry.configId === 'include')).toMatchObject({ category: 'cordis', protected: true })
-    expect(snapshot.entries.find(entry => entry.configId === 'timer')).toMatchObject({ category: 'cordis', protected: true })
+    expect(snapshot.categories).toEqual(['official', 'third-party'])
+    expect(snapshot.entries.find(entry => entry.entryId === selfId)).toMatchObject({ category: 'third-party', protected: true, enabled: true })
+    expect(snapshot.entries.find(entry => entry.configId === 'include')).toMatchObject({ category: 'official', protected: true })
+    expect(snapshot.entries.find(entry => entry.configId === 'timer')).toMatchObject({ category: 'official', protected: true })
+    expect(snapshot.entries.find(entry => entry.entryId === featureId)).toMatchObject({ category: 'third-party' })
   })
 
   it('persists and waits for the Loader state before reporting success', async () => {
@@ -79,10 +81,10 @@ describe('PluginManager', () => {
     expect(failed.items[0]?.message).toContain('Timed out')
   })
 
-  it('changes a category while skipping its protected entries', async () => {
+  it('changes the automatically classified third-party category while skipping protected entries', async () => {
     const { ctx, manager, featureId, siblingId, selfId } = await harness()
     const hmr = emulateHmr(ctx, [featureId, siblingId], false)
-    const receipt = await manager.setCategoryEnabled('ungrouped', false)
+    const receipt = await manager.setCategoryEnabled('third-party', false)
     await hmr
     expect(receipt.items).toEqual([
       { entryId: featureId, status: 'changed', message: null },

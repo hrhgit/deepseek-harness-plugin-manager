@@ -5,6 +5,7 @@ import { dshHomePath } from '@deepseek-ai/dsh-home-paths'
 import { Remote, TypertRemoteService } from '@deepseek-ai/dsh-typert-protocol'
 import type {} from 'zod'
 import { CatalogService, snapshotWithProfile } from './host/catalog.js'
+import { installTargetKey } from './host/install-target.js'
 import { currentDshRunner, MarketplaceInstaller, type MarketplaceInstallTarget } from './host/installer.js'
 import { installedDependencies, profileLocation, type ProfileLocation } from './host/profile.js'
 import type { InstallReceipt, MarketplaceSnapshot } from './types.js'
@@ -33,7 +34,7 @@ export class PluginMarketplace extends TypertRemoteService {
     if (baseUrl === undefined) throw new Error('dsh-plugin-marketplace requires a file-backed Loader root')
     this.location = profileLocation(baseUrl)
     this.catalog = new CatalogService({
-      cacheFile: join(dshHomePath('cache', 'dsh-plugin-marketplace'), 'catalog-v1.json'),
+      cacheFile: join(dshHomePath('cache', 'dsh-plugin-marketplace'), 'catalog-v2.json'),
       ...(config.catalogUrl === undefined ? {} : { catalogUrl: config.catalogUrl }),
       ...(config.requestTimeoutMs === undefined ? {} : { requestTimeoutMs: config.requestTimeoutMs }),
     })
@@ -47,8 +48,8 @@ export class PluginMarketplace extends TypertRemoteService {
 
   @Remote('installPlugin')
   async install(packageName: string, version: string): Promise<InstallReceipt> {
-    const target = this.latest.get(packageName)
-    if (target === undefined || target.version !== version) {
+    const target = this.latest.get(installTargetKey({ packageName, version }))
+    if (target === undefined) {
       throw new Error('Install target is not present in the latest installable marketplace snapshot.')
     }
     const dependencies = await installedDependencies(this.location.directory)
@@ -59,8 +60,9 @@ export class PluginMarketplace extends TypertRemoteService {
     const dependencies = await installedDependencies(this.location.directory)
     const installTargets: Array<readonly [string, MarketplaceInstallTarget]> = []
     for (const entry of state.entries) {
-      if (entry.installable && entry.packageName !== null && entry.version !== null) {
-        installTargets.push([entry.packageName, { packageName: entry.packageName, version: entry.version }])
+      if (entry.availability === 'installable' && entry.packageName !== null && entry.version !== null) {
+        const target = { packageName: entry.packageName, version: entry.version }
+        installTargets.push([installTargetKey(target), target])
       }
     }
     this.latest = new Map(installTargets)

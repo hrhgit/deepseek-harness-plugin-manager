@@ -30,9 +30,8 @@
 .rowMeta { display: grid; justify-items: end; gap: 4px; color: var(--dsw-alias-label-tertiary); }
 .rowMeta small { font-size: 10px; line-height: 15px; }
 .rowMeta small[data-installed='true'] { color: var(--dsw-alias-state-success-primary); }
-.rowMeta small[data-verification='verified'] { color: #16836b; }
-.rowMeta small[data-verification='unverified'] { color: #9a640f; }
-.rowMeta small[data-verification='rejected'] { color: var(--dsw-alias-state-error-primary); }
+.rowMeta small[data-availability='installable'] { color: #16836b; }
+.rowMeta small[data-availability='unavailable'] { color: var(--dsw-alias-state-error-primary); }
 .detailPane { min-width: 0; padding: 18px 20px; }
 .detailTitle { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; }
 .detailTitle h4 { margin: 0 0 3px; font-size: 16px; line-height: 23px; font-weight: 650; letter-spacing: 0; overflow-wrap: anywhere; }
@@ -41,7 +40,7 @@
 .installButton:disabled { cursor: not-allowed; opacity: .5; }
 .installButton[data-unavailable='true'] { border-color: var(--dsw-alias-border-l2); background: var(--dsw-alias-bg-layer-3); color: var(--dsw-alias-label-tertiary); opacity: 1; }
 .summary { max-width: 64ch; padding: 18px 0; color: var(--dsw-alias-label-secondary); font-size: 13px; line-height: 21px; }
-.facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin: 0; border-block: 1px solid var(--dsw-alias-border-l2); }
+.facts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 0; border-block: 1px solid var(--dsw-alias-border-l2); }
 .facts div { min-width: 0; padding: 11px 10px 11px 0; }
 .facts dt { color: var(--dsw-alias-label-tertiary); font-size: 10px; line-height: 16px; }
 .facts dd { overflow: hidden; margin: 2px 0 0; font-size: 12px; line-height: 18px; text-overflow: ellipsis; white-space: nowrap; }
@@ -59,6 +58,11 @@
 .error span { flex: 1; min-width: 0; overflow-wrap: anywhere; }
 .error button { border: 1px solid currentColor; border-radius: 5px; padding: 3px 9px; background: transparent; color: inherit; font: inherit; cursor: pointer; }
 .warning { border-color: color-mix(in srgb, #a96b13 28%, transparent); background: color-mix(in srgb, #a96b13 8%, transparent); color: #8a5b16; }
+.coverage { display: flex; align-items: flex-start; gap: 8px; border: 1px solid color-mix(in srgb, var(--dsw-alias-state-business-primary) 24%, transparent); border-radius: 6px; padding: 9px 11px; background: color-mix(in srgb, var(--dsw-alias-state-business-primary) 7%, transparent); color: var(--dsw-alias-state-business-primary); font-size: 11px; line-height: 17px; }
+.coverage svg { flex: none; margin-top: 1px; }
+.coverage div { display: grid; gap: 2px; }
+.coverage strong { font-weight: 600; }
+.coverage span { overflow-wrap: anywhere; }
 .warning svg, .feedback svg { flex: none; margin-top: 1px; }
 .warning div { display: grid; gap: 2px; }
 .warning strong { font-weight: 600; }

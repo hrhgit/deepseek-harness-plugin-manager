@@ -4,14 +4,15 @@ import type { Context, FiberState } from '@deepseek-ai/cordis'
 import type { Entry } from '@deepseek-ai/cordis-plugin-loader'
 import type {} from '@deepseek-ai/cordis-plugin-loader'
 import { Remote, TypertRemoteService } from '@deepseek-ai/dsh-typert-protocol'
-import type {} from 'zod'
+import { z } from 'zod'
 import { packageRoot } from './host/package-name.js'
-import { pluginCategory } from './host/plugin-category.js'
+import { AUTOMATIC_CATEGORIES, pluginCategory } from './host/plugin-category.js'
 import { profileLocation, writeDesiredState, type ProfileLocation } from './host/profile-patches.js'
 import type {
   ManagedPluginEntry,
   MutationItem,
   MutationReceipt,
+  PluginCategory,
   PluginManagerSnapshot,
   PluginPhase,
 } from './types.js'
@@ -57,6 +58,12 @@ export interface Config {
   settleTimeoutMs?: number
 }
 
+/** Loader-validated configuration for profile-owned manager settings. */
+export const Config = z.object({
+  protectedEntries: z.array(z.string().min(1)).default([]),
+  settleTimeoutMs: z.number().int().min(100).max(60_000).default(8_000),
+})
+
 /** Persistent plugin management Remote for a trusted Harness Web client. */
 export class PluginManager extends TypertRemoteService {
   static inject = ['loader']
@@ -68,8 +75,9 @@ export class PluginManager extends TypertRemoteService {
 
   constructor(ctx: Context, config: Config = {}) {
     super(ctx, 'pluginManager')
-    this.protectedIds = new Set([...DEFAULT_PROTECTED_IDS, ...(config.protectedEntries ?? [])])
-    this.settleTimeoutMs = config.settleTimeoutMs ?? 8_000
+    const resolvedConfig = Config.parse(config)
+    this.protectedIds = new Set([...DEFAULT_PROTECTED_IDS, ...resolvedConfig.protectedEntries])
+    this.settleTimeoutMs = resolvedConfig.settleTimeoutMs
     const baseUrl = ctx.loader.ctx.baseUrl
     if (baseUrl === undefined) throw new Error('dsh-plugin-manager requires a file-backed Loader root')
     this.location = profileLocation(baseUrl)
@@ -78,11 +86,13 @@ export class PluginManager extends TypertRemoteService {
   /** Read the current Loader without maintaining a second lifecycle cache. */
   @Remote('list')
   list(): PluginManagerSnapshot {
+    const entries = [...this.ctx.loader.entries()]
+      .filter(entry => !entry.options.group)
+      .map(entry => this.project(entry))
     return {
       profileName: this.location.profileName,
-      entries: [...this.ctx.loader.entries()]
-        .filter(entry => !entry.options.group)
-        .map(entry => this.project(entry)),
+      categories: AUTOMATIC_CATEGORIES,
+      entries,
     }
   }
 
@@ -97,12 +107,13 @@ export class PluginManager extends TypertRemoteService {
     })
   }
 
-  /** Persist and apply all mutable entries from one Harness category. */
+  /** Persist and apply all mutable entries from one automatic category. */
   @Remote('setCategoryEnabled')
-  async setCategoryEnabled(category: string, enabled: boolean): Promise<MutationReceipt> {
+  async setCategoryEnabled(category: PluginCategory, enabled: boolean): Promise<MutationReceipt> {
     return await this.serialize(async () => {
-      const targets = this.list().entries.filter(entry => entry.category === category)
-      if (targets.length === 0) throw new Error(`unknown plugin category ${JSON.stringify(category)}`)
+      const snapshot = this.list()
+      if (!snapshot.categories.includes(category)) throw new Error(`unknown plugin category ${JSON.stringify(category)}`)
+      const targets = snapshot.entries.filter(entry => entry.category === category)
       const items: MutationItem[] = []
       for (const target of targets) items.push(await this.change(target, enabled))
       return { enabled, items, snapshot: this.list() }
@@ -138,7 +149,7 @@ export class PluginManager extends TypertRemoteService {
       configId: entry.options.id,
       moduleName: entry.options.name,
       packageName: packageRoot(entry.options.name),
-      category: pluginCategory(packageRoot(entry.options.name), entry.parent.tree.ctx.baseUrl ?? this.location.directory),
+      category: pluginCategory(packageRoot(entry.options.name)),
       enabled: !entry.disabled,
       phase: fiber === undefined ? null : FIBER_PHASE[fiber.state] ?? null,
       protected: protectionReason !== null,

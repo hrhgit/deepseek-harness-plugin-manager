@@ -11,7 +11,7 @@
 - **运行时热加载**：修改启停状态后，通过宿主已有的 Cordis HMR 在当前进程内停用或重新加载普通插件，并等待 Loader 生命周期稳定后反馈结果。
 - 查看当前 Cordis Loader 条目与生命周期状态。
 - 启用或停用单个插件，不删除其 npm 软件包。
-- 展开 Harness 官方工作区分组，批量启停组内可修改条目，或按配置名称操作单个 Loader 条目。
+- 按自动识别的“官方 / 第三方”分类展开条目，批量启停组内可修改条目，或按配置名称操作单个 Loader 条目。
 - 把目标状态持久化到当前 profile 的 `cordis.patch.yml`，重启后仍然生效。
 - 保护管理器自身及 Web 管理界面的基础插件，避免意外关闭恢复入口。
 - 复用 Harness 现有的受信任 Host 策略，不额外开放服务器端口。
@@ -61,17 +61,7 @@ Web API 沿用 Harness 连接层的受信任 Host 判定。能够使用受信任
 
 ## 分类与条目名称
 
-官方和第三方软件包使用同一套开放的功能分组规则。插件可以在 `package.json` 中声明 `dsh.pluginManager.group`，不同发布者声明相同组 ID 时会进入同一组。未声明时，任何仓库都可以用 `repository.directory` 的 `packages/<组>/<包>` 形式提供尽力而为的回退；元数据缺失或不合法时进入“未分组”。组 ID 只允许小写字母、数字、点、下划线和连字符。面向市场发现的名称、摘要和分类统一声明在仓库 V1 规范的 `dsh.plugin` 中，不使用独立 `dsh-plugin.json`。
-
-```json
-{
-  "dsh": {
-    "pluginManager": {
-      "group": "llm"
-    }
-  }
-}
-```
+分类是自动的。内置的 [`OFFICIAL_PACKAGE_REGISTRY`](src/host/official-package-registry.ts) 记录了从已审查的 `deepseek-ai/deepseek-harness` 源码快照及其官方 bundle 依赖中登记的精确模块根名：表内条目显示为“官方”，其余所有已安装包（包括本社区管理器）显示为“第三方”。两个分组即使为空也会保留。管理器不会在运行时读取包元数据或仓库目录，也不再提供 profile 级分类覆盖；只有审查新的官方 Harness 发布版时才更新这张表。独立市场仍只负责发现与安装。
 
 分组默认收起，展开后直接显示 `include`、`timer` 和 `tool-web` 等 Loader 配置名称，不显示导入模块名。组开关只操作可修改条目并跳过受保护基础设施：绿色表示全部启用，黄色表示部分启用。
 

@@ -13,18 +13,17 @@ const entry = {
   version: '0.1.0',
   displayName: { 'zh-CN': '插件管理器', en: 'Plugin Manager' },
   summary: { 'zh-CN': '管理插件。', en: 'Manage plugins.' },
-  category: 'plugin-management',
   keywords: ['dsh-plugin'],
   license: 'MIT',
   repositoryDirectory: 'packages/manager',
   homepage: null,
   manifestUrl: 'https://example.test/package.json',
-  verification: 'verified' as const,
+  availability: 'installable' as const,
+  compatibility: 'declared' as const,
   issueCode: null,
   issue: null,
-  installable: true,
 }
-const document = { schemaVersion: 1 as const, generatedAt: '2026-08-14T00:00:00.000Z', entries: [entry], warnings: [] }
+const document = { schemaVersion: 2 as const, generatedAt: '2026-08-14T00:00:00.000Z', entries: [entry], warnings: [] }
 
 describe('generated marketplace catalog', () => {
   let server: Server

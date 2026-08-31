@@ -3,7 +3,17 @@ export interface LocalizedText {
   readonly en: string
 }
 
-export type CatalogVerification = 'verified' | 'unverified' | 'rejected'
+export type CatalogAvailability = 'installable' | 'unavailable'
+export type CatalogCompatibility = 'declared' | 'unverified'
+
+/** Stable marketplace ordering: installable entries first, then entries with a reason they cannot be installed. */
+export function compareCatalogEntries(
+  left: Pick<MarketplaceEntry, 'id' | 'availability'>,
+  right: Pick<MarketplaceEntry, 'id' | 'availability'>,
+): number {
+  const rank: Record<CatalogAvailability, number> = { installable: 0, unavailable: 1 }
+  return rank[left.availability] - rank[right.availability] || left.id.localeCompare(right.id)
+}
 
 export type CatalogIssueCode =
   | 'repository-unavailable'
@@ -22,16 +32,15 @@ export interface MarketplaceEntry {
   readonly version: string | null
   readonly displayName: LocalizedText
   readonly summary: LocalizedText
-  readonly category: string | null
   readonly keywords: readonly string[]
   readonly license: string | null
   readonly repositoryDirectory: string | null
   readonly homepage: string | null
   readonly manifestUrl: string | null
-  readonly verification: CatalogVerification
+  readonly availability: CatalogAvailability
+  readonly compatibility: CatalogCompatibility
   readonly issueCode: CatalogIssueCode | null
   readonly issue: string | null
-  readonly installable: boolean
   readonly installedVersion: string | null
 }
 
